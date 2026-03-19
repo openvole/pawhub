@@ -1,0 +1,20 @@
+{
+  "name": "@openvole/paw-telegram",
+  "version": "0.1.0",
+  "description": "Telegram bot channel for OpenVole",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "telegram_send", "description": "Send a message to a Telegram chat" },
+    { "name": "telegram_reply", "description": "Reply to a specific message in a Telegram chat" },
+    { "name": "telegram_get_chat", "description": "Get information about a Telegram chat" }
+  ],
+  "permissions": {
+    "network": ["api.telegram.org"],
+    "listen": [],
+    "filesystem": [],
+    "env": ["TELEGRAM_BOT_TOKEN", "TELEGRAM_ALLOW_FROM"]
+  }
+}

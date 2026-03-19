@@ -1,0 +1,16 @@
+{
+  "name": "@openvole/paw-dashboard",
+  "version": "0.1.0",
+  "description": "Web dashboard for real-time agent monitoring",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [],
+  "permissions": {
+    "network": [],
+    "listen": [3001],
+    "filesystem": [],
+    "env": ["VOLE_DASHBOARD_PORT"]
+  }
+}

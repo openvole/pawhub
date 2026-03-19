@@ -1,0 +1,46 @@
+{
+  "name": "@openvole/paw-compact",
+  "version": "0.1.0",
+  "description": "Default context compaction Paw for OpenVole — summarizes old messages to free context window",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "@openvole/paw-sdk": "file:../../../openvole/src/paw-sdk"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist",
+    "vole-paw.json"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openvole/pawhub",
+    "directory": "paws/paw-compact"
+  },
+  "keywords": [
+    "openvole",
+    "paw",
+    "compact",
+    "context"
+  ],
+  "peerDependencies": {
+    "@openvole/paw-sdk": "^0.1.0"
+  }
+}

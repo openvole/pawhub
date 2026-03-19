@@ -1,0 +1,20 @@
+{
+  "name": "@openvole/paw-session",
+  "version": "0.1.0",
+  "description": "Session management — per-session transcript and metadata tracking",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "session_history", "description": "Read conversation history for a session" },
+    { "name": "session_clear", "description": "Clear a session's transcript and metadata" },
+    { "name": "session_list", "description": "List all active sessions with their last activity time" }
+  ],
+  "permissions": {
+    "network": [],
+    "listen": [],
+    "filesystem": [],
+    "env": ["VOLE_SESSION_DIR", "VOLE_SESSION_TTL"]
+  }
+}

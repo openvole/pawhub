@@ -1,0 +1,41 @@
+{
+  "name": "@openvole/paw-filesystem",
+  "version": "0.1.0",
+  "description": "Filesystem Paw for reading, writing, editing, and searching files",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    {
+      "name": "fs_read",
+      "description": "Read a file"
+    },
+    {
+      "name": "fs_write",
+      "description": "Write or create a file"
+    },
+    {
+      "name": "fs_edit",
+      "description": "Search and replace in a file"
+    },
+    {
+      "name": "fs_list",
+      "description": "List directory contents"
+    },
+    {
+      "name": "fs_search",
+      "description": "Search for text in files"
+    },
+    {
+      "name": "fs_mkdir",
+      "description": "Create a directory"
+    }
+  ],
+  "permissions": {
+    "network": [],
+    "listen": [],
+    "filesystem": ["/app/workspace"],
+    "env": ["VOLE_FS_ALLOWED_DIRS"]
+  }
+}

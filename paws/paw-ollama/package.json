@@ -1,0 +1,50 @@
+{
+  "name": "@openvole/paw-ollama",
+  "version": "0.1.0",
+  "description": "Brain Paw powered by Ollama for local LLM inference",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ollama": "^0.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "@openvole/paw-sdk": "file:../../../openvole/src/paw-sdk"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist",
+    "vole-paw.json"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openvole/pawhub",
+    "directory": "paws/paw-ollama"
+  },
+  "keywords": [
+    "openvole",
+    "paw",
+    "ollama",
+    "brain",
+    "llm"
+  ],
+  "peerDependencies": {
+    "@openvole/paw-sdk": "^0.1.0"
+  }
+}

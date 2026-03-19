@@ -1,0 +1,21 @@
+{
+  "name": "@openvole/paw-memory",
+  "version": "0.1.0",
+  "description": "Persistent memory — markdown-based long-term and daily memory",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "memory_read", "description": "Read a memory file (MEMORY.md or a daily log)" },
+    { "name": "memory_write", "description": "Write or append to a memory file" },
+    { "name": "memory_search", "description": "Search across all memory files for relevant content" },
+    { "name": "memory_list", "description": "List all memory files with dates" }
+  ],
+  "permissions": {
+    "network": [],
+    "listen": [],
+    "filesystem": [],
+    "env": ["VOLE_MEMORY_DIR"]
+  }
+}

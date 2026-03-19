@@ -1,0 +1,46 @@
+{
+  "name": "@openvole/paw-memory",
+  "version": "0.1.0",
+  "description": "Persistent memory Paw for OpenVole — markdown-based long-term and daily memory",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "@openvole/paw-sdk": "file:../../../openvole/src/paw-sdk"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist",
+    "vole-paw.json"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openvole/pawhub",
+    "directory": "paws/paw-memory"
+  },
+  "keywords": [
+    "openvole",
+    "paw",
+    "memory",
+    "persistence"
+  ],
+  "peerDependencies": {
+    "@openvole/paw-sdk": "^0.1.0"
+  }
+}
