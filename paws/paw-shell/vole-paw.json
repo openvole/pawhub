@@ -1,0 +1,33 @@
+{
+  "name": "@openvole/paw-shell",
+  "version": "0.1.0",
+  "description": "Paw for executing shell commands with safety restrictions",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    {
+      "name": "shell_exec",
+      "description": "Run a shell command synchronously and return its output"
+    },
+    {
+      "name": "shell_exec_background",
+      "description": "Run a shell command in the background and return a process ID"
+    },
+    {
+      "name": "shell_status",
+      "description": "Check the status of a background process by its process ID"
+    },
+    {
+      "name": "shell_kill",
+      "description": "Kill a background process by its process ID"
+    }
+  ],
+  "permissions": {
+    "network": [],
+    "listen": [],
+    "filesystem": ["/app/workspace"],
+    "env": ["VOLE_SHELL_ALLOWED_DIRS"]
+  }
+}

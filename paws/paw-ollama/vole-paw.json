@@ -1,0 +1,16 @@
+{
+  "name": "@openvole/paw-ollama",
+  "version": "0.1.0",
+  "description": "Brain Paw powered by Ollama for local LLM inference",
+  "entry": "./dist/index.js",
+  "brain": true,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [],
+  "permissions": {
+    "network": ["127.0.0.1"],
+    "listen": [],
+    "filesystem": [],
+    "env": ["OLLAMA_MODEL", "OLLAMA_HOST"]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@openvole/paw-browser",
+  "version": "0.1.0",
+  "description": "Browser automation Paw using Puppeteer for web browsing, interaction, and screenshots",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    {
+      "name": "browser_navigate",
+      "description": "Navigate to a URL in the browser. Returns the page URL and title after loading."
+    },
+    {
+      "name": "browser_click",
+      "description": "Click an element on the page by CSS selector. Waits for the element and any triggered navigation."
+    },
+    {
+      "name": "browser_type",
+      "description": "Type text into an input element identified by CSS selector."
+    },
+    {
+      "name": "browser_screenshot",
+      "description": "Take a full-page screenshot of the current page. Returns a base64-encoded PNG."
+    },
+    {
+      "name": "browser_content",
+      "description": "Get the page text content and a simplified accessibility tree of interactive elements (links, buttons, inputs)."
+    },
+    {
+      "name": "browser_evaluate",
+      "description": "Run arbitrary JavaScript in the page context and return the result."
+    }
+  ],
+  "permissions": {
+    "network": ["*"],
+    "listen": [],
+    "filesystem": [],
+    "env": ["VOLE_BROWSER_HEADLESS"]
+  }
+}
