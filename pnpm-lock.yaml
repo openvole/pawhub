@@ -22,8 +22,8 @@ importers:
         version: 24.40.0(typescript@5.9.3)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: file:../../../openvole/src/paw-sdk
-        version: file:../openvole/src/paw-sdk
+        specifier: ^0.1.0
+        version: 0.1.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -37,8 +37,8 @@ importers:
   paws/paw-compact:
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: file:../../../openvole/src/paw-sdk
-        version: file:../openvole/src/paw-sdk
+        specifier: ^0.1.0
+        version: 0.1.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -59,8 +59,8 @@ importers:
         version: 3.25.76
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: file:../../../openvole/src/paw-sdk
-        version: file:../openvole/src/paw-sdk
+        specifier: ^0.1.0
+        version: 0.1.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -81,8 +81,8 @@ importers:
         version: 11.1.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: file:../../../openvole/src/paw-sdk
-        version: file:../openvole/src/paw-sdk
+        specifier: ^0.1.0
+        version: 0.1.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -100,8 +100,8 @@ importers:
         version: 1.27.1(zod@3.25.76)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: file:../../../openvole/src/paw-sdk
-        version: file:../openvole/src/paw-sdk
+        specifier: ^0.1.0
+        version: 0.1.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -115,8 +115,8 @@ importers:
   paws/paw-memory:
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: file:../../../openvole/src/paw-sdk
-        version: file:../openvole/src/paw-sdk
+        specifier: ^0.1.0
+        version: 0.1.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -134,8 +134,8 @@ importers:
         version: 0.5.18
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: file:../../../openvole/src/paw-sdk
-        version: file:../openvole/src/paw-sdk
+        specifier: ^0.1.0
+        version: 0.1.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -149,8 +149,8 @@ importers:
   paws/paw-session:
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: file:../../../openvole/src/paw-sdk
-        version: file:../openvole/src/paw-sdk
+        specifier: ^0.1.0
+        version: 0.1.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -168,8 +168,8 @@ importers:
         version: 9.6.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: file:../../../openvole/src/paw-sdk
-        version: file:../openvole/src/paw-sdk
+        specifier: ^0.1.0
+        version: 0.1.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -187,8 +187,8 @@ importers:
         version: 1.41.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: file:../../../openvole/src/paw-sdk
-        version: file:../openvole/src/paw-sdk
+        specifier: ^0.1.0
+        version: 0.1.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -458,8 +458,8 @@ packages:
       '@cfworker/json-schema':
         optional: true
 
-  '@openvole/paw-sdk@file:../openvole/src/paw-sdk':
-    resolution: {directory: ../openvole/src/paw-sdk, type: directory}
+  '@openvole/paw-sdk@0.1.0':
+    resolution: {integrity: sha512-3iPKHrTZQrxZJu9IGeWMo9O7bVXOxyJ0hLvM5oi8+IOAtMhL0qacJyQPwst3w590u9C2QrseyBoXrVATJqr+dQ==}
     engines: {node: '>=20.0.0'}
 
   '@puppeteer/browsers@2.13.0':
@@ -1815,7 +1815,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@openvole/paw-sdk@file:../openvole/src/paw-sdk':
+  '@openvole/paw-sdk@0.1.0':
     dependencies:
       zod: 3.25.76
 
