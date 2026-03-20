@@ -157,46 +157,17 @@ When the user asks you to do something regularly, repeatedly, or on a schedule:
 	 */
 	convertTools(tools: ToolSummary[]): Tool[] {
 		return tools.map((tool) => {
-			// Extract parameter schema if available
-			const params = (tool as unknown as { parameters?: { _def?: { shape?: () => Record<string, unknown> }; shape?: Record<string, unknown> } }).parameters
-			let properties: Record<string, unknown> = {}
-			const required: string[] = []
-
-			if (params) {
-				try {
-					// Try to extract Zod schema shape
-					const shape = typeof params._def?.shape === 'function' ? params._def.shape() : params.shape
-					if (shape && typeof shape === 'object') {
-						for (const [key, val] of Object.entries(shape)) {
-							const zodField = val as { _def?: { typeName?: string; description?: string; innerType?: { _def?: { typeName?: string } } } }
-							const isOptional = zodField?._def?.typeName === 'ZodOptional' || zodField?._def?.typeName === 'ZodDefault'
-							const innerType = isOptional ? zodField?._def?.innerType?._def?.typeName : zodField?._def?.typeName
-							const description = zodField?._def?.description ?? ''
-
-							let type = 'string'
-							if (innerType === 'ZodNumber') type = 'number'
-							else if (innerType === 'ZodBoolean') type = 'boolean'
-							else if (innerType === 'ZodRecord') type = 'object'
-							else if (innerType === 'ZodEnum') type = 'string'
-
-							properties[key] = { type, description }
-							if (!isOptional) required.push(key)
-						}
-					}
-				} catch {
-					// Fall back to empty properties
-				}
-			}
+			// Parameters are pre-converted to JSON Schema by the core
+			const params = (tool as { parameters?: Record<string, unknown> }).parameters
 
 			return {
 				type: 'function',
 				function: {
 					name: tool.name,
 					description: tool.description,
-					parameters: {
+					parameters: params ?? {
 						type: 'object',
-						properties,
-						...(required.length > 0 ? { required } : {}),
+						properties: {},
 					},
 				},
 			}
