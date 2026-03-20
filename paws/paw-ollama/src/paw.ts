@@ -1,7 +1,36 @@
+import * as fs from 'node:fs/promises'
+import * as path from 'node:path'
 import type { PawDefinition, AgentContext, AgentPlan } from '@openvole/paw-sdk'
 import { OllamaClient } from './ollama.js'
 
 let client: OllamaClient | undefined
+
+/** Cached identity files — loaded once on startup */
+let identityContext: string | undefined
+
+/** Load identity files from .openvole/ (AGENT.md, USER.md, SOUL.md) */
+async function loadIdentityFiles(): Promise<string> {
+	const openvoleDir = path.resolve(process.cwd(), '.openvole')
+	const files = [
+		{ name: 'SOUL.md', section: 'Agent Identity' },
+		{ name: 'USER.md', section: 'User Profile' },
+		{ name: 'AGENT.md', section: 'Agent Rules' },
+	]
+
+	const parts: string[] = []
+	for (const file of files) {
+		try {
+			const content = await fs.readFile(path.join(openvoleDir, file.name), 'utf-8')
+			if (content.trim()) {
+				parts.push(`## ${file.section}\n${content.trim()}`)
+			}
+		} catch {
+			// File doesn't exist — skip
+		}
+	}
+
+	return parts.join('\n\n')
+}
 
 function getClient(): OllamaClient {
 	if (!client) {
@@ -26,6 +55,8 @@ export const paw: PawDefinition = {
 			const systemPrompt = ollamaClient.buildSystemPrompt(
 				context.activeSkills,
 				context.availableTools,
+				context.metadata,
+				identityContext,
 			)
 
 			const response = await ollamaClient.chat(
@@ -40,6 +71,10 @@ export const paw: PawDefinition = {
 			)
 
 			const actions = ollamaClient.parseToolCalls(response)
+
+			console.log(
+				`[paw-ollama] response — role: ${response.message.role}, content: ${(response.message.content || '').substring(0, 100)}, tool_calls: ${response.message.tool_calls?.length ?? 0}, actions: ${actions.length}`,
+			)
 
 			if (actions.length > 0) {
 				return {
@@ -60,8 +95,15 @@ export const paw: PawDefinition = {
 			const durationMs = Date.now() - start
 			const message =
 				error instanceof Error ? error.message : String(error)
+			const stack =
+				error instanceof Error ? error.stack : undefined
 			console.error(
 				`[paw-ollama] think failed after ${durationMs}ms: ${message}`,
+			)
+			if (stack) console.error(`[paw-ollama] stack: ${stack}`)
+			// Log request details for debugging
+			console.error(
+				`[paw-ollama] model: ${ollamaClient.getModel()}, host: ${process.env.OLLAMA_HOST || 'http://localhost:11434'}, messages: ${context.messages.length}, tools: ${context.availableTools.length}`,
 			)
 
 			// Check for connection errors (Ollama not running)
@@ -82,6 +124,10 @@ export const paw: PawDefinition = {
 
 	async onLoad() {
 		const ollamaClient = getClient()
+		identityContext = await loadIdentityFiles()
+		if (identityContext) {
+			console.log('[paw-ollama] loaded identity files (SOUL.md, USER.md, AGENT.md)')
+		}
 		console.log(
 			`[paw-ollama] loaded — model: ${ollamaClient.getModel()}, host: ${process.env.OLLAMA_HOST || 'http://localhost:11434'}`,
 		)
