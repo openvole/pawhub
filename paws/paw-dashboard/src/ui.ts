@@ -308,7 +308,7 @@ export function getDashboardHtml(wsPort: number): string {
       <div class="panel-header"><h2>Schedules <span class="count" id="schedules-count">0</span></h2></div>
       <div class="panel-body">
         <table id="schedules-table">
-          <thead><tr><th>ID</th><th>Input</th><th>Interval</th></tr></thead>
+          <thead><tr><th>ID</th><th>Input</th><th>Cron</th><th>Next Run</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -457,12 +457,16 @@ function renderSchedules(schedules) {
   document.getElementById('schedules-count').textContent = schedules.length;
   const tbody = document.querySelector('#schedules-table tbody');
   tbody.innerHTML = schedules.length === 0
-    ? '<tr><td colspan="3" class="empty">No active schedules</td></tr>'
-    : schedules.map(s => '<tr>'
-      + '<td>' + esc(s.id) + '</td>'
-      + '<td title="' + esc(s.input) + '">' + esc((s.input || '').substring(0, 40)) + '</td>'
-      + '<td><span class="tag tag-yellow">' + s.intervalMinutes + 'm</span></td>'
-      + '</tr>').join('');
+    ? '<tr><td colspan="4" class="empty">No active schedules</td></tr>'
+    : schedules.map(s => {
+      const nextRun = s.nextRun ? new Date(s.nextRun).toLocaleString() : '\\u2014';
+      return '<tr>'
+        + '<td>' + esc(s.id) + '</td>'
+        + '<td title="' + esc(s.input) + '">' + esc((s.input || '').substring(0, 40)) + '</td>'
+        + '<td><span class="tag tag-yellow">' + esc(s.cron) + '</span></td>'
+        + '<td>' + nextRun + '</td>'
+        + '</tr>';
+    }).join('');
 }
 
 function statusClass(s) {
