@@ -12,6 +12,22 @@ export class BrowserManager {
 		const headlessEnv = process.env.VOLE_BROWSER_HEADLESS
 		const headless = headlessEnv === 'false' ? false : true
 
+		// Auto-install Chrome if not found
+		try {
+			const { executablePath } = await import('puppeteer')
+			executablePath()
+		} catch {
+			console.log('[paw-browser] Chrome not found, installing...')
+			const { execSync } = await import('node:child_process')
+			try {
+				execSync('npx puppeteer browsers install chrome', { stdio: 'inherit' })
+				console.log('[paw-browser] Chrome installed successfully')
+			} catch (err) {
+				console.error('[paw-browser] Failed to auto-install Chrome. Run manually: npx puppeteer browsers install chrome')
+				throw err
+			}
+		}
+
 		this.browser = await puppeteer.launch({
 			headless,
 			args: [
