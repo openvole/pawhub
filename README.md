@@ -63,6 +63,28 @@ Then add to `vole.config.json`:
 }
 ```
 
+## How Paws Work
+
+When a Paw is loaded, its tools are registered into the **Tool Registry** — a flat list that the Brain sees alongside core tools and MCP tools. The Brain calls them by name without knowing which Paw provides them.
+
+```
+vole> summarize my unread emails
+
+Brain sees:
+  email_search (paw-email) → searches inbox
+  email_read (paw-email) → reads each email
+  browser_navigate (paw-browser) → if needed
+  memory_write (paw-memory) → saves summary
+```
+
+You can also call any registered tool directly from the CLI — no Brain involved:
+
+```bash
+npx vole tool call email_search '{"query":"is:unread","limit":5}'
+npx vole tool call github_create_issue '{"repo":"myorg/myrepo","title":"Bug","body":"..."}'
+npx vole tool call calendar_list_events '{"days":7}'
+```
+
 ## Building a Paw
 
 A Paw is a Node.js package that provides tools to the agent. See the [Paw Development Guide](https://github.com/openvole/openvole) in the main repo.
