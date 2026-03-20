@@ -135,11 +135,15 @@ export const paw: PawDefinition = {
 		async onObserve(result) {
 			if (!store || !currentSessionId) return
 
-			const content = result.success
+			// Record tool results (truncated to keep transcript manageable)
+			const rawContent = result.success
 				? typeof result.output === 'string'
 					? result.output
 					: JSON.stringify(result.output)
 				: result.error?.message ?? 'error'
+			const content = rawContent.length > 500
+				? rawContent.substring(0, 500) + '... [truncated]'
+				: rawContent
 
 			await store.appendMessage(
 				currentSessionId,
@@ -150,9 +154,25 @@ export const paw: PawDefinition = {
 	},
 
 	async onLoad() {
+		// Subscribe to task completion to record brain responses in session
+		const { createIpcTransport } = await import('@openvole/paw-sdk')
+		const busTransport = createIpcTransport()
+		busTransport.subscribe(['task:completed'])
+		busTransport.onBusEvent(async (event, data) => {
+			if (event === 'task:completed' && store && currentSessionId) {
+				const taskData = data as { result?: string }
+				if (taskData.result) {
+					const content = taskData.result.length > 1000
+						? taskData.result.substring(0, 1000) + '... [truncated]'
+						: taskData.result
+					await store.appendMessage(currentSessionId, 'brain', content)
+				}
+			}
+		})
+
 		const sessionDir =
 			process.env.VOLE_SESSION_DIR ||
-			new URL('../../../../sessions', import.meta.url).pathname
+			new URL('../../../sessions', import.meta.url).pathname
 		store = new SessionStore(sessionDir)
 		await store.init()
 		console.log(`[paw-session] loaded — session dir: ${sessionDir}`)

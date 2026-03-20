@@ -138,7 +138,7 @@ export const paw: PawDefinition = {
 	async onLoad() {
 		const memoryDir =
 			process.env.VOLE_MEMORY_DIR ||
-			new URL('../../memory', import.meta.url).pathname
+			new URL('../../../memory', import.meta.url).pathname
 		store = new MemoryStore(memoryDir)
 		await store.init()
 		console.log(`[paw-memory] loaded — memory dir: ${memoryDir}`)
