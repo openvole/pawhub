@@ -31,7 +31,8 @@
   },
   "files": [
     "dist",
-    "vole-paw.json"
+    "vole-paw.json",
+    "README.md"
   ],
   "license": "MIT",
   "repository": {
