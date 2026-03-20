@@ -1,0 +1,40 @@
+{
+  "name": "@openvole/paw-email",
+  "version": "0.1.0",
+  "description": "Paw for sending and reading emails via SMTP and IMAP",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    {
+      "name": "email_send",
+      "description": "Send an email via SMTP"
+    },
+    {
+      "name": "email_search",
+      "description": "Search emails in a mailbox folder"
+    },
+    {
+      "name": "email_read",
+      "description": "Read a specific email by its message ID"
+    },
+    {
+      "name": "email_list_folders",
+      "description": "List available mailbox folders"
+    }
+  ],
+  "permissions": {
+    "network": ["*"],
+    "listen": [],
+    "filesystem": [],
+    "env": [
+      "EMAIL_HOST",
+      "EMAIL_PORT",
+      "EMAIL_USER",
+      "EMAIL_PASS",
+      "EMAIL_IMAP_HOST",
+      "EMAIL_IMAP_PORT"
+    ]
+  }
+}

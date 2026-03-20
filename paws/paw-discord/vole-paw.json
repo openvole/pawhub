@@ -1,0 +1,20 @@
+{
+  "name": "@openvole/paw-discord",
+  "version": "0.1.0",
+  "description": "Discord bot channel for OpenVole",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "discord_send", "description": "Send a message to a Discord channel" },
+    { "name": "discord_reply", "description": "Reply to a message in Discord" },
+    { "name": "discord_get_channel", "description": "Get information about a Discord channel" }
+  ],
+  "permissions": {
+    "network": ["discord.com", "gateway.discord.gg"],
+    "listen": [],
+    "filesystem": [],
+    "env": ["DISCORD_BOT_TOKEN", "DISCORD_ALLOW_FROM"]
+  }
+}

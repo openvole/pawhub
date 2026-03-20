@@ -1,0 +1,51 @@
+{
+  "name": "@openvole/paw-openai",
+  "version": "0.1.0",
+  "description": "Brain Paw powered by OpenAI",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "openai": "^4.73.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "@openvole/paw-sdk": "^0.1.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist",
+    "vole-paw.json"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openvole/pawhub",
+    "directory": "paws/paw-openai"
+  },
+  "keywords": [
+    "openvole",
+    "paw",
+    "openai",
+    "gpt",
+    "brain",
+    "llm"
+  ],
+  "peerDependencies": {
+    "@openvole/paw-sdk": "^0.1.0"
+  }
+}

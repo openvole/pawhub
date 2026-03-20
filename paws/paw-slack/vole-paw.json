@@ -1,0 +1,20 @@
+{
+  "name": "@openvole/paw-slack",
+  "version": "0.1.0",
+  "description": "Slack bot channel for OpenVole",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "slack_send", "description": "Send a message to a Slack channel" },
+    { "name": "slack_reply", "description": "Reply in a Slack thread" },
+    { "name": "slack_get_channel", "description": "Get information about a Slack channel" }
+  ],
+  "permissions": {
+    "network": ["slack.com"],
+    "listen": [3002],
+    "filesystem": [],
+    "env": ["SLACK_BOT_TOKEN", "SLACK_SIGNING_SECRET", "SLACK_APP_TOKEN", "SLACK_ALLOW_FROM"]
+  }
+}

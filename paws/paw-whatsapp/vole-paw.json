@@ -1,0 +1,19 @@
+{
+  "name": "@openvole/paw-whatsapp",
+  "version": "0.1.0",
+  "description": "WhatsApp messaging channel for OpenVole",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "whatsapp_send", "description": "Send a message via WhatsApp" },
+    { "name": "whatsapp_get_chat", "description": "Get information about a WhatsApp chat" }
+  ],
+  "permissions": {
+    "network": ["web.whatsapp.com", "*.whatsapp.net"],
+    "listen": [],
+    "filesystem": [],
+    "env": ["WHATSAPP_SESSION_DATA", "WHATSAPP_ALLOW_FROM"]
+  }
+}
