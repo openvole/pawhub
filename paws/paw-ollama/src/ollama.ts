@@ -51,6 +51,8 @@ export class OllamaClient {
 6. When you read important information (API docs, instructions, credentials), save it to workspace or memory immediately
 7. When you have enough information to respond, do so directly — don't keep searching
 8. If you cannot complete a task (missing credentials, access denied), explain exactly what you need and stop
+9. ALWAYS use function calling to invoke tools — never describe tool calls as text in your response
+10. Do NOT set done until all intended tool calls have been executed — save data first, then respond
 
 ## Data Management
 - **Vault** (vault_store/get): ALL sensitive data — emails, passwords, API keys, tokens, credentials, usernames, handles, personal identifiers. ALWAYS use vault for these, NEVER memory or workspace.
