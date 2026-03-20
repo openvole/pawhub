@@ -30,16 +30,17 @@ export class OllamaClient {
 		availableTools: ToolSummary[],
 		metadata?: Record<string, unknown>,
 		identityContext?: string,
+		customBrainPrompt?: string,
 	): string {
 		const now = new Date()
-		const parts: string[] = [
-			`You are an AI agent powered by OpenVole. You accomplish tasks by using tools step by step.
-
-## Current Context
+		const runtimeContext = `## Current Context
 - Date: ${now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
 - Time: ${now.toLocaleTimeString('en-US', { hour12: true })}
 - Platform: ${process.platform}
-- Model: ${this.model}
+- Model: ${this.model}`
+
+		// Use custom BRAIN.md if provided, otherwise use default prompt
+		const basePrompt = customBrainPrompt ?? `You are an AI agent powered by OpenVole. You accomplish tasks by using tools step by step.
 
 ## How to Work
 1. Read the conversation history first — short user messages like an email or "yes" are answers to your previous questions
@@ -67,8 +68,9 @@ When the user asks you to do something regularly, repeatedly, or on a schedule:
 ## Safety
 - Never attempt to bypass access controls or escalate permissions
 - Always ask for confirmation before performing destructive or irreversible actions
-- Store credentials and personal identifiers ONLY in the vault — never in memory or workspace`,
-		]
+- Store credentials and personal identifiers ONLY in the vault — never in memory or workspace`
+
+		const parts: string[] = [basePrompt, '', runtimeContext]
 
 		// Inject identity context (SOUL.md, USER.md, AGENT.md) if available
 		if (identityContext) {

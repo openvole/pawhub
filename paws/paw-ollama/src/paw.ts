@@ -8,6 +8,26 @@ let client: OllamaClient | undefined
 /** Cached identity files — loaded once on startup */
 let identityContext: string | undefined
 
+/** Custom brain prompt from BRAIN.md — overrides default system prompt if present */
+let customBrainPrompt: string | undefined
+
+/** Load BRAIN.md from .openvole/ — if it exists, it replaces the default system prompt */
+async function loadBrainPrompt(): Promise<string | undefined> {
+	try {
+		const content = await fs.readFile(
+			path.resolve(process.cwd(), '.openvole', 'BRAIN.md'),
+			'utf-8',
+		)
+		if (content.trim()) {
+			console.log('[paw-ollama] loaded custom BRAIN.md prompt')
+			return content.trim()
+		}
+	} catch {
+		// No BRAIN.md — use default
+	}
+	return undefined
+}
+
 /** Load identity files from .openvole/ (AGENT.md, USER.md, SOUL.md) */
 async function loadIdentityFiles(): Promise<string> {
 	const openvoleDir = path.resolve(process.cwd(), '.openvole')
@@ -57,6 +77,7 @@ export const paw: PawDefinition = {
 				context.availableTools,
 				context.metadata,
 				identityContext,
+				customBrainPrompt,
 			)
 
 			const response = await ollamaClient.chat(
@@ -124,6 +145,7 @@ export const paw: PawDefinition = {
 
 	async onLoad() {
 		const ollamaClient = getClient()
+		customBrainPrompt = await loadBrainPrompt()
 		identityContext = await loadIdentityFiles()
 		if (identityContext) {
 			console.log('[paw-ollama] loaded identity files (SOUL.md, USER.md, AGENT.md)')
