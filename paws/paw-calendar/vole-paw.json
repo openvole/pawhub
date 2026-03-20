@@ -1,0 +1,38 @@
+{
+  "name": "@openvole/paw-calendar",
+  "version": "0.1.0",
+  "description": "Paw for managing Google Calendar events",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    {
+      "name": "calendar_list_events",
+      "description": "List upcoming events from Google Calendar"
+    },
+    {
+      "name": "calendar_create_event",
+      "description": "Create a new event on Google Calendar"
+    },
+    {
+      "name": "calendar_update_event",
+      "description": "Update an existing event on Google Calendar"
+    },
+    {
+      "name": "calendar_delete_event",
+      "description": "Delete an event from Google Calendar"
+    }
+  ],
+  "permissions": {
+    "network": ["www.googleapis.com", "oauth2.googleapis.com"],
+    "listen": [],
+    "filesystem": [],
+    "env": [
+      "GOOGLE_CLIENT_ID",
+      "GOOGLE_CLIENT_SECRET",
+      "GOOGLE_REFRESH_TOKEN",
+      "GOOGLE_CALENDAR_ID"
+    ]
+  }
+}

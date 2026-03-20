@@ -1,0 +1,31 @@
+{
+  "name": "@openvole/paw-calendar",
+  "version": "0.1.0",
+  "description": "Paw for managing Google Calendar events",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "googleapis": "^140.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "@openvole/paw-sdk": "^0.1.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist",
+    "vole-paw.json"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@openvole/paw-sdk": "^0.1.0"
+  }
+}

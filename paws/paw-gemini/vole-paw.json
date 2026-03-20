@@ -1,0 +1,16 @@
+{
+  "name": "@openvole/paw-gemini",
+  "version": "0.1.0",
+  "description": "Brain Paw powered by Google Gemini",
+  "entry": "./dist/index.js",
+  "brain": true,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [],
+  "permissions": {
+    "network": ["generativelanguage.googleapis.com"],
+    "listen": [],
+    "filesystem": [],
+    "env": ["GEMINI_API_KEY", "GEMINI_MODEL"]
+  }
+}

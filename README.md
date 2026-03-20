@@ -6,18 +6,44 @@
 
 ## Paws
 
+### Brain Paws
+
 | Package | Description | npm |
 |---------|-------------|-----|
-| `@openvole/paw-ollama` | Brain Paw — local LLM via Ollama | [![npm](https://img.shields.io/npm/v/@openvole/paw-ollama)](https://www.npmjs.com/package/@openvole/paw-ollama) |
+| `@openvole/paw-ollama` | Local LLM via Ollama | [![npm](https://img.shields.io/npm/v/@openvole/paw-ollama)](https://www.npmjs.com/package/@openvole/paw-ollama) |
+| `@openvole/paw-claude` | Anthropic Claude | [![npm](https://img.shields.io/npm/v/@openvole/paw-claude)](https://www.npmjs.com/package/@openvole/paw-claude) |
+| `@openvole/paw-openai` | OpenAI GPT | [![npm](https://img.shields.io/npm/v/@openvole/paw-openai)](https://www.npmjs.com/package/@openvole/paw-openai) |
+| `@openvole/paw-gemini` | Google Gemini | [![npm](https://img.shields.io/npm/v/@openvole/paw-gemini)](https://www.npmjs.com/package/@openvole/paw-gemini) |
+
+### Channel Paws
+
+| Package | Description | npm |
+|---------|-------------|-----|
+| `@openvole/paw-telegram` | Telegram bot | [![npm](https://img.shields.io/npm/v/@openvole/paw-telegram)](https://www.npmjs.com/package/@openvole/paw-telegram) |
+| `@openvole/paw-slack` | Slack bot | [![npm](https://img.shields.io/npm/v/@openvole/paw-slack)](https://www.npmjs.com/package/@openvole/paw-slack) |
+| `@openvole/paw-discord` | Discord bot | [![npm](https://img.shields.io/npm/v/@openvole/paw-discord)](https://www.npmjs.com/package/@openvole/paw-discord) |
+| `@openvole/paw-whatsapp` | WhatsApp | [![npm](https://img.shields.io/npm/v/@openvole/paw-whatsapp)](https://www.npmjs.com/package/@openvole/paw-whatsapp) |
+
+### Tool Paws
+
+| Package | Description | npm |
+|---------|-------------|-----|
+| `@openvole/paw-browser` | Browser automation (Puppeteer) | [![npm](https://img.shields.io/npm/v/@openvole/paw-browser)](https://www.npmjs.com/package/@openvole/paw-browser) |
+| `@openvole/paw-shell` | Shell command execution | [![npm](https://img.shields.io/npm/v/@openvole/paw-shell)](https://www.npmjs.com/package/@openvole/paw-shell) |
+| `@openvole/paw-filesystem` | File system operations | [![npm](https://img.shields.io/npm/v/@openvole/paw-filesystem)](https://www.npmjs.com/package/@openvole/paw-filesystem) |
+| `@openvole/paw-mcp` | MCP server bridge (1000+ tools) | [![npm](https://img.shields.io/npm/v/@openvole/paw-mcp)](https://www.npmjs.com/package/@openvole/paw-mcp) |
+| `@openvole/paw-email` | Email (SMTP/IMAP) | [![npm](https://img.shields.io/npm/v/@openvole/paw-email)](https://www.npmjs.com/package/@openvole/paw-email) |
+| `@openvole/paw-github` | GitHub API | [![npm](https://img.shields.io/npm/v/@openvole/paw-github)](https://www.npmjs.com/package/@openvole/paw-github) |
+| `@openvole/paw-calendar` | Google Calendar | [![npm](https://img.shields.io/npm/v/@openvole/paw-calendar)](https://www.npmjs.com/package/@openvole/paw-calendar) |
+
+### Infrastructure Paws
+
+| Package | Description | npm |
+|---------|-------------|-----|
 | `@openvole/paw-memory` | Persistent memory with source isolation | [![npm](https://img.shields.io/npm/v/@openvole/paw-memory)](https://www.npmjs.com/package/@openvole/paw-memory) |
 | `@openvole/paw-session` | Session/conversation management | [![npm](https://img.shields.io/npm/v/@openvole/paw-session)](https://www.npmjs.com/package/@openvole/paw-session) |
 | `@openvole/paw-compact` | Context compaction (in-process) | [![npm](https://img.shields.io/npm/v/@openvole/paw-compact)](https://www.npmjs.com/package/@openvole/paw-compact) |
 | `@openvole/paw-dashboard` | Real-time web dashboard | [![npm](https://img.shields.io/npm/v/@openvole/paw-dashboard)](https://www.npmjs.com/package/@openvole/paw-dashboard) |
-| `@openvole/paw-telegram` | Telegram bot channel | [![npm](https://img.shields.io/npm/v/@openvole/paw-telegram)](https://www.npmjs.com/package/@openvole/paw-telegram) |
-| `@openvole/paw-browser` | Browser automation (Puppeteer) | [![npm](https://img.shields.io/npm/v/@openvole/paw-browser)](https://www.npmjs.com/package/@openvole/paw-browser) |
-| `@openvole/paw-mcp` | MCP server bridge (1000+ tools) | [![npm](https://img.shields.io/npm/v/@openvole/paw-mcp)](https://www.npmjs.com/package/@openvole/paw-mcp) |
-| `@openvole/paw-shell` | Shell command execution | [![npm](https://img.shields.io/npm/v/@openvole/paw-shell)](https://www.npmjs.com/package/@openvole/paw-shell) |
-| `@openvole/paw-filesystem` | File system operations | [![npm](https://img.shields.io/npm/v/@openvole/paw-filesystem)](https://www.npmjs.com/package/@openvole/paw-filesystem) |
 
 ## Install
 
