@@ -47,22 +47,29 @@ export const paw: PawDefinition = {
 				content: z.string().describe('The content to write or append'),
 				mode: z
 					.enum(['overwrite', 'append'])
-					.default('append')
-					.describe('"overwrite" replaces the file, "append" adds to the end with timestamp'),
+					.optional()
+					.describe('"overwrite" replaces the file, "append" adds to the end with timestamp. Default: append.'),
+				append: z
+					.boolean()
+					.optional()
+					.describe('Alias for mode — if true, appends (default behavior)'),
 				source: z
 					.enum(['user', 'paw', 'heartbeat', 'schedule', 'shared'])
 					.optional()
 					.describe('Memory source scope. Defaults to the current task source.'),
 			}),
 			async execute(params) {
-				const { file, content, mode, source } = params as {
+				const p = params as {
 					file: string
 					content: string
-					mode: 'overwrite' | 'append'
+					mode?: 'overwrite' | 'append'
+					append?: boolean
 					source?: MemorySource
 				}
 				if (!store) throw new Error('Memory store not initialized')
-				await store.write(file, content, mode, source ?? currentSource)
+				// Accept both "mode" and "append" params
+				const mode = p.mode ?? (p.append === false ? 'overwrite' : 'append')
+				await store.write(p.file, p.content, mode, p.source ?? currentSource)
 				return { ok: true }
 			},
 		},
