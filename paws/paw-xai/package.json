@@ -1,0 +1,45 @@
+{
+  "name": "@openvole/paw-xai",
+  "version": "0.1.0",
+  "description": "Brain Paw powered by xAI Grok models",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "openai": "^4.73.0"
+  },
+  "peerDependencies": {
+    "@openvole/paw-sdk": "^0.2.0"
+  },
+  "devDependencies": {
+    "@openvole/paw-sdk": "^0.2.0",
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist",
+    "vole-paw.json",
+    "README.md"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openvole/pawhub",
+    "directory": "paws/paw-xai"
+  },
+  "keywords": ["openvole", "paw", "xai", "grok", "brain", "llm"]
+}

@@ -376,6 +376,25 @@ importers:
         specifier: ^5.6.0
         version: 5.9.3
 
+  paws/paw-xai:
+    dependencies:
+      openai:
+        specifier: ^4.73.0
+        version: 4.104.0(ws@8.19.0)(zod@3.25.76)
+    devDependencies:
+      '@openvole/paw-sdk':
+        specifier: ^0.2.0
+        version: 0.2.0
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.15
+      tsup:
+        specifier: ^8.3.0
+        version: 8.5.1(typescript@5.9.3)
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+
 packages:
 
   '@anthropic-ai/sdk@0.39.0':
@@ -730,6 +749,10 @@ packages:
 
   '@openvole/paw-sdk@0.1.0':
     resolution: {integrity: sha512-3iPKHrTZQrxZJu9IGeWMo9O7bVXOxyJ0hLvM5oi8+IOAtMhL0qacJyQPwst3w590u9C2QrseyBoXrVATJqr+dQ==}
+    engines: {node: '>=20.0.0'}
+
+  '@openvole/paw-sdk@0.2.0':
+    resolution: {integrity: sha512-Y1Ovmgvd4Vk7g1lhpZnmGZmE7jMkXmecW428fUloJUkbAGqybUm4yz63Q0+h8Aeix6UEoT3n6VV+KnDEwnkOEA==}
     engines: {node: '>=20.0.0'}
 
   '@pedroslopez/moduleraid@5.0.2':
@@ -2845,6 +2868,10 @@ snapshots:
       '@octokit/openapi-types': 25.1.0
 
   '@openvole/paw-sdk@0.1.0':
+    dependencies:
+      zod: 3.25.76
+
+  '@openvole/paw-sdk@0.2.0':
     dependencies:
       zod: 3.25.76
 
