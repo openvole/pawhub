@@ -22,20 +22,54 @@ export function createDashboardServer(
 ): DashboardServer {
 	const clients = new Set<WebSocket>()
 
-	// Resolve logo path relative to project root
-	const logoPath = path.resolve(process.cwd(), 'assets', 'logo.jpg')
+	// Resolve assets directory relative to project root
+	const assetsDir = path.resolve(process.cwd(), 'assets')
+
+	const MIME_TYPES: Record<string, string> = {
+		'.png': 'image/png',
+		'.jpg': 'image/jpeg',
+		'.jpeg': 'image/jpeg',
+		'.ico': 'image/x-icon',
+		'.svg': 'image/svg+xml',
+	}
 
 	// HTTP server — serves the dashboard HTML and static assets
 	const httpServer = http.createServer((req, res) => {
-		if (req.url === '/logo.jpg') {
+		// Serve favicon
+		if (req.url === '/favicon.ico') {
 			try {
-				const logo = fs.readFileSync(logoPath)
+				const icon = fs.readFileSync(path.join(assetsDir, 'vole.ico'))
 				res.writeHead(200, {
-					'Content-Type': 'image/jpeg',
+					'Content-Type': 'image/x-icon',
+					'Cache-Control': 'public, max-age=86400',
+				})
+				res.end(icon)
+			} catch {
+				res.writeHead(404)
+				res.end()
+			}
+			return
+		}
+
+		// Serve static assets from /assets/*
+		if (req.url?.startsWith('/assets/')) {
+			const fileName = path.basename(req.url)
+			const filePath = path.resolve(assetsDir, fileName)
+			// Prevent path traversal
+			if (!filePath.startsWith(assetsDir)) {
+				res.writeHead(403)
+				res.end()
+				return
+			}
+			try {
+				const file = fs.readFileSync(filePath)
+				const ext = path.extname(fileName).toLowerCase()
+				res.writeHead(200, {
+					'Content-Type': MIME_TYPES[ext] ?? 'application/octet-stream',
 					'Cache-Control': 'public, max-age=86400',
 					'X-Content-Type-Options': 'nosniff',
 				})
-				res.end(logo)
+				res.end(file)
 			} catch {
 				res.writeHead(404)
 				res.end()
