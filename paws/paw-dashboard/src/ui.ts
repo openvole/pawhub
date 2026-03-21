@@ -5,6 +5,7 @@ export function getDashboardHtml(wsPort: number): string {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
 <title>OpenVole Dashboard</title>
 <style>
   :root {
@@ -246,6 +247,7 @@ export function getDashboardHtml(wsPort: number): string {
 <body>
 <header>
   <div class="logo-group">
+    <img src="/assets/vole.png" alt="OpenVole" onerror="this.style.display='none'">
     <h1><span>Open</span>Vole</h1>
   </div>
   <div class="header-right">
