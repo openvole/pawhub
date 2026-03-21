@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-compact",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Default context compaction Paw for OpenVole — summarizes old messages to free context window",
   "type": "module",
   "main": "./dist/index.js",

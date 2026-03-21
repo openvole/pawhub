@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-github",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Paw for interacting with GitHub via the Octokit REST API",
   "type": "module",
   "main": "./dist/index.js",

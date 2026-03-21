@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-dashboard",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Web dashboard Paw for OpenVole — real-time agent monitoring",
   "type": "module",
   "main": "./dist/index.js",
