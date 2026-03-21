@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/paw.png" alt="PawHub" width="150">
+  <img src="https://raw.githubusercontent.com/openvole/pawhub/main/assets/paw.png" alt="PawHub" width="150">
 </p>
 
 <h1 align="center">PawHub</h1>
@@ -14,7 +14,7 @@
 
 ## Paws
 
-### Brain Paws
+### Brain Paws (5)
 
 | Package | Description | npm |
 |---------|-------------|-----|
@@ -22,8 +22,9 @@
 | `@openvole/paw-claude` | Anthropic Claude | [![npm](https://img.shields.io/npm/v/@openvole/paw-claude)](https://www.npmjs.com/package/@openvole/paw-claude) |
 | `@openvole/paw-openai` | OpenAI GPT | [![npm](https://img.shields.io/npm/v/@openvole/paw-openai)](https://www.npmjs.com/package/@openvole/paw-openai) |
 | `@openvole/paw-gemini` | Google Gemini | [![npm](https://img.shields.io/npm/v/@openvole/paw-gemini)](https://www.npmjs.com/package/@openvole/paw-gemini) |
+| `@openvole/paw-xai` | xAI Grok | [![npm](https://img.shields.io/npm/v/@openvole/paw-xai)](https://www.npmjs.com/package/@openvole/paw-xai) |
 
-### Channel Paws
+### Channel Paws (4)
 
 | Package | Description | npm |
 |---------|-------------|-----|
@@ -32,7 +33,7 @@
 | `@openvole/paw-discord` | Discord bot | [![npm](https://img.shields.io/npm/v/@openvole/paw-discord)](https://www.npmjs.com/package/@openvole/paw-discord) |
 | `@openvole/paw-whatsapp` | WhatsApp | [![npm](https://img.shields.io/npm/v/@openvole/paw-whatsapp)](https://www.npmjs.com/package/@openvole/paw-whatsapp) |
 
-### Tool Paws
+### Tool Paws (8)
 
 | Package | Description | npm |
 |---------|-------------|-----|
@@ -41,6 +42,7 @@
 | `@openvole/paw-filesystem` | File system operations | [![npm](https://img.shields.io/npm/v/@openvole/paw-filesystem)](https://www.npmjs.com/package/@openvole/paw-filesystem) |
 | `@openvole/paw-mcp` | MCP server bridge (1000+ tools) | [![npm](https://img.shields.io/npm/v/@openvole/paw-mcp)](https://www.npmjs.com/package/@openvole/paw-mcp) |
 | `@openvole/paw-email` | Email (SMTP/IMAP) | [![npm](https://img.shields.io/npm/v/@openvole/paw-email)](https://www.npmjs.com/package/@openvole/paw-email) |
+| `@openvole/paw-resend` | Email via Resend API | [![npm](https://img.shields.io/npm/v/@openvole/paw-resend)](https://www.npmjs.com/package/@openvole/paw-resend) |
 | `@openvole/paw-github` | GitHub API | [![npm](https://img.shields.io/npm/v/@openvole/paw-github)](https://www.npmjs.com/package/@openvole/paw-github) |
 | `@openvole/paw-calendar` | Google Calendar | [![npm](https://img.shields.io/npm/v/@openvole/paw-calendar)](https://www.npmjs.com/package/@openvole/paw-calendar) |
 
