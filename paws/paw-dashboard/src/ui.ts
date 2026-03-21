@@ -43,8 +43,15 @@ export function getDashboardHtml(wsPort: number): string {
   .logo-group {
     display: flex;
     align-items: center;
-    gap: 12px;
   }
+  .logo-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .logo-link:hover h1 { opacity: 0.8; }
   .logo-group img {
     width: 32px;
     height: 32px;
@@ -233,6 +240,18 @@ export function getDashboardHtml(wsPort: number): string {
   .event-line.rate-limited .name { color: var(--orange); }
   .event-line.task-failed .name { color: var(--red); }
   .empty { color: var(--text-dim); font-style: italic; font-size: 12px; padding: 8px 0; }
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 8px 16px;
+    text-align: center;
+    font-size: 11px;
+    font-family: var(--mono);
+    flex-shrink: 0;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .footer-sep { color: var(--border); margin: 0 6px; }
   @media (max-width: 1000px) {
     .grid { grid-template-columns: 1fr 1fr; }
     .panel.span-2 { grid-column: span 2; }
@@ -247,8 +266,10 @@ export function getDashboardHtml(wsPort: number): string {
 <body>
 <header>
   <div class="logo-group">
-    <img src="/assets/vole.png" alt="OpenVole" onerror="this.style.display='none'">
-    <h1><span>Open</span>Vole</h1>
+    <a href="https://github.com/openvole/openvole" target="_blank" class="logo-link">
+      <img src="/assets/vole.png" alt="OpenVole" onerror="this.style.display='none'">
+      <h1><span>Open</span>Vole</h1>
+    </a>
   </div>
   <div class="header-right">
     <div class="stats">
@@ -324,6 +345,15 @@ export function getDashboardHtml(wsPort: number): string {
     </div>
     <div class="events-body" id="event-log"></div>
   </div>
+  <footer>
+    <a href="https://github.com/openvole/openvole" target="_blank">GitHub</a>
+    <span class="footer-sep">·</span>
+    <a href="https://github.com/openvole/pawhub" target="_blank">PawHub</a>
+    <span class="footer-sep">·</span>
+    <a href="https://www.npmjs.com/package/openvole" target="_blank">npm</a>
+    <span class="footer-sep">·</span>
+    <a href="https://clawhub.ai" target="_blank">ClawHub Skills</a>
+  </footer>
 </div>
 
 <script>
