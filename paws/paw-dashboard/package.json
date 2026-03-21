@@ -31,6 +31,7 @@
   },
   "files": [
     "dist",
+    "assets",
     "vole-paw.json",
     "README.md"
   ],
