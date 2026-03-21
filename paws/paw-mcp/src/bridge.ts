@@ -148,24 +148,33 @@ export class McpBridge {
 }
 
 /**
- * Load MCP server configs from servers.json inside the Paw's own directory.
+ * Load MCP server configs from the local paw config directory.
  *
- * Config location: paws/paw-mcp/servers.json
+ * Resolution order:
+ *   1. .openvole/paws/paw-mcp/servers.json (user config — preferred)
+ *   2. Paw's own directory/servers.json (package default — fallback)
  */
 export async function loadMcpServerConfigs(): Promise<McpServerConfig[]> {
+	const projectRoot = process.cwd()
+	const localConfigPath = resolve(projectRoot, '.openvole', 'paws', 'paw-mcp', 'servers.json')
 	const pawRoot = resolve(import.meta.dirname ?? '.', '..')
-	const serversJsonPath = resolve(pawRoot, 'servers.json')
+	const packageConfigPath = resolve(pawRoot, 'servers.json')
 
-	try {
-		const raw = await readFile(serversJsonPath, 'utf-8')
-		const parsed = JSON.parse(raw)
-		const servers: McpServerConfig[] = Array.isArray(parsed) ? parsed : parsed.servers ?? []
-		console.log(`[paw-mcp] Loaded ${servers.length} server config(s) from ${serversJsonPath}`)
-		return servers
-	} catch {
-		console.log(`[paw-mcp] No servers.json found at ${serversJsonPath}`)
-		return []
+	// Try local config first
+	for (const configPath of [localConfigPath, packageConfigPath]) {
+		try {
+			const raw = await readFile(configPath, 'utf-8')
+			const parsed = JSON.parse(raw)
+			const servers: McpServerConfig[] = Array.isArray(parsed) ? parsed : parsed.servers ?? []
+			console.log(`[paw-mcp] Loaded ${servers.length} server config(s) from ${configPath}`)
+			return servers
+		} catch {
+			// Try next path
+		}
 	}
+
+	console.log(`[paw-mcp] No servers.json found`)
+	return []
 }
 
 /**
