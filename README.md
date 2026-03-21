@@ -1,8 +1,16 @@
-# PawHub
+<p align="center">
+  <img src="assets/paw.png" alt="PawHub" width="150">
+</p>
 
-**Official Paws for [OpenVole](https://github.com/openvole/openvole) — the microkernel AI agent framework.**
+<h1 align="center">PawHub</h1>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+<p align="center">
+  <strong>Official Paws for <a href="https://github.com/openvole/openvole">OpenVole</a> — the microkernel AI agent framework.</strong>
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
+</p>
 
 ## Paws
 
