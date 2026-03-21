@@ -170,9 +170,10 @@ export const paw: PawDefinition = {
 			}
 		})
 
+		const { resolve } = await import('node:path')
 		const sessionDir =
 			process.env.VOLE_SESSION_DIR ||
-			new URL('../../../sessions', import.meta.url).pathname
+			resolve(process.cwd(), '.openvole', 'sessions')
 		store = new SessionStore(sessionDir)
 		await store.init()
 		console.log(`[paw-session] loaded — session dir: ${sessionDir}`)
