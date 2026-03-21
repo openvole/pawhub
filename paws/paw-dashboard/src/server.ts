@@ -22,8 +22,8 @@ export function createDashboardServer(
 ): DashboardServer {
 	const clients = new Set<WebSocket>()
 
-	// Resolve assets directory relative to project root
-	const assetsDir = path.resolve(process.cwd(), 'assets')
+	// Resolve assets directory relative to the paw's own directory
+	const assetsDir = path.resolve(import.meta.dirname ?? path.dirname(new URL(import.meta.url).pathname), '..', 'assets')
 
 	const MIME_TYPES: Record<string, string> = {
 		'.png': 'image/png',
