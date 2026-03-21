@@ -174,21 +174,30 @@ export const paw: PawDefinition = {
 		const fsModule = await import('node:fs/promises')
 		const sessionDir =
 			process.env.VOLE_SESSION_DIR ||
-			resolve(process.cwd(), '.openvole', 'sessions')
+			resolve(process.cwd(), '.openvole', 'paws', 'paw-session')
 
-		// Auto-migrate: check for data in old locations (v0.1.0 bug — relative to paw install)
+		// Auto-migrate from old location (.openvole/sessions/ → .openvole/paws/paw-session/)
 		try {
-			const oldDir = new URL('../../sessions', import.meta.url).pathname
+			const oldDir = resolve(process.cwd(), '.openvole', 'sessions')
 			const entries = await fsModule.readdir(oldDir).catch(() => [] as string[])
 			if (entries.length > 0 && oldDir !== sessionDir) {
 				console.log(`[paw-session] migrating data from ${oldDir} to ${sessionDir}`)
 				await fsModule.mkdir(sessionDir, { recursive: true })
 				for (const entry of entries) {
+					const src = join(oldDir, entry)
 					const dest = join(sessionDir, entry)
+					const srcStat = await fsModule.stat(src)
 					try { await fsModule.stat(dest) } catch {
-						await fsModule.rename(join(oldDir, entry), dest)
+						if (srcStat.isDirectory()) {
+							await fsModule.cp(src, dest, { recursive: true })
+						} else {
+							await fsModule.rename(src, dest)
+						}
 					}
 				}
+				// Clean up old directory
+				await fsModule.rm(oldDir, { recursive: true }).catch(() => {})
+				console.log(`[paw-session] migration complete`)
 			}
 		} catch { /* no old data */ }
 

@@ -147,23 +147,30 @@ export const paw: PawDefinition = {
 		const fsModule = await import('node:fs/promises')
 		const memoryDir =
 			process.env.VOLE_MEMORY_DIR ||
-			resolve(process.cwd(), '.openvole', 'memory')
+			resolve(process.cwd(), '.openvole', 'paws', 'paw-memory')
 
-		// Auto-migrate: check for data in old locations (v0.1.0 bug — relative to paw install)
+		// Auto-migrate from old location (.openvole/memory/ → .openvole/paws/paw-memory/)
 		try {
-			const oldDir = new URL('../../memory', import.meta.url).pathname
-			const oldMemory = join(oldDir, 'MEMORY.md')
-			const stat = await fsModule.stat(oldMemory).catch(() => null)
-			if (stat && oldDir !== memoryDir) {
+			const oldDir = resolve(process.cwd(), '.openvole', 'memory')
+			const entries = await fsModule.readdir(oldDir).catch(() => [] as string[])
+			if (entries.length > 0 && oldDir !== memoryDir) {
 				console.log(`[paw-memory] migrating data from ${oldDir} to ${memoryDir}`)
 				await fsModule.mkdir(memoryDir, { recursive: true })
-				const files = await fsModule.readdir(oldDir)
-				for (const file of files) {
-					const dest = join(memoryDir, file)
+				for (const entry of entries) {
+					const src = join(oldDir, entry)
+					const dest = join(memoryDir, entry)
+					const srcStat = await fsModule.stat(src)
 					try { await fsModule.stat(dest) } catch {
-						await fsModule.rename(join(oldDir, file), dest)
+						if (srcStat.isDirectory()) {
+							await fsModule.cp(src, dest, { recursive: true })
+						} else {
+							await fsModule.rename(src, dest)
+						}
 					}
 				}
+				// Clean up old directory
+				await fsModule.rm(oldDir, { recursive: true }).catch(() => {})
+				console.log(`[paw-memory] migration complete`)
 			}
 		} catch { /* no old data */ }
 
