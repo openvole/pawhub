@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-memory",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Persistent memory Paw for OpenVole — markdown-based long-term and daily memory",
   "type": "module",
   "main": "./dist/index.js",

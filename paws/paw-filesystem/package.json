@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-filesystem",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Filesystem Paw for reading, writing, editing, and searching files",
   "type": "module",
   "main": "./dist/index.js",

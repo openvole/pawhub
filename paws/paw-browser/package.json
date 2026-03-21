@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-browser",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Browser automation Paw using Puppeteer for web browsing, interaction, and screenshots",
   "type": "module",
   "main": "./dist/index.js",
