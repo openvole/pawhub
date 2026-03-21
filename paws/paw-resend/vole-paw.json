@@ -1,0 +1,20 @@
+{
+  "name": "@openvole/paw-resend",
+  "version": "0.1.0",
+  "description": "Email sending powered by Resend",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "resend_send", "description": "Send an email via Resend" },
+    { "name": "resend_send_html", "description": "Send an HTML email via Resend" },
+    { "name": "resend_batch", "description": "Send multiple emails in a batch" }
+  ],
+  "permissions": {
+    "network": ["api.resend.com"],
+    "listen": [],
+    "filesystem": [],
+    "env": ["RESEND_API_KEY", "RESEND_FROM"]
+  }
+}
