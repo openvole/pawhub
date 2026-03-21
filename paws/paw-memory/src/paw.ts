@@ -143,9 +143,10 @@ export const paw: PawDefinition = {
 	},
 
 	async onLoad() {
+		const { resolve } = await import('node:path')
 		const memoryDir =
 			process.env.VOLE_MEMORY_DIR ||
-			new URL('../../../memory', import.meta.url).pathname
+			resolve(process.cwd(), '.openvole', 'memory')
 		store = new MemoryStore(memoryDir)
 		await store.init()
 		console.log(`[paw-memory] loaded — memory dir: ${memoryDir}`)
