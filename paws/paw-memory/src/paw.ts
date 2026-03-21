@@ -143,10 +143,30 @@ export const paw: PawDefinition = {
 	},
 
 	async onLoad() {
-		const { resolve } = await import('node:path')
+		const { resolve, join } = await import('node:path')
+		const fsModule = await import('node:fs/promises')
 		const memoryDir =
 			process.env.VOLE_MEMORY_DIR ||
 			resolve(process.cwd(), '.openvole', 'memory')
+
+		// Auto-migrate: check for data in old locations (v0.1.0 bug — relative to paw install)
+		try {
+			const oldDir = new URL('../../memory', import.meta.url).pathname
+			const oldMemory = join(oldDir, 'MEMORY.md')
+			const stat = await fsModule.stat(oldMemory).catch(() => null)
+			if (stat && oldDir !== memoryDir) {
+				console.log(`[paw-memory] migrating data from ${oldDir} to ${memoryDir}`)
+				await fsModule.mkdir(memoryDir, { recursive: true })
+				const files = await fsModule.readdir(oldDir)
+				for (const file of files) {
+					const dest = join(memoryDir, file)
+					try { await fsModule.stat(dest) } catch {
+						await fsModule.rename(join(oldDir, file), dest)
+					}
+				}
+			}
+		} catch { /* no old data */ }
+
 		store = new MemoryStore(memoryDir)
 		await store.init()
 		console.log(`[paw-memory] loaded — memory dir: ${memoryDir}`)
