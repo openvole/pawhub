@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-mcp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "MCP bridge Paw for OpenVole — connects MCP servers to the tool registry",
   "type": "module",
   "main": "./dist/index.js",
@@ -22,7 +22,7 @@
     "@types/node": "^22.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.0",
-    "@openvole/paw-sdk": "^0.1.0"
+    "@openvole/paw-sdk": "^0.3.0"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -45,6 +45,6 @@
     "model-context-protocol"
   ],
   "peerDependencies": {
-    "@openvole/paw-sdk": "^0.1.0"
+    "@openvole/paw-sdk": "^0.3.0"
   }
 }

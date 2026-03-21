@@ -19,10 +19,10 @@
     "resend": "^4.0.0"
   },
   "peerDependencies": {
-    "@openvole/paw-sdk": "^0.2.0"
+    "@openvole/paw-sdk": "^0.3.0"
   },
   "devDependencies": {
-    "@openvole/paw-sdk": "^0.2.0",
+    "@openvole/paw-sdk": "^0.3.0",
     "@types/node": "^22.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.0"
@@ -41,5 +41,10 @@
     "url": "https://github.com/openvole/pawhub",
     "directory": "paws/paw-resend"
   },
-  "keywords": ["openvole", "paw", "resend", "email"]
+  "keywords": [
+    "openvole",
+    "paw",
+    "resend",
+    "email"
+  ]
 }

@@ -38,8 +38,19 @@ export const paw: PawDefinition = {
 
 		// Build tool definitions and populate the tools array
 		const toolDefs = discoveredTools.map((t) => buildToolDefinition(t, bridge!))
-		// Mutate the tools array so the runtime picks them up
 		paw.tools!.push(...toolDefs)
+
+		// Send a late registration to the core with discovered tools
+		// (the initial registration fires before onLoad completes)
+		try {
+			const { createIpcTransport } = await import('@openvole/paw-sdk')
+			const transport = createIpcTransport()
+			transport.send('register_tools', {
+				tools: toolDefs.map((t) => ({ name: t.name, description: t.description })),
+			})
+		} catch {
+			// Fallback — tools are in paw.tools but core may not see them until next query
+		}
 
 		console.log(`[paw-mcp] Registered ${toolDefs.length} tool(s) from ${configs.length} MCP server(s)`)
 	},
