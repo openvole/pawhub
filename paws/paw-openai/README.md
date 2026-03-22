@@ -35,6 +35,12 @@ npm install @openvole/paw-openai
 
 Implements the Think phase — receives the conversation context and registered tools, returns the next assistant message and any tool calls. Connects to the OpenAI API.
 
+## BRAIN.md
+
+The system prompt is loaded from `.openvole/paws/paw-openai/BRAIN.md`. On first startup, the paw scaffolds a default prompt there. Edit this file to customize how the Brain reasons and responds.
+
+The old `.openvole/BRAIN.md` path is no longer used.
+
 ## License
 
 [MIT](https://github.com/openvole/pawhub/blob/main/LICENSE)
