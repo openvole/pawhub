@@ -7,14 +7,14 @@ let imapConfig: { host: string; port: number; auth: { user: string; pass: string
 
 function getTransporter(): Transporter {
 	if (!transporter) {
-		throw new Error('SMTP transporter not initialized — paw not loaded')
+		throw new Error('EMAIL_HOST/EMAIL_USER/EMAIL_PASS not set — paw-email is not configured')
 	}
 	return transporter
 }
 
 function getImapConfig() {
 	if (!imapConfig) {
-		throw new Error('IMAP config not initialized — paw not loaded')
+		throw new Error('EMAIL_HOST/EMAIL_USER/EMAIL_PASS not set — paw-email is not configured')
 	}
 	return imapConfig
 }
@@ -185,9 +185,12 @@ export const paw: PawDefinition = {
 		const imapPort = Number(process.env.EMAIL_IMAP_PORT) || 993
 
 		if (!host || !user || !pass) {
-			throw new Error(
-				'[paw-email] Missing required env vars: EMAIL_HOST, EMAIL_USER, EMAIL_PASS',
-			)
+			const missing: string[] = []
+			if (!host) missing.push('EMAIL_HOST')
+			if (!user) missing.push('EMAIL_USER')
+			if (!pass) missing.push('EMAIL_PASS')
+			console.log(`[paw-email] ${missing.join(', ')} not set — paw will not function`)
+			return
 		}
 
 		transporter = nodemailer.createTransport({

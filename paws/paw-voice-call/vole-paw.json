@@ -1,0 +1,20 @@
+{
+  "name": "@openvole/paw-voice-call",
+  "version": "0.1.0",
+  "description": "Voice call channel for OpenVole via Twilio",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "initiate_call", "description": "Initiate an outbound phone call" },
+    { "name": "end_call", "description": "End an active phone call" },
+    { "name": "list_calls", "description": "List active phone calls" }
+  ],
+  "permissions": {
+    "network": ["api.twilio.com", "*.twilio.com"],
+    "listen": [3979],
+    "filesystem": [],
+    "env": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_PHONE_NUMBER", "VOICE_CALL_WEBHOOK_URL", "VOICE_CALL_PORT"]
+  }
+}

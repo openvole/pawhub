@@ -1,7 +1,7 @@
 {
-  "name": "@openvole/paw-email",
-  "version": "0.3.1",
-  "description": "Paw for sending and reading emails via SMTP and IMAP",
+  "name": "@openvole/paw-msteams",
+  "version": "0.1.0",
+  "description": "Microsoft Teams channel Paw for OpenVole",
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
@@ -9,12 +9,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "nodemailer": "^6.9.0",
-    "imapflow": "^1.0.0"
+    "botbuilder": "^4.23.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "@types/nodemailer": "^6.4.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.0",
     "@openvole/paw-sdk": "^0.3.0"

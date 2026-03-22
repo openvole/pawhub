@@ -1,3 +1,4 @@
+import * as path from 'node:path'
 // Using whatsapp-web.js for WhatsApp Web protocol
 // @ts-expect-error whatsapp-web.js has no type declarations
 import pkg from 'whatsapp-web.js'
@@ -24,8 +25,9 @@ export class WhatsAppClient {
 	private running = false
 
 	constructor(sessionData?: string) {
+		const dataPath = path.resolve(process.cwd(), '.openvole', 'paws', 'paw-whatsapp')
 		const clientOptions: Record<string, unknown> = {
-			authStrategy: new LocalAuth(),
+			authStrategy: new LocalAuth({ dataPath }),
 			puppeteer: {
 				headless: true,
 				args: ['--no-sandbox', '--disable-setuid-sandbox'],

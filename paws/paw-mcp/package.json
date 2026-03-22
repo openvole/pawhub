@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-mcp",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "MCP bridge Paw for OpenVole — connects MCP servers to the tool registry",
   "type": "module",
   "main": "./dist/index.js",

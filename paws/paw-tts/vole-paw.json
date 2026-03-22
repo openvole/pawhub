@@ -1,0 +1,19 @@
+{
+  "name": "@openvole/paw-tts",
+  "version": "0.1.0",
+  "description": "Text-to-speech tool Paw supporting ElevenLabs and OpenAI TTS",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "tts_speak", "description": "Convert text to speech and save as audio file" },
+    { "name": "tts_list_voices", "description": "List available voices for the active TTS provider" }
+  ],
+  "permissions": {
+    "network": ["api.elevenlabs.io", "api.openai.com"],
+    "listen": [],
+    "filesystem": [],
+    "env": ["VOLE_TTS_PROVIDER", "ELEVENLABS_API_KEY", "ELEVENLABS_VOICE_ID", "OPENAI_API_KEY", "OPENAI_TTS_MODEL", "OPENAI_TTS_VOICE"]
+  }
+}

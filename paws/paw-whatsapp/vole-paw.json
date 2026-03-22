@@ -14,6 +14,7 @@
     "network": ["web.whatsapp.com", "*.whatsapp.net"],
     "listen": [],
     "filesystem": [],
-    "env": ["WHATSAPP_SESSION_DATA", "WHATSAPP_ALLOW_FROM"]
+    "env": ["WHATSAPP_SESSION_DATA", "WHATSAPP_ALLOW_FROM"],
+    "childProcess": true
   }
 }

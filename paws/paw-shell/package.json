@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-shell",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Paw for executing shell commands with safety restrictions",
   "type": "module",
   "main": "./dist/index.js",

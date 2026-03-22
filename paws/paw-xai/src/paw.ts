@@ -76,9 +76,12 @@ async function loadIdentityFiles(): Promise<string> {
 	return parts.join('\n\n')
 }
 
-function getClient(): OpenAI {
+function getClient(): OpenAI | undefined {
 	if (!client) {
 		const apiKey = process.env.XAI_API_KEY
+		if (!apiKey) {
+			return undefined
+		}
 		model = process.env.XAI_MODEL || 'grok-3'
 		client = new OpenAI({ apiKey, baseURL: 'https://api.x.ai/v1' })
 	}
@@ -231,6 +234,13 @@ export const paw: PawDefinition = {
 
 	async think(context: AgentContext): Promise<AgentPlan> {
 		const openai = getClient()
+		if (!openai) {
+			return {
+				actions: [],
+				response: 'XAI_API_KEY not set — paw-xai is not configured.',
+				done: true,
+			}
+		}
 		const start = Date.now()
 
 		try {
@@ -298,6 +308,10 @@ export const paw: PawDefinition = {
 	},
 
 	async onLoad() {
+		if (!process.env.XAI_API_KEY) {
+			console.log('[paw-xai] XAI_API_KEY not set — paw will not function')
+			return
+		}
 		getClient()
 		customBrainPrompt = await loadBrainPrompt()
 		identityContext = await loadIdentityFiles()

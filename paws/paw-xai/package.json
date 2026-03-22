@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-xai",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Brain Paw powered by xAI Grok models",
   "type": "module",
   "main": "./dist/index.js",

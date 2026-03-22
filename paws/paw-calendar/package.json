@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-calendar",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Paw for managing Google Calendar events",
   "type": "module",
   "main": "./dist/index.js",

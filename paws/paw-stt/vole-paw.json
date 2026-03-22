@@ -1,0 +1,18 @@
+{
+  "name": "@openvole/paw-stt",
+  "version": "0.1.0",
+  "description": "Speech-to-text tool Paw using OpenAI Whisper",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "stt_transcribe", "description": "Transcribe an audio file to text using OpenAI Whisper" }
+  ],
+  "permissions": {
+    "network": ["api.openai.com"],
+    "listen": [],
+    "filesystem": [],
+    "env": ["OPENAI_API_KEY", "OPENAI_STT_MODEL"]
+  }
+}
