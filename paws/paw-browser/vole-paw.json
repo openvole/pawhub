@@ -36,6 +36,7 @@
     "network": ["*"],
     "listen": [],
     "filesystem": [],
-    "env": ["VOLE_BROWSER_HEADLESS"]
+    "env": ["VOLE_BROWSER_HEADLESS"],
+    "childProcess": true
   }
 }

@@ -28,6 +28,7 @@
     "network": [],
     "listen": [],
     "filesystem": ["/app/workspace"],
-    "env": ["VOLE_SHELL_ALLOWED_DIRS"]
+    "env": ["VOLE_SHELL_ALLOWED_DIRS"],
+    "childProcess": true
   }
 }
