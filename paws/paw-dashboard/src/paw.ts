@@ -21,10 +21,25 @@ async function fetchFullState(): Promise<unknown> {
 	return { tools, paws, skills, tasks, schedules }
 }
 
-/** Refresh state and broadcast to all clients */
+/** Refresh state and broadcast to all clients (coalesced — at most one in-flight) */
+let refreshInFlight = false
+let refreshPending = false
 async function refreshAndBroadcastState(): Promise<void> {
-	const state = await fetchFullState()
-	server?.broadcast('state', state)
+	if (refreshInFlight) {
+		refreshPending = true
+		return
+	}
+	refreshInFlight = true
+	try {
+		const state = await fetchFullState()
+		server?.broadcast('state', state)
+	} finally {
+		refreshInFlight = false
+		if (refreshPending) {
+			refreshPending = false
+			refreshAndBroadcastState()
+		}
+	}
 }
 
 export const paw: PawDefinition = {
