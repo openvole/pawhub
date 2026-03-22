@@ -1,0 +1,20 @@
+{
+  "name": "@openvole/paw-msteams",
+  "version": "0.1.0",
+  "description": "Microsoft Teams channel for OpenVole",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "msteams_send", "description": "Send a message to a Microsoft Teams conversation" },
+    { "name": "msteams_reply", "description": "Reply to the current Teams conversation" },
+    { "name": "msteams_get_conversations", "description": "List active Teams conversations" }
+  ],
+  "permissions": {
+    "network": ["login.microsoftonline.com", "smba.trafficmanager.net", "*.botframework.com"],
+    "listen": [3978],
+    "filesystem": [],
+    "env": ["MSTEAMS_APP_ID", "MSTEAMS_APP_PASSWORD", "MSTEAMS_TENANT_ID", "MSTEAMS_PORT", "MSTEAMS_ALLOW_FROM"]
+  }
+}

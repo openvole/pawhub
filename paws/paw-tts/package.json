@@ -1,20 +1,15 @@
 {
-  "name": "@openvole/paw-email",
-  "version": "0.3.1",
-  "description": "Paw for sending and reading emails via SMTP and IMAP",
+  "name": "@openvole/paw-tts",
+  "version": "0.1.0",
+  "description": "Text-to-speech tool Paw for OpenVole — ElevenLabs and OpenAI TTS providers",
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "nodemailer": "^6.9.0",
-    "imapflow": "^1.0.0"
-  },
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "@types/nodemailer": "^6.4.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.0",
     "@openvole/paw-sdk": "^0.3.0"

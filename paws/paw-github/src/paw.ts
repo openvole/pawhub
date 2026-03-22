@@ -5,7 +5,7 @@ let octokit: Octokit | undefined
 
 function getOctokit(): Octokit {
 	if (!octokit) {
-		throw new Error('Octokit not initialized — paw not loaded')
+		throw new Error('GITHUB_TOKEN not set — paw-github is not configured')
 	}
 	return octokit
 }
@@ -266,7 +266,8 @@ export const paw: PawDefinition = {
 	async onLoad() {
 		const token = process.env.GITHUB_TOKEN
 		if (!token) {
-			throw new Error('[paw-github] Missing required env var: GITHUB_TOKEN')
+			console.log('[paw-github] GITHUB_TOKEN not set — paw will not function')
+			return
 		}
 		octokit = new Octokit({ auth: token })
 		console.log('[paw-github] loaded')

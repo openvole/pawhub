@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-openai",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Brain Paw powered by OpenAI",
   "type": "module",
   "main": "./dist/index.js",

@@ -6,7 +6,7 @@ let calendarId: string = 'primary'
 
 function getCalendar(): calendar_v3.Calendar {
 	if (!calendar) {
-		throw new Error('Google Calendar client not initialized — paw not loaded')
+		throw new Error('GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET/GOOGLE_REFRESH_TOKEN not set — paw-calendar is not configured')
 	}
 	return calendar
 }
@@ -177,9 +177,12 @@ export const paw: PawDefinition = {
 		const refreshToken = process.env.GOOGLE_REFRESH_TOKEN
 
 		if (!clientId || !clientSecret || !refreshToken) {
-			throw new Error(
-				'[paw-calendar] Missing required env vars: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN',
-			)
+			const missing: string[] = []
+			if (!clientId) missing.push('GOOGLE_CLIENT_ID')
+			if (!clientSecret) missing.push('GOOGLE_CLIENT_SECRET')
+			if (!refreshToken) missing.push('GOOGLE_REFRESH_TOKEN')
+			console.log(`[paw-calendar] ${missing.join(', ')} not set — paw will not function`)
+			return
 		}
 
 		calendarId = process.env.GOOGLE_CALENDAR_ID || 'primary'
