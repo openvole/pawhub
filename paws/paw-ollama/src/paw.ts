@@ -8,23 +8,38 @@ let client: OllamaClient | undefined
 /** Cached identity files — loaded once on startup */
 let identityContext: string | undefined
 
-/** Custom brain prompt from BRAIN.md — overrides default system prompt if present */
+/** Brain prompt — loaded from user's local dir or packaged default */
 let customBrainPrompt: string | undefined
 
-/** Load BRAIN.md from .openvole/ — if it exists, it replaces the default system prompt */
+/** Load BRAIN.md from .openvole/paws/paw-ollama/BRAIN.md — scaffolds from packaged default on first run */
 async function loadBrainPrompt(): Promise<string | undefined> {
+	const brainPath = path.resolve(process.cwd(), '.openvole', 'paws', 'paw-ollama', 'BRAIN.md')
+
+	// Scaffold on first run: copy packaged BRAIN.md to local paw data dir
 	try {
-		const content = await fs.readFile(
-			path.resolve(process.cwd(), '.openvole', 'BRAIN.md'),
-			'utf-8',
-		)
+		await fs.access(brainPath)
+	} catch {
+		try {
+			const pkgPath = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', 'BRAIN.md')
+			const defaultContent = await fs.readFile(pkgPath, 'utf-8')
+			await fs.mkdir(path.dirname(brainPath), { recursive: true })
+			await fs.writeFile(brainPath, defaultContent, 'utf-8')
+			console.log('[paw-ollama] scaffolded BRAIN.md to .openvole/paws/paw-ollama/')
+		} catch (err) {
+			console.error('[paw-ollama] failed to scaffold BRAIN.md:', err)
+		}
+	}
+
+	// Always read from the local paw data dir
+	try {
+		const content = await fs.readFile(brainPath, 'utf-8')
 		if (content.trim()) {
-			console.log('[paw-ollama] loaded custom BRAIN.md prompt')
 			return content.trim()
 		}
 	} catch {
-		// No BRAIN.md — use default
+		// No BRAIN.md
 	}
+
 	return undefined
 }
 

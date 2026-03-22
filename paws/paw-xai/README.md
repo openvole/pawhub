@@ -38,7 +38,13 @@ npm install @openvole/paw-xai
 
 ## Brain
 
-Implements the Think phase using xAI's OpenAI-compatible API. Supports BRAIN.md, identity files (SOUL.md, USER.md, AGENT.md), session history, and memory injection.
+Implements the Think phase using xAI's OpenAI-compatible API. Supports identity files (SOUL.md, USER.md, AGENT.md), session history, and memory injection.
+
+## BRAIN.md
+
+The system prompt is loaded from `.openvole/paws/paw-xai/BRAIN.md`. On first startup, the paw scaffolds a default prompt there. Edit this file to customize how the Brain reasons and responds.
+
+The old `.openvole/BRAIN.md` path is no longer used.
 
 ## License
 

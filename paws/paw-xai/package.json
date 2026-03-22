@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-xai",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "description": "Brain Paw powered by xAI Grok models",
   "type": "module",
   "main": "./dist/index.js",
@@ -33,6 +33,7 @@
   "files": [
     "dist",
     "vole-paw.json",
+    "BRAIN.md",
     "README.md"
   ],
   "license": "MIT",

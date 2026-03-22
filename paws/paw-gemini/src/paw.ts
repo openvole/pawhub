@@ -29,20 +29,35 @@ let identityContext: string | undefined
 /** Custom brain prompt from BRAIN.md — overrides default system prompt if present */
 let customBrainPrompt: string | undefined
 
-/** Load BRAIN.md from .openvole/ — if it exists, it replaces the default system prompt */
+/** Load BRAIN.md from .openvole/paws/paw-gemini/BRAIN.md — scaffolds from packaged default on first run */
 async function loadBrainPrompt(): Promise<string | undefined> {
+	const brainPath = path.resolve(process.cwd(), '.openvole', 'paws', 'paw-gemini', 'BRAIN.md')
+
+	// Scaffold on first run: copy packaged BRAIN.md to local paw data dir
 	try {
-		const content = await fs.readFile(
-			path.resolve(process.cwd(), '.openvole', 'BRAIN.md'),
-			'utf-8',
-		)
+		await fs.access(brainPath)
+	} catch {
+		try {
+			const pkgPath = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', 'BRAIN.md')
+			const defaultContent = await fs.readFile(pkgPath, 'utf-8')
+			await fs.mkdir(path.dirname(brainPath), { recursive: true })
+			await fs.writeFile(brainPath, defaultContent, 'utf-8')
+			console.log('[paw-gemini] scaffolded BRAIN.md to .openvole/paws/paw-gemini/')
+		} catch {
+			// No packaged BRAIN.md available
+		}
+	}
+
+	// Always read from the local paw data dir
+	try {
+		const content = await fs.readFile(brainPath, 'utf-8')
 		if (content.trim()) {
-			console.log('[paw-gemini] loaded custom BRAIN.md prompt')
 			return content.trim()
 		}
 	} catch {
-		// No BRAIN.md — use default
+		// No BRAIN.md
 	}
+
 	return undefined
 }
 
@@ -98,35 +113,7 @@ function buildSystemPrompt(
 - Model: ${model}`
 
 	// Use custom BRAIN.md if provided, otherwise use default prompt
-	const basePrompt = customBrain ?? `You are an AI agent powered by OpenVole. You accomplish tasks by using tools step by step.
-
-## How to Work
-1. Read the conversation history first — short user messages like an email or "yes" are answers to your previous questions
-2. Break complex tasks into clear steps and execute them one at a time
-3. After each tool call, examine the result carefully before deciding the next action
-4. Never repeat the same tool call if it already succeeded — move to the next step
-5. If a tool returns an error, try a different approach or different parameters
-6. When you read important information (API docs, instructions, credentials), save it to workspace or memory immediately
-7. When you have enough information to respond, do so directly — don't keep searching
-8. If you cannot complete a task (missing credentials, access denied), explain exactly what you need and stop
-
-## Data Management
-- **Vault** (vault_store/get): ALL sensitive data — emails, passwords, API keys, tokens, credentials, usernames, handles, personal identifiers. ALWAYS use vault for these, NEVER memory or workspace.
-- **Memory** (memory_write/read): General knowledge, non-sensitive facts, preferences, summaries
-- **Workspace** (workspace_write/read): Files, documents, downloaded content, API docs, drafts
-- **Session history**: Recent conversation — automatically available, review it before each response
-
-## Recurring Tasks
-When the user asks you to do something regularly, repeatedly, or on a schedule:
-- **schedule_task**: Use this for tasks with a specific interval (e.g. "post every 6 hours", "check every 30 minutes"). Creates an automatic timer — no heartbeat needed.
-- **heartbeat_write**: Use this ONLY for open-ended checks with no specific interval (e.g. "keep an eye on server status"). These run on the global heartbeat timer.
-- Use ONE or the OTHER — never both for the same task. If you use schedule_task, do NOT also add it to HEARTBEAT.md.
-- Do NOT just save recurring task requests to memory — that won't make them happen.
-
-## Safety
-- Never attempt to bypass access controls or escalate permissions
-- Always ask for confirmation before performing destructive or irreversible actions
-- Store credentials and personal identifiers ONLY in the vault — never in memory or workspace`
+	const basePrompt = customBrain ?? 'You are an AI agent powered by OpenVole. You accomplish tasks by using tools step by step.'
 
 	const parts: string[] = [basePrompt, '', runtimeContext]
 
