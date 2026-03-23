@@ -24,7 +24,7 @@
 | `@openvole/paw-gemini` | Google Gemini | [![npm](https://img.shields.io/npm/v/@openvole/paw-gemini)](https://www.npmjs.com/package/@openvole/paw-gemini) |
 | `@openvole/paw-xai` | xAI Grok | [![npm](https://img.shields.io/npm/v/@openvole/paw-xai)](https://www.npmjs.com/package/@openvole/paw-xai) |
 
-### Channel Paws (4)
+### Channel Paws (6)
 
 | Package | Description | npm |
 |---------|-------------|-----|
@@ -32,8 +32,10 @@
 | `@openvole/paw-slack` | Slack bot | [![npm](https://img.shields.io/npm/v/@openvole/paw-slack)](https://www.npmjs.com/package/@openvole/paw-slack) |
 | `@openvole/paw-discord` | Discord bot | [![npm](https://img.shields.io/npm/v/@openvole/paw-discord)](https://www.npmjs.com/package/@openvole/paw-discord) |
 | `@openvole/paw-whatsapp` | WhatsApp | [![npm](https://img.shields.io/npm/v/@openvole/paw-whatsapp)](https://www.npmjs.com/package/@openvole/paw-whatsapp) |
+| `@openvole/paw-msteams` | Microsoft Teams | [![npm](https://img.shields.io/npm/v/@openvole/paw-msteams)](https://www.npmjs.com/package/@openvole/paw-msteams) |
+| `@openvole/paw-voice-call` | Voice calls (Twilio) | [![npm](https://img.shields.io/npm/v/@openvole/paw-voice-call)](https://www.npmjs.com/package/@openvole/paw-voice-call) |
 
-### Tool Paws (8)
+### Tool Paws (10)
 
 | Package | Description | npm |
 |---------|-------------|-----|
@@ -45,6 +47,8 @@
 | `@openvole/paw-resend` | Email via Resend API | [![npm](https://img.shields.io/npm/v/@openvole/paw-resend)](https://www.npmjs.com/package/@openvole/paw-resend) |
 | `@openvole/paw-github` | GitHub API | [![npm](https://img.shields.io/npm/v/@openvole/paw-github)](https://www.npmjs.com/package/@openvole/paw-github) |
 | `@openvole/paw-calendar` | Google Calendar | [![npm](https://img.shields.io/npm/v/@openvole/paw-calendar)](https://www.npmjs.com/package/@openvole/paw-calendar) |
+| `@openvole/paw-tts` | Text-to-speech (ElevenLabs, OpenAI) | [![npm](https://img.shields.io/npm/v/@openvole/paw-tts)](https://www.npmjs.com/package/@openvole/paw-tts) |
+| `@openvole/paw-stt` | Speech-to-text (OpenAI Whisper) | [![npm](https://img.shields.io/npm/v/@openvole/paw-stt)](https://www.npmjs.com/package/@openvole/paw-stt) |
 
 ### Infrastructure Paws
 
@@ -116,6 +120,10 @@ export default definePaw({
   ],
 })
 ```
+
+## Contributing
+
+We welcome new Paws! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on creating and submitting Paws.
 
 ## License
 
