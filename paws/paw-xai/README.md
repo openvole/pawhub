@@ -16,16 +16,11 @@ npm install @openvole/paw-xai
 
 ```json
 {
-  "brain": "@openvole/paw-xai",
-  "paws": [
-    {
-      "name": "@openvole/paw-xai",
-      "allow": {
-        "network": ["api.x.ai"],
-        "env": ["XAI_API_KEY", "XAI_MODEL"]
-      }
-    }
-  ]
+  "name": "@openvole/paw-xai",
+  "allow": {
+    "network": ["api.x.ai"],
+    "env": ["XAI_API_KEY", "XAI_MODEL"]
+  }
 }
 ```
 

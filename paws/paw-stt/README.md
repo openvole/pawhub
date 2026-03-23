@@ -1,8 +1,10 @@
 # @openvole/paw-stt
 
-[![npm version](https://img.shields.io/npm/v/@openvole/paw-stt.svg)](https://www.npmjs.com/package/@openvole/paw-stt)
+**Speech-to-text tool for OpenVole using the OpenAI Whisper API.**
 
-Speech-to-text tool Paw for OpenVole. Transcribe audio files using the OpenAI Whisper API.
+[![npm](https://img.shields.io/npm/v/@openvole/paw-stt)](https://www.npmjs.com/package/@openvole/paw-stt)
+
+Part of [OpenVole](https://github.com/openvole/openvole) — the microkernel AI agent framework.
 
 ## Install
 
@@ -10,22 +12,24 @@ Speech-to-text tool Paw for OpenVole. Transcribe audio files using the OpenAI Wh
 npm install @openvole/paw-stt
 ```
 
-## Configuration
-
-Add to your Vole config:
+## Config
 
 ```json
 {
-  "paws": ["@openvole/paw-stt"]
+  "name": "@openvole/paw-stt",
+  "allow": {
+    "network": ["api.openai.com"],
+    "env": ["OPENAI_API_KEY", "OPENAI_STT_MODEL"]
+  }
 }
 ```
 
 ## Environment Variables
 
-| Variable | Required | Default | Description |
-|---|---|---|---|
-| `OPENAI_API_KEY` | Yes | — | OpenAI API key for Whisper access |
-| `OPENAI_STT_MODEL` | No | `whisper-1` | Whisper model to use |
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `OPENAI_API_KEY` | Yes | OpenAI API key for Whisper access |
+| `OPENAI_STT_MODEL` | No | Whisper model to use (default: `whisper-1`) |
 
 ## Tool
 
@@ -42,4 +46,4 @@ Transcribe an audio file to text using OpenAI Whisper.
 
 ## License
 
-MIT
+[MIT](https://github.com/openvole/pawhub/blob/main/LICENSE)

@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-dashboard",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "description": "Web dashboard Paw for OpenVole — real-time agent monitoring",
   "type": "module",
   "main": "./dist/index.js",
@@ -24,7 +24,7 @@
     "@types/ws": "^8.5.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.0",
-    "@openvole/paw-sdk": "^0.3.0"
+    "@openvole/paw-sdk": "^1.0.0"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -48,6 +48,6 @@
     "monitoring"
   ],
   "peerDependencies": {
-    "@openvole/paw-sdk": "^0.3.0"
+    "@openvole/paw-sdk": "^1.0.0"
   }
 }

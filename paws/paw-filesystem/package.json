@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-filesystem",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Filesystem Paw for reading, writing, editing, and searching files",
   "type": "module",
   "main": "./dist/index.js",
@@ -15,7 +15,7 @@
     "@types/node": "^22.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.0",
-    "@openvole/paw-sdk": "^0.3.0"
+    "@openvole/paw-sdk": "^1.0.0"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -27,6 +27,6 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@openvole/paw-sdk": "^0.3.0"
+    "@openvole/paw-sdk": "^1.0.0"
   }
 }

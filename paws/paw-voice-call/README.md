@@ -1,8 +1,10 @@
 # @openvole/paw-voice-call
 
-[![npm version](https://img.shields.io/npm/v/@openvole/paw-voice-call.svg)](https://www.npmjs.com/package/@openvole/paw-voice-call)
+**Voice call channel for OpenVole — inbound and outbound calls via Twilio with real-time STT/TTS.**
 
-Voice call channel Paw for OpenVole. Enables voice conversations via Twilio — both inbound and outbound calls with real-time speech-to-text and text-to-speech.
+[![npm](https://img.shields.io/npm/v/@openvole/paw-voice-call)](https://www.npmjs.com/package/@openvole/paw-voice-call)
+
+Part of [OpenVole](https://github.com/openvole/openvole) — the microkernel AI agent framework.
 
 ## Install
 
@@ -10,37 +12,37 @@ Voice call channel Paw for OpenVole. Enables voice conversations via Twilio — 
 npm install @openvole/paw-voice-call
 ```
 
-## Twilio Account Setup
+## Config
 
-1. Create a [Twilio account](https://www.twilio.com/try-twilio)
-2. Purchase a phone number with Voice capabilities
-3. Note your Account SID and Auth Token from the Twilio Console
-4. Configure your phone number's Voice webhook to point to your server (see Webhook Setup below)
-
-## Configuration
-
-Add the paw to your `vole.json`:
+Add the paw to your `vole.config.json`:
 
 ```json
 {
-  "paws": [
-    {
-      "name": "@openvole/paw-voice-call",
-      "config": {}
-    }
-  ]
+  "name": "@openvole/paw-voice-call",
+  "allow": {
+    "network": ["api.twilio.com", "*.twilio.com"],
+    "listen": [3979],
+    "env": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_PHONE_NUMBER", "VOICE_CALL_WEBHOOK_URL", "VOICE_CALL_PORT"]
+  }
 }
 ```
 
 ## Environment Variables
 
 | Variable | Required | Description |
-|---|---|---|
+|----------|----------|-------------|
 | `TWILIO_ACCOUNT_SID` | Yes | Your Twilio Account SID |
 | `TWILIO_AUTH_TOKEN` | Yes | Your Twilio Auth Token |
 | `TWILIO_PHONE_NUMBER` | Yes | Your Twilio phone number in E.164 format (e.g. `+14155551234`) |
 | `VOICE_CALL_WEBHOOK_URL` | Yes | Public URL where Twilio can reach the webhook server |
 | `VOICE_CALL_PORT` | No | Local port for the webhook server (default: `3979`) |
+
+## Twilio Account Setup
+
+1. Create a [Twilio account](https://www.twilio.com/try-twilio)
+2. Purchase a phone number with Voice capabilities
+3. Note your Account SID and Auth Token from the Twilio Console
+4. Configure your phone number's Voice webhook to point to your server (see Webhook Setup below)
 
 ## Call Flow
 
@@ -73,4 +75,4 @@ Point `VOICE_CALL_WEBHOOK_URL` to your production server's public URL and config
 
 ## License
 
-MIT
+[MIT](https://github.com/openvole/pawhub/blob/main/LICENSE)

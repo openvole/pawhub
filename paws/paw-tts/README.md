@@ -1,8 +1,10 @@
 # @openvole/paw-tts
 
-[![npm version](https://img.shields.io/npm/v/@openvole/paw-tts.svg)](https://www.npmjs.com/package/@openvole/paw-tts)
+**Text-to-speech tool for OpenVole with multi-provider support (ElevenLabs and OpenAI).**
 
-Text-to-speech tool Paw for OpenVole with multi-provider support (ElevenLabs and OpenAI TTS).
+[![npm](https://img.shields.io/npm/v/@openvole/paw-tts)](https://www.npmjs.com/package/@openvole/paw-tts)
+
+Part of [OpenVole](https://github.com/openvole/openvole) — the microkernel AI agent framework.
 
 ## Install
 
@@ -10,35 +12,42 @@ Text-to-speech tool Paw for OpenVole with multi-provider support (ElevenLabs and
 npm install @openvole/paw-tts
 ```
 
-## Configuration
+## Config
 
 ### ElevenLabs (default)
 
-```bash
-export VOLE_TTS_PROVIDER=elevenlabs
-export ELEVENLABS_API_KEY=your-api-key
-export ELEVENLABS_VOICE_ID=21m00Tcm4TlvDq8ikWAM  # optional, defaults to Rachel
+```json
+{
+  "name": "@openvole/paw-tts",
+  "allow": {
+    "network": ["api.elevenlabs.io"],
+    "env": ["VOLE_TTS_PROVIDER", "ELEVENLABS_API_KEY", "ELEVENLABS_VOICE_ID"]
+  }
+}
 ```
 
 ### OpenAI
 
-```bash
-export VOLE_TTS_PROVIDER=openai
-export OPENAI_API_KEY=your-api-key
-export OPENAI_TTS_MODEL=tts-1        # optional, defaults to tts-1
-export OPENAI_TTS_VOICE=alloy        # optional, defaults to alloy
+```json
+{
+  "name": "@openvole/paw-tts",
+  "allow": {
+    "network": ["api.openai.com"],
+    "env": ["VOLE_TTS_PROVIDER", "OPENAI_API_KEY", "OPENAI_TTS_MODEL", "OPENAI_TTS_VOICE"]
+  }
+}
 ```
 
 ## Environment Variables
 
-| Variable | Required | Default | Description |
-|---|---|---|---|
-| `VOLE_TTS_PROVIDER` | No | `elevenlabs` | TTS provider to use (`elevenlabs` or `openai`) |
-| `ELEVENLABS_API_KEY` | Yes (ElevenLabs) | — | ElevenLabs API key |
-| `ELEVENLABS_VOICE_ID` | No | `21m00Tcm4TlvDq8ikWAM` | Default ElevenLabs voice ID |
-| `OPENAI_API_KEY` | Yes (OpenAI) | — | OpenAI API key |
-| `OPENAI_TTS_MODEL` | No | `tts-1` | OpenAI TTS model (`tts-1` or `tts-1-hd`) |
-| `OPENAI_TTS_VOICE` | No | `alloy` | Default OpenAI voice |
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VOLE_TTS_PROVIDER` | No | TTS provider to use: `elevenlabs` (default) or `openai` |
+| `ELEVENLABS_API_KEY` | Yes (ElevenLabs) | ElevenLabs API key |
+| `ELEVENLABS_VOICE_ID` | No | Default ElevenLabs voice ID (default: `21m00Tcm4TlvDq8ikWAM`) |
+| `OPENAI_API_KEY` | Yes (OpenAI) | OpenAI API key |
+| `OPENAI_TTS_MODEL` | No | OpenAI TTS model: `tts-1` (default) or `tts-1-hd` |
+| `OPENAI_TTS_VOICE` | No | Default OpenAI voice (default: `alloy`) |
 
 ## Tools
 
@@ -58,4 +67,4 @@ List available voices for the active TTS provider.
 
 ## License
 
-MIT
+[MIT](https://github.com/openvole/pawhub/blob/main/LICENSE)
