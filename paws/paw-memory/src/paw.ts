@@ -76,18 +76,30 @@ export const paw: PawDefinition = {
 		{
 			name: 'memory_search',
 			description:
-				'Search memory files for relevant content. By default searches the current source + shared MEMORY.md. Use source "all" to search everything.',
+				'Search memory files using BM25 ranked retrieval. Returns results scored by relevance. By default searches the current source + shared MEMORY.md. Use source "all" to search everything.',
 			parameters: z.object({
 				query: z.string().describe('Search query'),
+				limit: z
+					.number()
+					.optional()
+					.describe('Maximum number of results to return. Default: 10.'),
 				source: z
 					.enum(['user', 'paw', 'heartbeat', 'schedule', 'shared', 'all'])
 					.optional()
 					.describe('Scope to search. "all" searches every source. Defaults to current source + shared.'),
 			}),
 			async execute(params) {
-				const { query, source } = params as { query: string; source?: MemorySource | 'all' }
+				const { query, limit, source } = params as {
+					query: string
+					limit?: number
+					source?: MemorySource | 'all'
+				}
 				if (!store) throw new Error('Memory store not initialized')
-				const results = await store.search(query, source ?? currentSource)
+				const results = await store.search(
+					query,
+					source ?? currentSource,
+					limit ?? 10,
+				)
 				return { ok: true, results }
 			},
 		},

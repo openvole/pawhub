@@ -35,7 +35,7 @@ npm install @openvole/paw-memory
 |------|-------------|
 | `memory_read` | Read a memory file (MEMORY.md or a daily log) |
 | `memory_write` | Write or append to a memory file |
-| `memory_search` | Search across all memory files for relevant content |
+| `memory_search` | BM25 ranked search across memory files — returns results sorted by relevance with scores |
 | `memory_list` | List all memory files with dates |
 
 ## License

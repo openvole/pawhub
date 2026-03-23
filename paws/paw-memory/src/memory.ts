@@ -1,11 +1,12 @@
 import * as fs from 'node:fs/promises'
 import * as path from 'node:path'
+import { BM25Index, type BM25Document } from './bm25.js'
 
 export interface SearchResult {
 	file: string
 	source: string
-	line: number
-	content: string
+	score: number
+	snippet: string
 }
 
 export interface MemoryFile {
@@ -87,21 +88,22 @@ export class MemoryStore {
 	}
 
 	/**
-	 * Search memory files for a query.
+	 * Search memory files using BM25 ranked retrieval.
 	 * If source is specified, searches only that source's files + shared MEMORY.md.
 	 * If source is "all", searches everything.
 	 */
 	async search(
 		query: string,
 		source?: MemorySource | 'all',
+		limit = 10,
 	): Promise<SearchResult[]> {
-		const results: SearchResult[] = []
-		const queryLower = query.toLowerCase()
-
 		const sources =
 			source === 'all' || !source
 				? await this.listSources()
 				: [source, 'shared' as const]
+
+		// Collect all documents for indexing
+		const docs: (BM25Document & { file: string; source: string })[] = []
 
 		for (const src of sources) {
 			const srcDir =
@@ -112,17 +114,13 @@ export class MemoryStore {
 				const filePath = path.join(srcDir, file)
 				try {
 					const content = await fs.readFile(filePath, 'utf-8')
-					const lines = content.split('\n')
-
-					for (let i = 0; i < lines.length; i++) {
-						if (lines[i].toLowerCase().includes(queryLower)) {
-							results.push({
-								file,
-								source: src,
-								line: i + 1,
-								content: lines[i].trim(),
-							})
-						}
+					if (content.trim()) {
+						docs.push({
+							id: `${src}/${file}`,
+							content,
+							file,
+							source: src,
+						})
 					}
 				} catch {
 					// Skip unreadable files
@@ -130,7 +128,23 @@ export class MemoryStore {
 			}
 		}
 
-		return results
+		if (docs.length === 0) return []
+
+		// Build BM25 index and search
+		const index = new BM25Index()
+		index.index(docs)
+		const ranked = index.search(query, limit)
+
+		// Map results back to SearchResult format
+		return ranked.map((r) => {
+			const doc = docs.find((d) => d.id === r.id)!
+			return {
+				file: doc.file,
+				source: doc.source,
+				score: Math.round(r.score * 1000) / 1000,
+				snippet: r.content.slice(0, 200),
+			}
+		})
 	}
 
 	/** List all memory files with metadata, optionally filtered by source */
