@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-ollama",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Brain Paw powered by Ollama for local LLM inference",
   "type": "module",
   "main": "./dist/index.js",

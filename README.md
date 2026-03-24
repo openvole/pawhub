@@ -35,7 +35,7 @@
 | `@openvole/paw-msteams` | Microsoft Teams | [![npm](https://img.shields.io/npm/v/@openvole/paw-msteams)](https://www.npmjs.com/package/@openvole/paw-msteams) |
 | `@openvole/paw-voice-call` | Voice calls (Twilio) | [![npm](https://img.shields.io/npm/v/@openvole/paw-voice-call)](https://www.npmjs.com/package/@openvole/paw-voice-call) |
 
-### Tool Paws (10)
+### Tool Paws (11)
 
 | Package | Description | npm |
 |---------|-------------|-----|
@@ -49,6 +49,7 @@
 | `@openvole/paw-calendar` | Google Calendar | [![npm](https://img.shields.io/npm/v/@openvole/paw-calendar)](https://www.npmjs.com/package/@openvole/paw-calendar) |
 | `@openvole/paw-tts` | Text-to-speech (ElevenLabs, OpenAI) | [![npm](https://img.shields.io/npm/v/@openvole/paw-tts)](https://www.npmjs.com/package/@openvole/paw-tts) |
 | `@openvole/paw-stt` | Speech-to-text (OpenAI Whisper) | [![npm](https://img.shields.io/npm/v/@openvole/paw-stt)](https://www.npmjs.com/package/@openvole/paw-stt) |
+| `@openvole/paw-computer` | Desktop automation (mouse, keyboard, screen) | [![npm](https://img.shields.io/npm/v/@openvole/paw-computer)](https://www.npmjs.com/package/@openvole/paw-computer) |
 
 ### Infrastructure Paws
 
