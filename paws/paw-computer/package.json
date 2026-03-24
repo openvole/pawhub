@@ -1,0 +1,32 @@
+{
+  "name": "@openvole/paw-computer",
+  "version": "1.0.0",
+  "description": "Desktop automation Paw for OpenVole — mouse, keyboard, and screen control",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@nut-tree-fork/nut-js": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "@openvole/paw-sdk": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist",
+    "vole-paw.json",
+    "README.md"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@openvole/paw-sdk": "^1.0.0"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "@openvole/paw-computer",
+  "version": "1.0.0",
+  "description": "Desktop automation — control mouse, keyboard, and screen capture",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "type": "tool",
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "computer_screenshot", "description": "Capture the screen and return as base64 PNG with active window info" },
+    { "name": "computer_click", "description": "Click at screen coordinates (x, y)" },
+    { "name": "computer_double_click", "description": "Double click at screen coordinates" },
+    { "name": "computer_type", "description": "Type text at the current cursor position" },
+    { "name": "computer_key", "description": "Press a key combination (e.g. ctrl+c, cmd+tab, enter)" },
+    { "name": "computer_mouse_move", "description": "Move the mouse cursor to coordinates without clicking" },
+    { "name": "computer_scroll", "description": "Scroll up or down at a screen position" },
+    { "name": "computer_drag", "description": "Drag from one screen position to another" },
+    { "name": "computer_active_window", "description": "Get the title and bounds of the currently active window" }
+  ],
+  "permissions": {
+    "network": [],
+    "listen": [],
+    "filesystem": [],
+    "env": ["VOLE_COMPUTER_DELAY_MS"],
+    "childProcess": true
+  }
+}
