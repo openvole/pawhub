@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-gemini",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Brain Paw powered by Google Gemini",
   "type": "module",
   "main": "./dist/index.js",
