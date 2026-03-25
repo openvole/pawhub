@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-email",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Paw for sending and reading emails via SMTP and IMAP",
   "type": "module",
   "main": "./dist/index.js",
@@ -9,15 +9,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "nodemailer": "^6.9.0",
-    "imapflow": "^1.0.0"
+    "imapflow": "^1.0.0",
+    "nodemailer": "^8.0.4"
   },
   "devDependencies": {
+    "@openvole/paw-sdk": "^1.0.0",
     "@types/node": "^22.0.0",
     "@types/nodemailer": "^6.4.0",
     "tsup": "^8.3.0",
-    "typescript": "^5.6.0",
-    "@openvole/paw-sdk": "^1.0.0"
+    "typescript": "^5.6.0"
   },
   "engines": {
     "node": ">=20.0.0"

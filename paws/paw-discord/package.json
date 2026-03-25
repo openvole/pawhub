@@ -9,13 +9,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "discord.js": "^14.16.0"
+    "discord.js": "^14.25.1"
   },
   "devDependencies": {
+    "@openvole/paw-sdk": "^1.0.0",
     "@types/node": "^22.0.0",
     "tsup": "^8.3.0",
-    "typescript": "^5.6.0",
-    "@openvole/paw-sdk": "^1.0.0"
+    "typescript": "^5.6.0"
   },
   "engines": {
     "node": ">=20.0.0"
