@@ -1,7 +1,7 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js'
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
-import { readFile } from 'node:fs/promises'
-import { resolve } from 'node:path'
+import { readFile, writeFile, mkdir } from 'node:fs/promises'
+import { resolve, dirname } from 'node:path'
 
 export interface McpServerConfig {
 	name: string
@@ -125,6 +125,48 @@ export class McpBridge {
 	}
 
 	/**
+	 * Add and connect a new MCP server at runtime.
+	 */
+	async addServer(config: McpServerConfig): Promise<DiscoveredTool[]> {
+		if (this.servers.has(config.name)) {
+			throw new Error(`MCP server "${config.name}" is already connected`)
+		}
+		this.configs.push(config)
+		return this.connectServer(config)
+	}
+
+	/**
+	 * Disconnect and remove an MCP server at runtime.
+	 */
+	async removeServer(name: string): Promise<string[]> {
+		const server = this.servers.get(name)
+		if (!server) {
+			throw new Error(`MCP server "${name}" is not connected`)
+		}
+
+		// Collect tool names before disconnecting
+		const result = await server.client.listTools()
+		const toolNames = (result.tools ?? []).map((t) => `${name}_${t.name}`)
+
+		await server.transport.close().catch(() => {})
+		this.servers.delete(name)
+		this.configs = this.configs.filter((c) => c.name !== name)
+
+		return toolNames
+	}
+
+	/**
+	 * List connected MCP servers.
+	 */
+	listServers(): Array<{ name: string; command: string; toolCount: number }> {
+		return Array.from(this.servers.entries()).map(([name, server]) => ({
+			name,
+			command: server.config.command,
+			toolCount: 0, // Updated after listing tools
+		}))
+	}
+
+	/**
 	 * Shut down all MCP server connections.
 	 */
 	async close(): Promise<void> {
@@ -175,6 +217,15 @@ export async function loadMcpServerConfigs(): Promise<McpServerConfig[]> {
 
 	console.log(`[paw-mcp] No servers.json found`)
 	return []
+}
+
+/**
+ * Save MCP server configs to the local paw config directory.
+ */
+export async function saveMcpServerConfigs(configs: McpServerConfig[]): Promise<void> {
+	const configPath = resolve(process.cwd(), '.openvole', 'paws', 'paw-mcp', 'servers.json')
+	await mkdir(dirname(configPath), { recursive: true })
+	await writeFile(configPath, JSON.stringify({ servers: configs }, null, 2) + '\n', 'utf-8')
 }
 
 /**
