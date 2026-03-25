@@ -154,13 +154,10 @@ export const paw: PawDefinition = {
 	},
 
 	async onLoad() {
-		const keepRecent = getKeepRecent()
-		console.log(
-			`[paw-compact] loaded — keeping ${keepRecent} recent messages on compact`,
-		)
+		// Logged to file via paw-loader, silent on console (in-process paw)
 	},
 
 	async onUnload() {
-		console.log('[paw-compact] unloaded')
+		// Silent
 	},
 }
