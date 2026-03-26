@@ -17,6 +17,7 @@
     { "name": "computer_scroll", "description": "Scroll up or down at a screen position" },
     { "name": "computer_drag", "description": "Drag from one screen position to another" },
     { "name": "computer_active_window", "description": "Get the title and bounds of the currently active window" },
+    { "name": "computer_ui_tree", "description": "Read the accessibility UI tree — all buttons, fields, menus with positions. Cheaper than screenshots." },
     { "name": "computer_clipboard_read", "description": "Read the current clipboard content as text" },
     { "name": "computer_clipboard_write", "description": "Write text to the clipboard" }
   ],

@@ -174,6 +174,22 @@ export const paw: PawDefinition = {
 			},
 		},
 		{
+			name: 'computer_ui_tree',
+			description: 'Read the accessibility UI tree of the active application. Returns all interactive elements (buttons, text fields, menus, labels) with their roles, names, values, and positions. Much cheaper than screenshots — use this to understand what is on screen before clicking.',
+			parameters: z.object({
+				max_depth: z.number().optional().describe('Maximum depth of the UI tree to traverse (default: 5)'),
+			}),
+			async execute(params) {
+				const { max_depth } = params as { max_depth?: number }
+				try {
+					const tree = await getDesktop().getUITree(max_depth ?? 5)
+					return { ok: true, tree }
+				} catch (err) {
+					return { ok: false, error: err instanceof Error ? err.message : String(err) }
+				}
+			},
+		},
+		{
 			name: 'computer_clipboard_read',
 			description: 'Read the current clipboard content as text. To read content from any app on screen: first use computer_key with cmd+a to select all, then cmd+c to copy, then call this tool to get the text.',
 			parameters: z.object({}),
