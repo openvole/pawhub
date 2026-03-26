@@ -1,5 +1,6 @@
 import { mouse, keyboard, screen, Button, Key, Point, Region } from '@nut-tree-fork/nut-js'
 import { execSync } from 'node:child_process'
+import { crc32 } from 'node:buffer'
 
 const KEY_MAP: Record<string, Key> = {
 	ctrl: Key.LeftControl,
@@ -242,7 +243,7 @@ export class DesktopController {
 	}
 
 	private pngChunk(type: string, data: Buffer): Buffer {
-		const { crc32 } = require('node:buffer')
+		// crc32 imported at top level from node:buffer
 		const length = Buffer.alloc(4)
 		length.writeUInt32BE(data.length, 0)
 		const typeBuffer = Buffer.from(type, 'ascii')
