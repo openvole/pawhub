@@ -387,9 +387,18 @@ export const paw: PawDefinition = {
 			}
 
 			const text = candidate.content.parts
-				.filter((part): part is Part & { text: string } => 'text' in part)
+				.filter((part): part is Part & { text: string } => 'text' in part && part.text.trim() !== '')
 				.map((part) => part.text)
 				.join('')
+
+			if (!text) {
+				// Gemini returned no text — likely a function call response with no accompanying text
+				// Don't mark as done so the loop continues
+				return {
+					actions: [],
+					done: false,
+				}
+			}
 
 			return {
 				actions: [],

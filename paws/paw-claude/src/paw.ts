@@ -358,6 +358,11 @@ export const paw: PawDefinition = {
 				.filter((block): block is Anthropic.TextBlock => block.type === 'text')
 				.map((block) => block.text)
 				.join('')
+				.trim()
+
+			if (!text) {
+				return { actions: [], done: false }
+			}
 
 			return {
 				actions: [],

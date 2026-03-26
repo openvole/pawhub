@@ -368,7 +368,11 @@ export const paw: PawDefinition = {
 				}
 			}
 
-			const text = choice.message.content || ''
+			const text = (choice.message.content || '').trim()
+
+			if (!text) {
+				return { actions: [], done: false }
+			}
 
 			return {
 				actions: [],

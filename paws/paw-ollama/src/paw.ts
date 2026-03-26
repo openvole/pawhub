@@ -121,9 +121,13 @@ export const paw: PawDefinition = {
 				}
 			}
 
-			const text = response.message.content || ''
+			const text = (response.message.content || '').trim()
 
-			// If the model produced a text response, return it as done
+			if (!text) {
+				// Brain returned no text — let the loop retry
+				return { actions: [], done: false }
+			}
+
 			return {
 				actions: [],
 				response: text,
