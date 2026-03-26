@@ -129,30 +129,11 @@ export const paw: PawDefinition = {
 			}
 		} catch (error) {
 			const durationMs = Date.now() - start
-			const message =
-				error instanceof Error ? error.message : String(error)
-			const stack =
-				error instanceof Error ? error.stack : undefined
-			console.error(
-				`[paw-ollama] think failed after ${durationMs}ms: ${message}`,
-			)
-			if (stack) console.error(`[paw-ollama] stack: ${stack}`)
-			// Log request details for debugging
-			console.error(
-				`[paw-ollama] model: ${ollamaClient.getModel()}, host: ${process.env.OLLAMA_HOST || 'http://localhost:11434'}, messages: ${context.messages.length}, tools: ${context.availableTools.length}`,
-			)
-
-			// Check for connection errors (Ollama not running)
-			const isConnectionError =
-				message.includes('ECONNREFUSED') ||
-				message.includes('fetch failed') ||
-				message.includes('ENOTFOUND')
-
+			const message = error instanceof Error ? error.message : String(error)
+			console.error(`[paw-ollama] think failed after ${durationMs}ms: ${message}`)
 			return {
 				actions: [],
-				response: isConnectionError
-					? 'Ollama is not running or unreachable. Please start Ollama and try again.'
-					: `Error communicating with Ollama: ${message}`,
+				response: message,
 				done: true,
 			}
 		}

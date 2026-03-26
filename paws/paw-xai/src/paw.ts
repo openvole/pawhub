@@ -293,15 +293,11 @@ export const paw: PawDefinition = {
 			}
 		} catch (error) {
 			const durationMs = Date.now() - start
-			const message =
-				error instanceof Error ? error.message : String(error)
-			console.error(
-				`[paw-xai] think failed after ${durationMs}ms: ${message}`,
-			)
-
+			const message = error instanceof Error ? error.message : String(error)
+			console.error(`[paw-xai] think failed after ${durationMs}ms: ${message}`)
 			return {
 				actions: [],
-				response: `Error communicating with OpenAI API: ${message}`,
+				response: message,
 				done: true,
 			}
 		}
