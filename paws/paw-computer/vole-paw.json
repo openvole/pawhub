@@ -16,7 +16,9 @@
     { "name": "computer_mouse_move", "description": "Move the mouse cursor to coordinates without clicking" },
     { "name": "computer_scroll", "description": "Scroll up or down at a screen position" },
     { "name": "computer_drag", "description": "Drag from one screen position to another" },
-    { "name": "computer_active_window", "description": "Get the title and bounds of the currently active window" }
+    { "name": "computer_active_window", "description": "Get the title and bounds of the currently active window" },
+    { "name": "computer_clipboard_read", "description": "Read the current clipboard content as text" },
+    { "name": "computer_clipboard_write", "description": "Write text to the clipboard" }
   ],
   "permissions": {
     "network": [],

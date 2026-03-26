@@ -1,4 +1,5 @@
 import { mouse, keyboard, screen, Button, Key, Point, Region } from '@nut-tree-fork/nut-js'
+import { execSync } from 'node:child_process'
 
 const KEY_MAP: Record<string, Key> = {
 	ctrl: Key.LeftControl,
@@ -156,6 +157,31 @@ export class DesktopController {
 		await mouse.pressButton(Button.LEFT)
 		await mouse.setPosition(new Point(toX, toY))
 		await mouse.releaseButton(Button.LEFT)
+	}
+
+	async clipboardRead(): Promise<string> {
+		const platform = process.platform
+		if (platform === 'darwin') {
+			return execSync('pbpaste', { encoding: 'utf-8' })
+		} else if (platform === 'linux') {
+			return execSync('xclip -selection clipboard -o', { encoding: 'utf-8' })
+		} else if (platform === 'win32') {
+			return execSync('powershell -command "Get-Clipboard"', { encoding: 'utf-8' })
+		}
+		throw new Error(`Clipboard read not supported on ${platform}`)
+	}
+
+	async clipboardWrite(text: string): Promise<void> {
+		const platform = process.platform
+		if (platform === 'darwin') {
+			execSync('pbcopy', { input: text, encoding: 'utf-8' })
+		} else if (platform === 'linux') {
+			execSync('xclip -selection clipboard', { input: text, encoding: 'utf-8' })
+		} else if (platform === 'win32') {
+			execSync('powershell -command "Set-Clipboard"', { input: text, encoding: 'utf-8' })
+		} else {
+			throw new Error(`Clipboard write not supported on ${platform}`)
+		}
 	}
 
 	async getActiveWindow(): Promise<{ title: string; x: number; y: number; width: number; height: number }> {

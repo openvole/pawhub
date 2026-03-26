@@ -173,6 +173,35 @@ export const paw: PawDefinition = {
 				return win
 			},
 		},
+		{
+			name: 'computer_clipboard_read',
+			description: 'Read the current clipboard content as text. Useful after pressing Cmd+C/Ctrl+C to copy content from the screen.',
+			parameters: z.object({}),
+			async execute() {
+				try {
+					const text = await getDesktop().clipboardRead()
+					return { ok: true, text }
+				} catch (err) {
+					return { ok: false, error: err instanceof Error ? err.message : String(err) }
+				}
+			},
+		},
+		{
+			name: 'computer_clipboard_write',
+			description: 'Write text to the clipboard. Can then be pasted with Cmd+V/Ctrl+V.',
+			parameters: z.object({
+				text: z.string().describe('Text to write to the clipboard'),
+			}),
+			async execute(params) {
+				const { text } = params as { text: string }
+				try {
+					await getDesktop().clipboardWrite(text)
+					return { ok: true }
+				} catch (err) {
+					return { ok: false, error: err instanceof Error ? err.message : String(err) }
+				}
+			},
+		},
 	],
 
 	async onLoad() {
