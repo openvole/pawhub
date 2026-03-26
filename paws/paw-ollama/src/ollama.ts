@@ -204,6 +204,7 @@ export class OllamaClient {
 		messages: AgentMessage[],
 		tools: ToolSummary[],
 		sessionHistory?: string,
+		configMaxTokens?: number,
 	): Promise<ChatResponse> {
 		let ollamaMessages = this.convertMessages(systemPrompt, messages, sessionHistory)
 		const ollamaTools = this.convertTools(tools)
@@ -212,7 +213,7 @@ export class OllamaClient {
 		const toolTokens = this.estimateTokens(JSON.stringify(ollamaTools))
 
 		// Get max context from env or default (128K for most Ollama models)
-		const maxContextTokens = Number(process.env.OLLAMA_MAX_CONTEXT) || 128000
+		const maxContextTokens = configMaxTokens || Number(process.env.BRAIN_MAX_CONTEXT) || 128000
 
 		// Trim messages to fit within context limit
 		const totalTokens = this.estimateMessageTokens(ollamaMessages) + toolTokens

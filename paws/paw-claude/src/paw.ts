@@ -306,6 +306,7 @@ export const paw: PawDefinition = {
 			)
 
 			const sessionHistory = context.metadata?.sessionHistory as string | undefined
+			const configMax = context.metadata?.maxContextTokens as number | undefined
 			let anthropicMessages = convertMessages(context.messages, sessionHistory)
 			const anthropicTools = convertTools(context.availableTools)
 
@@ -313,8 +314,8 @@ export const paw: PawDefinition = {
 			const toolTokens = estimateTokens(JSON.stringify(anthropicTools))
 			const systemTokens = estimateTokens(systemPrompt)
 
-			// Get max context from env or default (200K for Claude)
-			const maxContextTokens = Number(process.env.ANTHROPIC_MAX_CONTEXT) || 200000
+			// Get max context from config, env, or default (200K for Claude)
+			const maxContextTokens = configMax || Number(process.env.BRAIN_MAX_CONTEXT) || 200000
 
 			// Trim messages to fit within context limit
 			const totalTokens = estimateMessageTokens(anthropicMessages) + systemTokens + toolTokens

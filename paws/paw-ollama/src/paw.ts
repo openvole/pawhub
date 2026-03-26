@@ -96,11 +96,13 @@ export const paw: PawDefinition = {
 			)
 
 			const sessionHistory = context.metadata?.sessionHistory as string | undefined
+			const maxContextTokens = context.metadata?.maxContextTokens as number | undefined
 			const response = await ollamaClient.chat(
 				systemPrompt,
 				context.messages,
 				context.availableTools,
 				sessionHistory,
+				maxContextTokens,
 			)
 
 			const durationMs = Date.now() - start

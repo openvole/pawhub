@@ -326,6 +326,7 @@ export const paw: PawDefinition = {
 			)
 
 			const sessionHistory = context.metadata?.sessionHistory as string | undefined
+			const configMax = context.metadata?.maxContextTokens as number | undefined
 			let geminiContents = convertMessages(context.messages, sessionHistory)
 			const geminiTools = convertTools(context.availableTools)
 
@@ -333,8 +334,8 @@ export const paw: PawDefinition = {
 			const toolTokens = estimateTokens(JSON.stringify(geminiTools))
 			const systemTokens = estimateTokens(systemPrompt)
 
-			// Get max context from env or default (1M for Gemini)
-			const maxContextTokens = Number(process.env.GEMINI_MAX_CONTEXT) || 1000000
+			// Get max context from config, env, or default (1M for Gemini)
+			const maxContextTokens = configMax || Number(process.env.BRAIN_MAX_CONTEXT) || 1000000
 
 			// Trim messages to fit within context limit
 			const totalTokens = estimateContentTokens(geminiContents) + systemTokens + toolTokens

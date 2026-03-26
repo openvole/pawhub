@@ -315,14 +315,15 @@ export const paw: PawDefinition = {
 			)
 
 			const sessionHistory = context.metadata?.sessionHistory as string | undefined
+			const configMax = context.metadata?.maxContextTokens as number | undefined
 			let openaiMessages = convertMessages(systemPrompt, context.messages, sessionHistory)
 			const openaiTools = convertTools(context.availableTools)
 
 			// Estimate tool tokens
 			const toolTokens = estimateTokens(JSON.stringify(openaiTools))
 
-			// Get max context from env or default (131072 for xAI)
-			const maxContextTokens = Number(process.env.XAI_MAX_CONTEXT) || 131072
+			// Get max context from config, env, or default (131072 for xAI)
+			const maxContextTokens = configMax || Number(process.env.BRAIN_MAX_CONTEXT) || 131072
 
 			// Trim messages to fit within context limit
 			const totalTokens = estimateMessageTokens(openaiMessages) + toolTokens
