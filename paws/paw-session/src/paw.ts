@@ -16,98 +16,46 @@ const BOOTSTRAP_HISTORY_LIMIT = 50
 const MAX_HISTORY_CHARS = 8000
 
 /**
- * 4-layer session history pruning:
- * 1. Message count limit (already applied before this function)
- * 2. Time decay — recent messages full, older messages shortened
- * 3. Compaction — consecutive tool results compressed into summaries
- * 4. Token budget — trim from oldest until within character limit
+ * Prune session history for injection into Brain context.
+ * Only user and brain messages are kept — tool results are excluded
+ * because they belong to previous tasks and confuse the LLM.
+ * Older messages are truncated, newest kept verbatim.
+ * Total capped at MAX_HISTORY_CHARS token budget.
  */
 function pruneSessionHistory(lines: string[]): string {
-	const total = lines.length
-
-	// Layer 2: Time decay — recent messages get more space
-	const decayed: string[] = []
-	for (let i = 0; i < total; i++) {
-		const age = total - i // 1 = newest, total = oldest
-		const line = lines[i]
-
-		// Extract role from line: [HH:MM:SS] role: content
+	// Filter to user/brain messages only
+	const conversations: string[] = []
+	for (const line of lines) {
 		const closeBracket = line.indexOf(']')
 		if (closeBracket === -1) continue
 		const rest = line.substring(closeBracket + 2)
 		const colonIdx = rest.indexOf(':')
 		if (colonIdx === -1) continue
 		const role = rest.substring(0, colonIdx).trim()
+		if (role !== 'user' && role !== 'brain') continue
+
 		const content = rest.substring(colonIdx + 1).trim()
 		const timestamp = line.substring(0, closeBracket + 1)
 
-		if (role === 'user' || role === 'brain') {
-			// User and brain messages: full for recent, truncated for old
-			if (age <= 10) {
-				decayed.push(line) // recent — full content
-			} else {
-				const truncated = content.length > 150
-					? content.substring(0, 150) + '...'
-					: content
-				decayed.push(`${timestamp} ${role}: ${truncated}`)
-			}
+		// Time decay: older messages truncated
+		const age = lines.length - lines.indexOf(line)
+		if (age > 10 && content.length > 150) {
+			conversations.push(`${timestamp} ${role}: ${content.substring(0, 150)}...`)
 		} else {
-			// Tool results: brief for recent, just name for old
-			if (age <= 5) {
-				const truncated = content.length > 200
-					? content.substring(0, 200) + '...'
-					: content
-				decayed.push(`${timestamp} ${role}: ${truncated}`)
-			} else {
-				// Old tool results — just record that it was called
-				decayed.push(`${timestamp} ${role}: [called]`)
-			}
+			conversations.push(line)
 		}
 	}
 
-	// Layer 3: Compact consecutive old tool calls into summaries
-	const compacted: string[] = []
-	let toolGroup: string[] = []
-
-	for (const line of decayed) {
-		const isOldTool = line.includes('[called]')
-		if (isOldTool) {
-			// Extract tool name
-			const match = line.match(/\] (tool:\S+):/)
-			if (match) toolGroup.push(match[1])
-		} else {
-			// Flush any accumulated tool group
-			if (toolGroup.length > 0) {
-				if (toolGroup.length <= 2) {
-					compacted.push(...toolGroup.map((t) => `  ${t}`))
-				} else {
-					compacted.push(`  [${toolGroup.length} tool calls: ${[...new Set(toolGroup)].join(', ')}]`)
-				}
-				toolGroup = []
-			}
-			compacted.push(line)
-		}
-	}
-	// Flush remaining
-	if (toolGroup.length > 0) {
-		if (toolGroup.length <= 2) {
-			compacted.push(...toolGroup.map((t) => `  ${t}`))
-		} else {
-			compacted.push(`  [${toolGroup.length} tool calls: ${[...new Set(toolGroup)].join(', ')}]`)
-		}
-	}
-
-	// Layer 4: Token budget — trim from oldest until within budget
+	// Token budget — keep newest, trim oldest
 	let totalChars = 0
-	const budgetLines: string[] = []
-	for (let i = compacted.length - 1; i >= 0; i--) {
-		const lineLen = compacted[i].length
-		if (totalChars + lineLen > MAX_HISTORY_CHARS) break
-		budgetLines.unshift(compacted[i])
-		totalChars += lineLen
+	const kept: string[] = []
+	for (let i = conversations.length - 1; i >= 0; i--) {
+		if (totalChars + conversations[i].length > MAX_HISTORY_CHARS) break
+		kept.unshift(conversations[i])
+		totalChars += conversations[i].length
 	}
 
-	return budgetLines.join('\n')
+	return kept.join('\n')
 }
 
 function getTtl(): number {

@@ -94,7 +94,8 @@ export class OllamaClient {
 	): Message[] {
 		const result: Message[] = [{ role: 'system', content: systemPrompt }]
 
-		// Inject session history as structured messages (before current task messages)
+		// Inject session history as structured user/assistant messages only
+		// Tool results are excluded — they belong to previous tasks and cause confusion
 		if (sessionHistory) {
 			for (const line of sessionHistory.split('\n')) {
 				if (!line.startsWith('[')) continue
@@ -111,8 +112,6 @@ export class OllamaClient {
 				} else if (role === 'brain') {
 					result.push({ role: 'assistant', content })
 				}
-				// Tool results in session history are skipped as structured messages
-				// — they were already seen by the Brain in previous tasks
 			}
 		}
 
