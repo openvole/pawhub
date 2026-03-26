@@ -114,13 +114,7 @@ function buildSystemPrompt(
 		parts.push(identityCtx)
 	}
 
-	// Inject session history if available — this is critical for conversation continuity
-	if (metadata?.sessionHistory && typeof metadata.sessionHistory === 'string') {
-		parts.push('')
-		parts.push('## Conversation History')
-		parts.push('Previous messages in this session. Use this to understand the current context and follow-up messages:')
-		parts.push(metadata.sessionHistory)
-	}
+	// Note: session history is injected as structured messages in convertMessages(), not here
 
 	// Inject memory if available
 	if (metadata?.memory && typeof metadata.memory === 'string') {
@@ -156,8 +150,31 @@ function buildSystemPrompt(
 
 function convertMessages(
 	messages: AgentMessage[],
+	sessionHistory?: string,
 ): Anthropic.MessageParam[] {
 	const result: Anthropic.MessageParam[] = []
+
+	// Inject session history as structured messages (before current task messages)
+	if (sessionHistory) {
+		for (const line of sessionHistory.split('\n')) {
+			if (!line.startsWith('[')) continue
+			const closeBracket = line.indexOf(']')
+			if (closeBracket === -1) continue
+			const rest = line.substring(closeBracket + 2)
+			const colonIdx = rest.indexOf(':')
+			if (colonIdx === -1) continue
+			const role = rest.substring(0, colonIdx).trim()
+			const content = rest.substring(colonIdx + 1).trim()
+
+			if (role === 'user') {
+				result.push({ role: 'user', content })
+			} else if (role === 'brain') {
+				result.push({ role: 'assistant', content })
+			}
+			// Tool results in session history are skipped as structured messages
+			// — they were already seen by the Brain in previous tasks
+		}
+	}
 
 	for (const msg of messages) {
 		switch (msg.role) {
@@ -211,6 +228,47 @@ function convertTools(
 	}))
 }
 
+/** Estimate token count for a string (~4 chars per token) */
+function estimateTokens(text: string): number {
+	return Math.ceil(text.length / 4)
+}
+
+/** Estimate total tokens for Anthropic messages (system prompt counted separately) */
+function estimateMessageTokens(messages: Anthropic.MessageParam[]): number {
+	return messages.reduce((sum, m) => {
+		const content = typeof m.content === 'string' ? m.content : JSON.stringify(m.content)
+		return sum + estimateTokens(content) + 4
+	}, 0)
+}
+
+/** Trim messages from oldest to fit within token budget */
+function trimToFit(
+	messages: Anthropic.MessageParam[],
+	maxTokens: number,
+	systemTokens: number,
+	toolTokens: number,
+): Anthropic.MessageParam[] {
+	const available = maxTokens - systemTokens - toolTokens - 500 // 500 token buffer for response
+
+	if (available <= 0) {
+		// System prompt + tools already exceed limit — keep only last 2 messages
+		return messages.slice(-2)
+	}
+
+	// Trim from oldest until within budget
+	let totalTokens = 0
+	const kept: Anthropic.MessageParam[] = []
+	for (let i = messages.length - 1; i >= 0; i--) {
+		const content = typeof messages[i].content === 'string' ? messages[i].content as string : JSON.stringify(messages[i].content)
+		const msgTokens = estimateTokens(content) + 4
+		if (totalTokens + msgTokens > available) break
+		kept.unshift(messages[i])
+		totalTokens += msgTokens
+	}
+
+	return kept
+}
+
 function parseToolCalls(
 	response: Anthropic.Message,
 ): PlannedAction[] {
@@ -247,8 +305,29 @@ export const paw: PawDefinition = {
 				customBrainPrompt,
 			)
 
-			const anthropicMessages = convertMessages(context.messages)
+			const sessionHistory = context.metadata?.sessionHistory as string | undefined
+			let anthropicMessages = convertMessages(context.messages, sessionHistory)
 			const anthropicTools = convertTools(context.availableTools)
+
+			// Estimate tool tokens
+			const toolTokens = estimateTokens(JSON.stringify(anthropicTools))
+			const systemTokens = estimateTokens(systemPrompt)
+
+			// Get max context from env or default (200K for Claude)
+			const maxContextTokens = Number(process.env.ANTHROPIC_MAX_CONTEXT) || 200000
+
+			// Trim messages to fit within context limit
+			const totalTokens = estimateMessageTokens(anthropicMessages) + systemTokens + toolTokens
+			if (totalTokens > maxContextTokens) {
+				console.warn(
+					`[paw-claude] context ${totalTokens} tokens exceeds limit ${maxContextTokens}, trimming oldest messages`,
+				)
+				anthropicMessages = trimToFit(anthropicMessages, maxContextTokens, systemTokens, toolTokens)
+			}
+
+			console.log(
+				`[paw-claude] chat request — model: ${model}, messages: ${anthropicMessages.length}, tools: ${anthropicTools.length}, ~${estimateMessageTokens(anthropicMessages) + systemTokens + toolTokens} tokens`,
+			)
 
 			const response = await anthropic.messages.create({
 				model,

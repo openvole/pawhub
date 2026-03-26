@@ -50,13 +50,7 @@ export class OllamaClient {
 			parts.push(identityContext)
 		}
 
-		// Inject session history if available — this is critical for conversation continuity
-		if (metadata?.sessionHistory && typeof metadata.sessionHistory === 'string') {
-			parts.push('')
-			parts.push('## Conversation History')
-			parts.push('Previous messages in this session. Use this to understand the current context and follow-up messages:')
-			parts.push(metadata.sessionHistory)
-		}
+		// Note: session history is injected as structured messages in convertMessages(), not here
 
 		// Inject memory if available
 		if (metadata?.memory && typeof metadata.memory === 'string') {
@@ -96,8 +90,31 @@ export class OllamaClient {
 	convertMessages(
 		systemPrompt: string,
 		messages: AgentMessage[],
+		sessionHistory?: string,
 	): Message[] {
 		const result: Message[] = [{ role: 'system', content: systemPrompt }]
+
+		// Inject session history as structured messages (before current task messages)
+		if (sessionHistory) {
+			for (const line of sessionHistory.split('\n')) {
+				if (!line.startsWith('[')) continue
+				const closeBracket = line.indexOf(']')
+				if (closeBracket === -1) continue
+				const rest = line.substring(closeBracket + 2)
+				const colonIdx = rest.indexOf(':')
+				if (colonIdx === -1) continue
+				const role = rest.substring(0, colonIdx).trim()
+				const content = rest.substring(colonIdx + 1).trim()
+
+				if (role === 'user') {
+					result.push({ role: 'user', content })
+				} else if (role === 'brain') {
+					result.push({ role: 'assistant', content })
+				}
+				// Tool results in session history are skipped as structured messages
+				// — they were already seen by the Brain in previous tasks
+			}
+		}
 
 		for (const msg of messages) {
 			switch (msg.role) {
@@ -147,16 +164,68 @@ export class OllamaClient {
 	/**
 	 * Send a chat request to Ollama and return the raw response.
 	 */
+	/** Estimate token count for a string (~4 chars per token) */
+	private estimateTokens(text: string): number {
+		return Math.ceil(text.length / 4)
+	}
+
+	/** Estimate total tokens for a message list */
+	private estimateMessageTokens(messages: Message[]): number {
+		return messages.reduce((sum, m) => sum + this.estimateTokens(m.content) + 4, 0)
+	}
+
+	/** Trim messages from oldest (after system prompt) to fit within token budget */
+	private trimToFit(messages: Message[], maxTokens: number, toolTokens: number): Message[] {
+		const systemMsg = messages[0] // always keep system prompt
+		const rest = messages.slice(1)
+
+		const systemTokens = this.estimateTokens(systemMsg.content) + 4
+		const available = maxTokens - systemTokens - toolTokens - 500 // 500 token buffer for response
+
+		if (available <= 0) {
+			// System prompt + tools already exceed limit — keep only system + last 2 messages
+			return [systemMsg, ...rest.slice(-2)]
+		}
+
+		// Trim from oldest until within budget
+		let totalTokens = 0
+		const kept: Message[] = []
+		for (let i = rest.length - 1; i >= 0; i--) {
+			const msgTokens = this.estimateTokens(rest[i].content) + 4
+			if (totalTokens + msgTokens > available) break
+			kept.unshift(rest[i])
+			totalTokens += msgTokens
+		}
+
+		return [systemMsg, ...kept]
+	}
+
 	async chat(
 		systemPrompt: string,
 		messages: AgentMessage[],
 		tools: ToolSummary[],
+		sessionHistory?: string,
 	): Promise<ChatResponse> {
-		const ollamaMessages = this.convertMessages(systemPrompt, messages)
+		let ollamaMessages = this.convertMessages(systemPrompt, messages, sessionHistory)
 		const ollamaTools = this.convertTools(tools)
 
+		// Estimate tool tokens
+		const toolTokens = this.estimateTokens(JSON.stringify(ollamaTools))
+
+		// Get max context from env or default (128K for most Ollama models)
+		const maxContextTokens = Number(process.env.OLLAMA_MAX_CONTEXT) || 128000
+
+		// Trim messages to fit within context limit
+		const totalTokens = this.estimateMessageTokens(ollamaMessages) + toolTokens
+		if (totalTokens > maxContextTokens) {
+			console.warn(
+				`[paw-ollama] context ${totalTokens} tokens exceeds limit ${maxContextTokens}, trimming oldest messages`,
+			)
+			ollamaMessages = this.trimToFit(ollamaMessages, maxContextTokens, toolTokens)
+		}
+
 		console.log(
-			`[paw-ollama] chat request — model: ${this.model}, messages: ${ollamaMessages.length}, tools: ${ollamaTools.length}`,
+			`[paw-ollama] chat request — model: ${this.model}, messages: ${ollamaMessages.length}, tools: ${ollamaTools.length}, ~${this.estimateMessageTokens(ollamaMessages) + toolTokens} tokens`,
 		)
 		return this.client.chat({
 			model: this.model,

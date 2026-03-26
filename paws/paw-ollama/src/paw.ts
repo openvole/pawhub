@@ -95,10 +95,12 @@ export const paw: PawDefinition = {
 				customBrainPrompt,
 			)
 
+			const sessionHistory = context.metadata?.sessionHistory as string | undefined
 			const response = await ollamaClient.chat(
 				systemPrompt,
 				context.messages,
 				context.availableTools,
+				sessionHistory,
 			)
 
 			const durationMs = Date.now() - start

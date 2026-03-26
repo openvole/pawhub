@@ -123,13 +123,7 @@ function buildSystemPrompt(
 		parts.push(identityCtx)
 	}
 
-	// Inject session history if available — this is critical for conversation continuity
-	if (metadata?.sessionHistory && typeof metadata.sessionHistory === 'string') {
-		parts.push('')
-		parts.push('## Conversation History')
-		parts.push('Previous messages in this session. Use this to understand the current context and follow-up messages:')
-		parts.push(metadata.sessionHistory)
-	}
+	// Note: session history is injected as structured messages in convertMessages(), not here
 
 	// Inject memory if available
 	if (metadata?.memory && typeof metadata.memory === 'string') {
@@ -165,8 +159,31 @@ function buildSystemPrompt(
 
 function convertMessages(
 	messages: AgentMessage[],
+	sessionHistory?: string,
 ): Content[] {
 	const result: Content[] = []
+
+	// Inject session history as structured messages (before current task messages)
+	if (sessionHistory) {
+		for (const line of sessionHistory.split('\n')) {
+			if (!line.startsWith('[')) continue
+			const closeBracket = line.indexOf(']')
+			if (closeBracket === -1) continue
+			const rest = line.substring(closeBracket + 2)
+			const colonIdx = rest.indexOf(':')
+			if (colonIdx === -1) continue
+			const role = rest.substring(0, colonIdx).trim()
+			const content = rest.substring(colonIdx + 1).trim()
+
+			if (role === 'user') {
+				result.push({ role: 'user', parts: [{ text: content }] })
+			} else if (role === 'brain') {
+				result.push({ role: 'model', parts: [{ text: content }] })
+			}
+			// Tool results in session history are skipped as structured messages
+			// — they were already seen by the Brain in previous tasks
+		}
+	}
 
 	for (const msg of messages) {
 		switch (msg.role) {
@@ -231,6 +248,47 @@ function convertTools(
 	return [{ functionDeclarations }]
 }
 
+/** Estimate token count for a string (~4 chars per token) */
+function estimateTokens(text: string): number {
+	return Math.ceil(text.length / 4)
+}
+
+/** Estimate total tokens for a Content list */
+function estimateContentTokens(contents: Content[]): number {
+	return contents.reduce((sum, c) => {
+		const text = c.parts.map((p) => ('text' in p ? p.text || '' : JSON.stringify(p))).join('')
+		return sum + estimateTokens(text) + 4
+	}, 0)
+}
+
+/** Trim contents from oldest to fit within token budget */
+function trimContentsToFit(
+	contents: Content[],
+	maxTokens: number,
+	systemTokens: number,
+	toolTokens: number,
+): Content[] {
+	const available = maxTokens - systemTokens - toolTokens - 500 // 500 token buffer for response
+
+	if (available <= 0) {
+		// System prompt + tools already exceed limit — keep only last 2 contents
+		return contents.slice(-2)
+	}
+
+	// Trim from oldest until within budget
+	let totalTokens = 0
+	const kept: Content[] = []
+	for (let i = contents.length - 1; i >= 0; i--) {
+		const text = contents[i].parts.map((p) => ('text' in p ? p.text || '' : JSON.stringify(p))).join('')
+		const msgTokens = estimateTokens(text) + 4
+		if (totalTokens + msgTokens > available) break
+		kept.unshift(contents[i])
+		totalTokens += msgTokens
+	}
+
+	return kept
+}
+
 function parseToolCalls(
 	parts: Part[],
 ): PlannedAction[] {
@@ -267,8 +325,29 @@ export const paw: PawDefinition = {
 				customBrainPrompt,
 			)
 
-			const geminiContents = convertMessages(context.messages)
+			const sessionHistory = context.metadata?.sessionHistory as string | undefined
+			let geminiContents = convertMessages(context.messages, sessionHistory)
 			const geminiTools = convertTools(context.availableTools)
+
+			// Estimate tool tokens
+			const toolTokens = estimateTokens(JSON.stringify(geminiTools))
+			const systemTokens = estimateTokens(systemPrompt)
+
+			// Get max context from env or default (1M for Gemini)
+			const maxContextTokens = Number(process.env.GEMINI_MAX_CONTEXT) || 1000000
+
+			// Trim messages to fit within context limit
+			const totalTokens = estimateContentTokens(geminiContents) + systemTokens + toolTokens
+			if (totalTokens > maxContextTokens) {
+				console.warn(
+					`[paw-gemini] context ${totalTokens} tokens exceeds limit ${maxContextTokens}, trimming oldest messages`,
+				)
+				geminiContents = trimContentsToFit(geminiContents, maxContextTokens, systemTokens, toolTokens)
+			}
+
+			console.log(
+				`[paw-gemini] chat request — model: ${model}, messages: ${geminiContents.length}, tools: ${geminiTools.length}, ~${estimateContentTokens(geminiContents) + systemTokens + toolTokens} tokens`,
+			)
 
 			const chat = geminiModel.startChat({
 				history: geminiContents.slice(0, -1),

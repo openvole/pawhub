@@ -113,13 +113,7 @@ function buildSystemPrompt(
 		parts.push(identityCtx)
 	}
 
-	// Inject session history if available — this is critical for conversation continuity
-	if (metadata?.sessionHistory && typeof metadata.sessionHistory === 'string') {
-		parts.push('')
-		parts.push('## Conversation History')
-		parts.push('Previous messages in this session. Use this to understand the current context and follow-up messages:')
-		parts.push(metadata.sessionHistory)
-	}
+	// Note: session history is injected as structured messages in convertMessages(), not here
 
 	// Inject memory if available
 	if (metadata?.memory && typeof metadata.memory === 'string') {
@@ -156,10 +150,33 @@ function buildSystemPrompt(
 function convertMessages(
 	systemPrompt: string,
 	messages: AgentMessage[],
+	sessionHistory?: string,
 ): OpenAI.ChatCompletionMessageParam[] {
 	const result: OpenAI.ChatCompletionMessageParam[] = [
 		{ role: 'system', content: systemPrompt },
 	]
+
+	// Inject session history as structured messages (before current task messages)
+	if (sessionHistory) {
+		for (const line of sessionHistory.split('\n')) {
+			if (!line.startsWith('[')) continue
+			const closeBracket = line.indexOf(']')
+			if (closeBracket === -1) continue
+			const rest = line.substring(closeBracket + 2)
+			const colonIdx = rest.indexOf(':')
+			if (colonIdx === -1) continue
+			const role = rest.substring(0, colonIdx).trim()
+			const content = rest.substring(colonIdx + 1).trim()
+
+			if (role === 'user') {
+				result.push({ role: 'user', content })
+			} else if (role === 'brain') {
+				result.push({ role: 'assistant', content })
+			}
+			// Tool results in session history are skipped as structured messages
+			// — they were already seen by the Brain in previous tasks
+		}
+	}
 
 	for (const msg of messages) {
 		switch (msg.role) {
@@ -203,6 +220,51 @@ function convertTools(
 			},
 		},
 	}))
+}
+
+/** Estimate token count for a string (~4 chars per token) */
+function estimateTokens(text: string): number {
+	return Math.ceil(text.length / 4)
+}
+
+/** Estimate total tokens for a message list */
+function estimateMessageTokens(messages: OpenAI.ChatCompletionMessageParam[]): number {
+	return messages.reduce((sum, m) => {
+		const content = typeof m.content === 'string' ? m.content || '' : JSON.stringify(m.content)
+		return sum + estimateTokens(content) + 4
+	}, 0)
+}
+
+/** Trim messages from oldest (after system prompt) to fit within token budget */
+function trimToFit(
+	messages: OpenAI.ChatCompletionMessageParam[],
+	maxTokens: number,
+	toolTokens: number,
+): OpenAI.ChatCompletionMessageParam[] {
+	const systemMsg = messages[0] // always keep system prompt
+	const rest = messages.slice(1)
+
+	const systemContent = typeof systemMsg.content === 'string' ? systemMsg.content || '' : JSON.stringify(systemMsg.content)
+	const systemTokens = estimateTokens(systemContent) + 4
+	const available = maxTokens - systemTokens - toolTokens - 500 // 500 token buffer for response
+
+	if (available <= 0) {
+		// System prompt + tools already exceed limit — keep only system + last 2 messages
+		return [systemMsg, ...rest.slice(-2)]
+	}
+
+	// Trim from oldest until within budget
+	let totalTokens = 0
+	const kept: OpenAI.ChatCompletionMessageParam[] = []
+	for (let i = rest.length - 1; i >= 0; i--) {
+		const content = typeof rest[i].content === 'string' ? rest[i].content || '' : JSON.stringify(rest[i].content)
+		const msgTokens = estimateTokens(content) + 4
+		if (totalTokens + msgTokens > available) break
+		kept.unshift(rest[i])
+		totalTokens += msgTokens
+	}
+
+	return [systemMsg, ...kept]
 }
 
 function parseToolCalls(
@@ -252,8 +314,28 @@ export const paw: PawDefinition = {
 				customBrainPrompt,
 			)
 
-			const openaiMessages = convertMessages(systemPrompt, context.messages)
+			const sessionHistory = context.metadata?.sessionHistory as string | undefined
+			let openaiMessages = convertMessages(systemPrompt, context.messages, sessionHistory)
 			const openaiTools = convertTools(context.availableTools)
+
+			// Estimate tool tokens
+			const toolTokens = estimateTokens(JSON.stringify(openaiTools))
+
+			// Get max context from env or default (131072 for xAI)
+			const maxContextTokens = Number(process.env.XAI_MAX_CONTEXT) || 131072
+
+			// Trim messages to fit within context limit
+			const totalTokens = estimateMessageTokens(openaiMessages) + toolTokens
+			if (totalTokens > maxContextTokens) {
+				console.warn(
+					`[paw-xai] context ${totalTokens} tokens exceeds limit ${maxContextTokens}, trimming oldest messages`,
+				)
+				openaiMessages = trimToFit(openaiMessages, maxContextTokens, toolTokens)
+			}
+
+			console.log(
+				`[paw-xai] chat request — model: ${model}, messages: ${openaiMessages.length}, tools: ${openaiTools.length}, ~${estimateMessageTokens(openaiMessages) + toolTokens} tokens`,
+			)
 
 			const response = await openai.chat.completions.create({
 				model,
