@@ -10,7 +10,105 @@ let currentSessionId: string | undefined
 const DEFAULT_TTL = 60
 
 /** Max messages to load during bootstrap */
-const BOOTSTRAP_HISTORY_LIMIT = 20
+const BOOTSTRAP_HISTORY_LIMIT = 50
+
+/** Approximate max characters for session history (~4 chars per token, ~2000 token budget) */
+const MAX_HISTORY_CHARS = 8000
+
+/**
+ * 4-layer session history pruning:
+ * 1. Message count limit (already applied before this function)
+ * 2. Time decay — recent messages full, older messages shortened
+ * 3. Compaction — consecutive tool results compressed into summaries
+ * 4. Token budget — trim from oldest until within character limit
+ */
+function pruneSessionHistory(lines: string[]): string {
+	const total = lines.length
+
+	// Layer 2: Time decay — recent messages get more space
+	const decayed: string[] = []
+	for (let i = 0; i < total; i++) {
+		const age = total - i // 1 = newest, total = oldest
+		const line = lines[i]
+
+		// Extract role from line: [HH:MM:SS] role: content
+		const closeBracket = line.indexOf(']')
+		if (closeBracket === -1) continue
+		const rest = line.substring(closeBracket + 2)
+		const colonIdx = rest.indexOf(':')
+		if (colonIdx === -1) continue
+		const role = rest.substring(0, colonIdx).trim()
+		const content = rest.substring(colonIdx + 1).trim()
+		const timestamp = line.substring(0, closeBracket + 1)
+
+		if (role === 'user' || role === 'brain') {
+			// User and brain messages: full for recent, truncated for old
+			if (age <= 10) {
+				decayed.push(line) // recent — full content
+			} else {
+				const truncated = content.length > 150
+					? content.substring(0, 150) + '...'
+					: content
+				decayed.push(`${timestamp} ${role}: ${truncated}`)
+			}
+		} else {
+			// Tool results: brief for recent, just name for old
+			if (age <= 5) {
+				const truncated = content.length > 200
+					? content.substring(0, 200) + '...'
+					: content
+				decayed.push(`${timestamp} ${role}: ${truncated}`)
+			} else {
+				// Old tool results — just record that it was called
+				decayed.push(`${timestamp} ${role}: [called]`)
+			}
+		}
+	}
+
+	// Layer 3: Compact consecutive old tool calls into summaries
+	const compacted: string[] = []
+	let toolGroup: string[] = []
+
+	for (const line of decayed) {
+		const isOldTool = line.includes('[called]')
+		if (isOldTool) {
+			// Extract tool name
+			const match = line.match(/\] (tool:\S+):/)
+			if (match) toolGroup.push(match[1])
+		} else {
+			// Flush any accumulated tool group
+			if (toolGroup.length > 0) {
+				if (toolGroup.length <= 2) {
+					compacted.push(...toolGroup.map((t) => `  ${t}`))
+				} else {
+					compacted.push(`  [${toolGroup.length} tool calls: ${[...new Set(toolGroup)].join(', ')}]`)
+				}
+				toolGroup = []
+			}
+			compacted.push(line)
+		}
+	}
+	// Flush remaining
+	if (toolGroup.length > 0) {
+		if (toolGroup.length <= 2) {
+			compacted.push(...toolGroup.map((t) => `  ${t}`))
+		} else {
+			compacted.push(`  [${toolGroup.length} tool calls: ${[...new Set(toolGroup)].join(', ')}]`)
+		}
+	}
+
+	// Layer 4: Token budget — trim from oldest until within budget
+	let totalChars = 0
+	const budgetLines: string[] = []
+	for (let i = compacted.length - 1; i >= 0; i--) {
+		const lineLen = compacted[i].length
+		if (totalChars + lineLen > MAX_HISTORY_CHARS) break
+		budgetLines.unshift(compacted[i])
+		totalChars += lineLen
+	}
+
+	return budgetLines.join('\n')
+}
 
 function getTtl(): number {
 	const envTtl = process.env.VOLE_SESSION_TTL
@@ -110,10 +208,13 @@ export const paw: PawDefinition = {
 				await store.clear(sessionId)
 			}
 
-			// Load recent history
-			const history = await store.getHistory(sessionId, BOOTSTRAP_HISTORY_LIMIT)
-			if (history) {
-				context.metadata.sessionHistory = history
+			// Load recent history with 4-layer pruning
+			const rawHistory = await store.getHistory(sessionId, BOOTSTRAP_HISTORY_LIMIT)
+			if (rawHistory) {
+				const lines = rawHistory.split('\n').filter((l) => l.startsWith('['))
+				if (lines.length > 0) {
+					context.metadata.sessionHistory = pruneSessionHistory(lines)
+				}
 			}
 
 			// Append the user's input to the transcript
@@ -135,14 +236,14 @@ export const paw: PawDefinition = {
 		async onObserve(result) {
 			if (!store || !currentSessionId) return
 
-			// Record tool results (truncated to keep transcript manageable)
+			// Record tool results — truncated to keep transcript manageable
 			const rawContent = result.success
 				? typeof result.output === 'string'
 					? result.output
 					: JSON.stringify(result.output)
 				: result.error?.message ?? 'error'
-			const content = rawContent.length > 500
-				? rawContent.substring(0, 500) + '... [truncated]'
+			const content = rawContent.length > 300
+				? rawContent.substring(0, 300) + '...'
 				: rawContent
 
 			await store.appendMessage(
