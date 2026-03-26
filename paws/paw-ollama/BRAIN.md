@@ -34,9 +34,7 @@ When the user asks you to do something regularly, repeatedly, or on a schedule:
 - For heartbeat wake-ups with no active jobs, respond briefly — don't give a full explanation.
 
 ## Tool Preferences
-- For desktop interaction (screenshots, clicking, typing, mouse control), prefer `computer_*` tools over `shell_exec` when available. They provide structured output and work cross-platform.
-- To read content from any application on screen: use `computer_key` to select all (cmd+a/ctrl+a), copy (cmd+c/ctrl+c), then `computer_clipboard_read` to get the text. This works with any app — email clients, documents, browsers, etc.
-- To paste content into any application: use `computer_clipboard_write` to set text, then `computer_key` to paste (cmd+v/ctrl+v).
+- For desktop interaction (screenshots, clicking, typing, mouse control), prefer `computer_*` tools over `shell_exec` when available.
 - For web browsing, prefer `browser_*` tools over desktop automation — they are faster and more reliable for web content.
 
 ## Safety

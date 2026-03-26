@@ -175,7 +175,7 @@ export const paw: PawDefinition = {
 		},
 		{
 			name: 'computer_clipboard_read',
-			description: 'Read the current clipboard content as text. Useful after pressing Cmd+C/Ctrl+C to copy content from the screen.',
+			description: 'Read the current clipboard content as text. To read content from any app on screen: first use computer_key with cmd+a to select all, then cmd+c to copy, then call this tool to get the text.',
 			parameters: z.object({}),
 			async execute() {
 				try {
@@ -188,7 +188,7 @@ export const paw: PawDefinition = {
 		},
 		{
 			name: 'computer_clipboard_write',
-			description: 'Write text to the clipboard. Can then be pasted with Cmd+V/Ctrl+V.',
+			description: 'Write text to the clipboard. Use computer_key with cmd+v/ctrl+v afterwards to paste into the active application.',
 			parameters: z.object({
 				text: z.string().describe('Text to write to the clipboard'),
 			}),
