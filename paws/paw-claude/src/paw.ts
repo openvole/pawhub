@@ -337,6 +337,8 @@ export const paw: PawDefinition = {
 				...(anthropicTools.length > 0 ? { tools: anthropicTools } : {}),
 			})
 
+			console.log(`[paw-claude] tokens — INPUT: ${response.usage.input_tokens}, OUTPUT: ${response.usage.output_tokens} (model: ${model})`)
+
 			const durationMs = Date.now() - start
 			console.log(
 				`[paw-claude] think completed in ${durationMs}ms (model: ${model})`,
@@ -365,7 +367,7 @@ export const paw: PawDefinition = {
 		} catch (error) {
 			const durationMs = Date.now() - start
 			const message = error instanceof Error ? error.message : String(error)
-			console.error(`[paw-claude] think failed after ${durationMs}ms: ${message}`)
+			console.log(`[paw-claude] think failed after ${durationMs}ms: ${message}`)
 			return {
 				actions: [],
 				response: message,

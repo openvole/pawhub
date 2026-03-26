@@ -361,6 +361,8 @@ export const paw: PawDefinition = {
 
 			const response = await chat.sendMessage(lastParts)
 
+			console.log(`[paw-gemini] tokens — INPUT: ${response.response.usageMetadata?.promptTokenCount ?? '?'}, OUTPUT: ${response.response.usageMetadata?.candidatesTokenCount ?? '?'} (model: ${model})`)
+
 			const durationMs = Date.now() - start
 			console.log(
 				`[paw-gemini] think completed in ${durationMs}ms (model: ${model})`,
@@ -397,7 +399,7 @@ export const paw: PawDefinition = {
 		} catch (error) {
 			const durationMs = Date.now() - start
 			const message = error instanceof Error ? error.message : String(error)
-			console.error(`[paw-gemini] think failed after ${durationMs}ms: ${message}`)
+			console.log(`[paw-gemini] think failed after ${durationMs}ms: ${message}`)
 			return {
 				actions: [],
 				response: message,

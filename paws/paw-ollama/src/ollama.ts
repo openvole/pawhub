@@ -224,15 +224,21 @@ export class OllamaClient {
 			ollamaMessages = this.trimToFit(ollamaMessages, maxContextTokens, toolTokens)
 		}
 
-		console.log(
-			`[paw-ollama] chat request — model: ${this.model}, messages: ${ollamaMessages.length}, tools: ${ollamaTools.length}, ~${this.estimateMessageTokens(ollamaMessages) + toolTokens} tokens`,
-		)
-		return this.client.chat({
+		const response = await this.client.chat({
 			model: this.model,
 			messages: ollamaMessages,
 			tools: ollamaTools.length > 0 ? ollamaTools : undefined,
 			stream: false,
 		})
+
+		// Log actual token usage from API response (stderr so paw-loader captures it)
+		const inputTokens = (response as Record<string, unknown>).prompt_eval_count ?? '?'
+		const outputTokens = (response as Record<string, unknown>).eval_count ?? '?'
+		console.error(
+			`[paw-ollama] tokens — INPUT: ${inputTokens}, OUTPUT: ${outputTokens} (model: ${this.model})`,
+		)
+
+		return response
 	}
 
 	/**

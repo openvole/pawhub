@@ -343,6 +343,8 @@ export const paw: PawDefinition = {
 				...(openaiTools.length > 0 ? { tools: openaiTools } : {}),
 			})
 
+			console.log(`[paw-xai] tokens — INPUT: ${response.usage?.prompt_tokens ?? '?'}, OUTPUT: ${response.usage?.completion_tokens ?? '?'} (model: ${model})`)
+
 			const durationMs = Date.now() - start
 			console.log(
 				`[paw-xai] think completed in ${durationMs}ms (model: ${model})`,
@@ -376,7 +378,7 @@ export const paw: PawDefinition = {
 		} catch (error) {
 			const durationMs = Date.now() - start
 			const message = error instanceof Error ? error.message : String(error)
-			console.error(`[paw-xai] think failed after ${durationMs}ms: ${message}`)
+			console.log(`[paw-xai] think failed after ${durationMs}ms: ${message}`)
 			return {
 				actions: [],
 				response: message,
