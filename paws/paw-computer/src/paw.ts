@@ -175,7 +175,7 @@ export const paw: PawDefinition = {
 		},
 		{
 			name: 'computer_ui_tree',
-			description: 'Read the accessibility UI tree of the active application. Returns all interactive elements (buttons, text fields, menus, labels) with their roles, names, values, and positions. Much cheaper than screenshots — use this to understand what is on screen before clicking.',
+			description: 'Read the accessibility UI tree of the active application. Returns a hierarchical indented tree showing parent-child relationships between UI elements (buttons, text fields, menus, labels, groups, toolbars) with their roles, names, values, and screen positions. Much cheaper than screenshots — use this first to understand what is on screen and locate elements before clicking.',
 			parameters: z.object({
 				max_depth: z.number().optional().describe('Maximum depth of the UI tree to traverse (default: 5)'),
 			}),

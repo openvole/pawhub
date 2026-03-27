@@ -60,18 +60,33 @@ function convertMessages(
 			case 'brain':
 				result.push({ role: 'assistant', content: msg.content })
 				break
-			case 'tool_result':
+			case 'tool_result': {
+				const toolResultContent: Anthropic.ToolResultBlockParam['content'] = [
+					{ type: 'text', text: msg.content },
+				]
+				// Attach image as proper Anthropic image block if present
+				if (msg.imageBase64 && msg.imageMimeType) {
+					toolResultContent.push({
+						type: 'image',
+						source: {
+							type: 'base64',
+							media_type: msg.imageMimeType as 'image/png' | 'image/jpeg' | 'image/gif' | 'image/webp',
+							data: msg.imageBase64,
+						},
+					})
+				}
 				result.push({
 					role: 'user',
 					content: [
 						{
 							type: 'tool_result',
 							tool_use_id: (msg as any).toolUseId || 'unknown',
-							content: msg.content,
+							content: toolResultContent,
 						},
 					],
 				})
 				break
+			}
 			case 'error':
 				result.push({
 					role: 'user',

@@ -60,9 +60,15 @@ export class OllamaClient {
 				case 'brain':
 					result.push({ role: 'assistant', content: msg.content })
 					break
-				case 'tool_result':
-					result.push({ role: 'tool', content: msg.content })
+				case 'tool_result': {
+					const toolMsg: Message = { role: 'tool', content: msg.content }
+					// Ollama supports images via the images array on messages
+					if (msg.imageBase64 && msg.imageMimeType) {
+						toolMsg.images = [msg.imageBase64]
+					}
+					result.push(toolMsg)
 					break
+				}
 				case 'error':
 					result.push({
 						role: 'tool',

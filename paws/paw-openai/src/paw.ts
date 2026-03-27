@@ -56,19 +56,48 @@ function convertMessages(
 
 	for (const msg of messages) {
 		switch (msg.role) {
-			case 'user':
-				result.push({ role: 'user', content: msg.content })
+			case 'user': {
+				// If user message has an attached image, send as multi-part content
+				if (msg.imageBase64 && msg.imageMimeType) {
+					result.push({
+						role: 'user',
+						content: [
+							{ type: 'text', text: msg.content },
+							{
+								type: 'image_url',
+								image_url: { url: `data:${msg.imageMimeType};base64,${msg.imageBase64}` },
+							},
+						],
+					})
+				} else {
+					result.push({ role: 'user', content: msg.content })
+				}
 				break
+			}
 			case 'brain':
 				result.push({ role: 'assistant', content: msg.content })
 				break
-			case 'tool_result':
+			case 'tool_result': {
+				// Tool results with images: attach as a follow-up user message with image_url
 				result.push({
 					role: 'tool',
 					content: msg.content,
 					tool_call_id: (msg as any).toolCallId || 'unknown',
 				})
+				if (msg.imageBase64 && msg.imageMimeType) {
+					result.push({
+						role: 'user',
+						content: [
+							{ type: 'text', text: '[Image from tool result]' },
+							{
+								type: 'image_url',
+								image_url: { url: `data:${msg.imageMimeType};base64,${msg.imageBase64}` },
+							},
+						],
+					})
+				}
 				break
+			}
 			case 'error':
 				result.push({
 					role: 'tool',

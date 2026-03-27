@@ -198,60 +198,79 @@ export class DesktopController {
 
 		if (platform === 'darwin') {
 			const scriptPath = join(tmpdir(), `vole-uitree-${Date.now()}.scpt`)
-			const script = [
-				'tell application "System Events"',
-				'  set frontApp to first application process whose frontmost is true',
-				'  set appName to name of frontApp',
-				'  set windowInfo to ""',
-				'  try',
-				'    set frontWindow to first window of frontApp',
-				'    set winTitle to name of frontWindow',
-				'    set winPos to position of frontWindow',
-				'    set winSize to size of frontWindow',
-				'    set windowInfo to "Window: " & winTitle & " at (" & item 1 of winPos & "," & item 2 of winPos & ") size (" & item 1 of winSize & "x" & item 2 of winSize & ")"',
-				'  end try',
-				'  set uiText to ""',
-				'  set elemCount to 0',
-				'  try',
-				'    set allElems to entire contents of frontWindow',
-				'    repeat with elem in allElems',
-				'      if elemCount > 100 then exit repeat',
-				'      try',
-				'        set r to role of elem',
-				'        set t to ""',
-				'        try',
-				'          set t to name of elem',
-				'        end try',
-				'        set d to ""',
-				'        try',
-				'          set d to description of elem',
-				'        end try',
-				'        set v to ""',
-				'        try',
-				'          set v to value of elem',
-				'        end try',
-				'        set pos to ""',
-				'        try',
-				'          set p to position of elem',
-				'          set s to size of elem',
-				'          set pos to " at (" & item 1 of p & "," & item 2 of p & " " & item 1 of s & "x" & item 2 of s & ")"',
-				'        end try',
-				'        if r is in {"AXButton", "AXTextField", "AXTextArea", "AXCheckBox", "AXRadioButton", "AXPopUpButton", "AXComboBox", "AXMenuItem", "AXLink", "AXStaticText", "AXTabGroup", "AXTab", "AXToolbar", "AXMenu", "AXMenuBarItem", "AXMenuButton", "AXSlider"} then',
-				'          set ln to r',
-				'          if t is not "" then set ln to ln & " " & quote & t & quote',
-				'          if d is not "" and d is not t then set ln to ln & " (" & d & ")"',
-				'          if v is not "" and (length of (v as text)) < 100 then set ln to ln & " [" & v & "]"',
-				'          set ln to ln & pos',
-				'          set uiText to uiText & ln & linefeed',
-				'          set elemCount to elemCount + 1',
-				'        end if',
-				'      end try',
-				'    end repeat',
-				'  end try',
-				'  return "App: " & appName & linefeed & windowInfo & linefeed & linefeed & "UI Elements:" & linefeed & uiText',
-				'end tell',
-			].join('\n')
+			// Recursive traversal that preserves parent-child hierarchy via indentation
+			const script = `
+property elemCount : 0
 
+tell application "System Events"
+  set frontApp to first application process whose frontmost is true
+  set appName to name of frontApp
+  set output to "App: " & appName & linefeed
+  try
+    set frontWindow to first window of frontApp
+    set winTitle to name of frontWindow
+    set winPos to position of frontWindow
+    set winSize to size of frontWindow
+    set output to output & "Window: " & winTitle & " at (" & item 1 of winPos & "," & item 2 of winPos & " " & item 1 of winSize & "x" & item 2 of winSize & ")" & linefeed & linefeed
+    set my elemCount to 0
+    set output to output & my walkElement(frontWindow, 0, ${maxDepth})
+  end try
+  return output
+end tell
+
+on walkElement(el, depth, maxD)
+  if depth > maxD then return ""
+  if my elemCount > 200 then return ""
+  set indent to ""
+  repeat depth times
+    set indent to indent & "  "
+  end repeat
+  set result to ""
+  try
+    set uiElems to UI elements of el
+  on error
+    return ""
+  end try
+  repeat with elem in uiElems
+    if my elemCount > 200 then exit repeat
+    try
+      set r to role of elem
+      set t to ""
+      try
+        set t to name of elem
+      end try
+      set d to ""
+      try
+        set d to description of elem
+      end try
+      set v to ""
+      try
+        set v to value of elem
+      end try
+      set pos to ""
+      try
+        set p to position of elem
+        set s to size of elem
+        set pos to " at (" & item 1 of p & "," & item 2 of p & " " & item 1 of s & "x" & item 2 of s & ")"
+      end try
+      set ln to indent & r
+      if t is not "" then set ln to ln & " " & quote & t & quote
+      if d is not "" and d is not t then set ln to ln & " (" & d & ")"
+      if v is not "" then
+        try
+          if (length of (v as text)) < 100 then set ln to ln & " [" & v & "]"
+        end try
+      end if
+      set ln to ln & pos
+      set result to result & ln & linefeed
+      set my elemCount to (my elemCount) + 1
+      -- Recurse into children
+      set result to result & my walkElement(elem, depth + 1, maxD)
+    end try
+  end repeat
+  return result
+end walkElement
+`
 			try {
 				writeFileSync(scriptPath, script, 'utf-8')
 				const result = execSync(`osascript ${scriptPath}`, {
@@ -266,28 +285,46 @@ export class DesktopController {
 			}
 		} else if (platform === 'win32') {
 			const psPath = join(tmpdir(), `vole-uitree-${Date.now()}.ps1`)
-			const psScript = [
-				'Add-Type -AssemblyName UIAutomationClient',
-				'$walker = [System.Windows.Automation.TreeWalker]::ControlViewWalker',
-				'function Get-UITree($el, $d, $m) {',
-				'  if ($d -ge $m) { return }',
-				'  $c = $walker.GetFirstChild($el)',
-				'  while ($c -ne $null) {',
-				'    $n = $c.Current.Name',
-				'    $t = $c.Current.ControlType.ProgrammaticName',
-				'    $r = $c.Current.BoundingRectangle',
-				'    $i = "  " * $d',
-				'    if ($n -ne "") { Write-Output "$i$t `"$n`" at ($([int]$r.X),$([int]$r.Y) $([int]$r.Width)x$([int]$r.Height))" }',
-				'    Get-UITree $c ($d+1) $m',
-				'    $c = $walker.GetNextSibling($c)',
-				'  }',
-				'}',
-				'$f = [System.Windows.Automation.AutomationElement]::FocusedElement',
-				'$w = $f',
-				'while ($w.Current.ControlType -ne [System.Windows.Automation.ControlType]::Window -and $w -ne $null) { $w = $walker.GetParent($w) }',
-				`if ($w -ne $null) { Write-Output "Window: $($w.Current.Name)"; Get-UITree $w 0 ${maxDepth} }`,
-			].join('\n')
+			// Recursive traversal with indented tree output
+			const psScript = `
+Add-Type -AssemblyName UIAutomationClient
+$walker = [System.Windows.Automation.TreeWalker]::ControlViewWalker
+$script:count = 0
 
+function Get-UITree($el, $depth, $maxDepth) {
+  if ($depth -ge $maxDepth) { return }
+  if ($script:count -ge 200) { return }
+  $c = $walker.GetFirstChild($el)
+  while ($c -ne $null) {
+    if ($script:count -ge 200) { return }
+    $n = $c.Current.Name
+    $t = $c.Current.ControlType.ProgrammaticName -replace '^ControlType\\.', ''
+    $r = $c.Current.BoundingRectangle
+    $indent = "  " * $depth
+    $line = "$indent$t"
+    if ($n -ne "") { $line += " \`"$n\`"" }
+    if (-not [System.Double]::IsInfinity($r.X)) {
+      $line += " at ($([int]$r.X),$([int]$r.Y) $([int]$r.Width)x$([int]$r.Height))"
+    }
+    Write-Output $line
+    $script:count++
+    Get-UITree $c ($depth + 1) $maxDepth
+    $c = $walker.GetNextSibling($c)
+  }
+}
+
+$focused = [System.Windows.Automation.AutomationElement]::FocusedElement
+$win = $focused
+while ($win -ne $null -and $win.Current.ControlType -ne [System.Windows.Automation.ControlType]::Window) {
+  $win = $walker.GetParent($win)
+}
+if ($win -ne $null) {
+  $wr = $win.Current.BoundingRectangle
+  Write-Output "Window: $($win.Current.Name) at ($([int]$wr.X),$([int]$wr.Y) $([int]$wr.Width)x$([int]$wr.Height))"
+  Write-Output ""
+  Get-UITree $win 0 ${maxDepth}
+}
+`
 			try {
 				writeFileSync(psPath, psScript, 'utf-8')
 				const result = execSync(`powershell -NoProfile -ExecutionPolicy Bypass -File "${psPath}"`, {

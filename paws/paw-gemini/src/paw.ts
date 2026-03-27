@@ -75,19 +75,30 @@ function convertMessages(
 					parts: [{ text: msg.content }],
 				})
 				break
-			case 'tool_result':
+			case 'tool_result': {
+				const toolParts: Part[] = [
+					{
+						functionResponse: {
+							name: (msg as any).toolName || 'unknown',
+							response: { result: msg.content },
+						},
+					},
+				]
+				// Attach image as Gemini inlineData part if present
+				if (msg.imageBase64 && msg.imageMimeType) {
+					toolParts.push({
+						inlineData: {
+							mimeType: msg.imageMimeType,
+							data: msg.imageBase64,
+						},
+					})
+				}
 				result.push({
 					role: 'function',
-					parts: [
-						{
-							functionResponse: {
-								name: (msg as any).toolName || 'unknown',
-								response: { result: msg.content },
-							},
-						},
-					],
+					parts: toolParts,
 				})
 				break
+			}
 			case 'error':
 				result.push({
 					role: 'function',
