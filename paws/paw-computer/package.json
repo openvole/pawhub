@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-computer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Desktop automation Paw for OpenVole — mouse, keyboard, and screen control",
   "type": "module",
   "main": "./dist/index.js",

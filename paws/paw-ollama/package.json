@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-ollama",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "[DEPRECATED — use @openvole/paw-brain] Brain Paw powered by Ollama for local LLM inference",
   "deprecated": "Use @openvole/paw-brain instead. It supports all providers (Anthropic, OpenAI, Gemini, xAI, Ollama) in a single paw.",
   "type": "module",

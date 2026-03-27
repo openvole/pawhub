@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-claude",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "[DEPRECATED — use @openvole/paw-brain] Brain Paw powered by Anthropic Claude",
   "deprecated": "Use @openvole/paw-brain instead. It supports all providers (Anthropic, OpenAI, Gemini, xAI, Ollama) in a single paw.",
   "type": "module",
