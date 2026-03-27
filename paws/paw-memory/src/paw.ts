@@ -6,6 +6,11 @@ let store: MemoryStore | undefined
 /** Current task source — set during bootstrap, used by tools */
 let currentSource: MemorySource = 'user'
 
+/** Track successful tool calls for auto-extraction */
+let successfulToolCalls = 0
+const AUTO_EXTRACT_INTERVAL = 10
+const learnedPatterns = new Set<string>()
+
 export const paw: PawDefinition = {
 	name: '@openvole/paw-memory',
 	version: '0.1.0',
@@ -122,6 +127,51 @@ export const paw: PawDefinition = {
 	],
 
 	hooks: {
+		async onCompact(context) {
+			if (!store) return context
+
+			// Before compaction, extract key facts from messages that will be compacted
+			const messages = context.messages
+			const KEEP_RECENT = 10
+			if (messages.length <= KEEP_RECENT + 2) return context
+
+			const oldMessages = messages.slice(1, messages.length - KEEP_RECENT)
+			const facts: string[] = []
+
+			for (const msg of oldMessages) {
+				// Extract user preferences and corrections
+				if (msg.role === 'user' && msg.content.length > 20) {
+					const lower = msg.content.toLowerCase()
+					if (lower.includes('remember') || lower.includes('always') || lower.includes('never') ||
+						lower.includes('prefer') || lower.includes('don\'t') || lower.includes('my ')) {
+						facts.push(`User said: "${msg.content.substring(0, 200)}"`)
+					}
+				}
+				// Extract successful tool patterns (what worked)
+				if (msg.role === 'tool_result' && msg.toolCall?.name) {
+					const lower = msg.content.toLowerCase()
+					if (lower.includes('"ok":true') || lower.includes('"ok": true') || lower.includes('"success"')) {
+						if (msg.content.length > 500) {
+							// Large successful result — note what tool was used for what
+							facts.push(`Used ${msg.toolCall.name} successfully`)
+						}
+					}
+				}
+			}
+
+			if (facts.length > 0) {
+				const entry = `### Auto-extracted (compaction)\n${facts.join('\n')}`
+				try {
+					await store.write('today', entry, 'append', currentSource)
+					console.log(`[paw-memory] Extracted ${facts.length} facts before compaction`)
+				} catch (err) {
+					console.log(`[paw-memory] Failed to save compaction facts: ${err instanceof Error ? err.message : String(err)}`)
+				}
+			}
+
+			return context
+		},
+
 		async onBootstrap(context) {
 			if (!store) return context
 
@@ -151,6 +201,45 @@ export const paw: PawDefinition = {
 			}
 
 			return context
+		},
+
+		async onObserve(result) {
+			if (!store) return
+			if (!result.success) return
+
+			successfulToolCalls++
+
+			// Track tool usage patterns
+			const toolName = result.toolName
+			const output = typeof result.output === 'string' ? result.output : JSON.stringify(result.output)
+
+			// Auto-extract every N successful tool calls
+			if (successfulToolCalls % AUTO_EXTRACT_INTERVAL === 0) {
+				const patterns: string[] = []
+
+				// Note frequently used tools
+				const pattern = `tool:${toolName}`
+				if (!learnedPatterns.has(pattern)) {
+					learnedPatterns.add(pattern)
+					patterns.push(`- Frequently used tool: ${toolName}`)
+				}
+
+				// Detect API keys or credentials in results (warn, don't store)
+				const lower = output.toLowerCase()
+				if (lower.includes('api_key') || lower.includes('token') || lower.includes('password')) {
+					patterns.push(`- Warning: ${toolName} returned sensitive data — use vault for storage`)
+				}
+
+				if (patterns.length > 0) {
+					try {
+						const entry = `### Auto-learned (iteration ${successfulToolCalls})\n${patterns.join('\n')}`
+						await store.write('today', entry, 'append', currentSource)
+						console.log(`[paw-memory] Auto-extracted ${patterns.length} patterns at tool call #${successfulToolCalls}`)
+					} catch {
+						// Silent — don't break the loop for memory writes
+					}
+				}
+			}
 		},
 	},
 

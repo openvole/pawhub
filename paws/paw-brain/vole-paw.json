@@ -26,7 +26,10 @@
       "OLLAMA_MODEL",
       "OLLAMA_API_KEY",
       "XAI_API_KEY",
-      "XAI_MODEL"
+      "XAI_MODEL",
+      "BRAIN_FALLBACK",
+      "BRAIN_FALLBACK_MODEL",
+      "BRAIN_FALLBACK_BASE_URL"
     ]
   }
 }

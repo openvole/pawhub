@@ -2,6 +2,7 @@ import type { PawDefinition, AgentContext, AgentPlan } from '@openvole/paw-sdk'
 import type { BrainProvider } from './types.js'
 
 let provider: BrainProvider | undefined
+let fallbackProvider: BrainProvider | undefined
 
 /**
  * Resolve provider from environment variables.
@@ -39,6 +40,23 @@ async function resolveProvider(): Promise<BrainProvider> {
 	}
 	// Ollama doesn't need an API key — default fallback
 	return createProvider('ollama', brainApiKey, brainModel, brainBaseURL)
+}
+
+/** Resolve fallback provider from BRAIN_FALLBACK env var */
+async function resolveFallbackProvider(): Promise<BrainProvider | undefined> {
+	const fallbackName = process.env.BRAIN_FALLBACK?.toLowerCase()
+	if (!fallbackName) return undefined
+
+	const brainApiKey = process.env.BRAIN_API_KEY
+	const brainModel = process.env.BRAIN_FALLBACK_MODEL
+	const brainBaseURL = process.env.BRAIN_FALLBACK_BASE_URL
+
+	try {
+		return await createProvider(fallbackName, brainApiKey, brainModel, brainBaseURL)
+	} catch (err) {
+		console.log(`[paw-brain] Failed to create fallback provider "${fallbackName}": ${err instanceof Error ? err.message : String(err)}`)
+		return undefined
+	}
 }
 
 async function createProvider(
@@ -126,26 +144,76 @@ export const paw: PawDefinition = {
 				`${tag} tokens — INPUT: ${result.inputTokens ?? '?'}, OUTPUT: ${result.outputTokens ?? '?'} (${durationMs}ms)`,
 			)
 
+			const usage = {
+				inputTokens: typeof result.inputTokens === 'number' ? result.inputTokens : undefined,
+				outputTokens: typeof result.outputTokens === 'number' ? result.outputTokens : undefined,
+				model: provider.model,
+				provider: provider.name,
+			}
+
 			if (result.actions.length > 0) {
 				return {
 					actions: result.actions,
 					execution: 'sequential',
+					usage,
 				}
 			}
 
 			if (!result.response) {
-				return { actions: [], done: false }
+				return { actions: [], done: false, usage }
 			}
 
 			return {
 				actions: [],
 				response: result.response,
 				done: result.done ?? true,
+				usage,
 			}
 		} catch (error) {
 			const durationMs = Date.now() - start
 			const message = error instanceof Error ? error.message : String(error)
 			console.log(`${tag} think failed after ${durationMs}ms: ${message}`)
+
+			// Try fallback provider if available
+			if (fallbackProvider) {
+				console.log(`${tag} Attempting fallback provider: ${fallbackProvider.name}/${fallbackProvider.model}`)
+				try {
+					const fallbackResult = await fallbackProvider.think(
+						systemPrompt,
+						context.messages,
+						context.availableTools,
+						sessionHistory,
+					)
+					const fbDuration = Date.now() - start
+					console.log(
+						`[paw-brain:${fallbackProvider.name}] fallback tokens — INPUT: ${fallbackResult.inputTokens ?? '?'}, OUTPUT: ${fallbackResult.outputTokens ?? '?'} (${fbDuration}ms)`,
+					)
+
+					const fbUsage = {
+						inputTokens: typeof fallbackResult.inputTokens === 'number' ? fallbackResult.inputTokens : undefined,
+						outputTokens: typeof fallbackResult.outputTokens === 'number' ? fallbackResult.outputTokens : undefined,
+						model: fallbackProvider.model,
+						provider: fallbackProvider.name,
+					}
+
+					if (fallbackResult.actions.length > 0) {
+						return { actions: fallbackResult.actions, execution: 'sequential' as const, usage: fbUsage }
+					}
+					if (!fallbackResult.response) {
+						return { actions: [], done: false, usage: fbUsage }
+					}
+					return {
+						actions: [],
+						response: fallbackResult.response,
+						done: fallbackResult.done ?? true,
+						usage: fbUsage,
+					}
+				} catch (fbError) {
+					const fbMsg = fbError instanceof Error ? fbError.message : String(fbError)
+					console.log(`[paw-brain:${fallbackProvider.name}] fallback also failed: ${fbMsg}`)
+				}
+			}
+
 			return {
 				actions: [],
 				response: message,
@@ -156,8 +224,10 @@ export const paw: PawDefinition = {
 
 	async onLoad() {
 		provider = await resolveProvider()
+		fallbackProvider = await resolveFallbackProvider()
+		const fbInfo = fallbackProvider ? `, fallback: ${fallbackProvider.name}/${fallbackProvider.model}` : ''
 		console.log(
-			`[paw-brain] loaded — provider: ${provider.name}, model: ${provider.model}`,
+			`[paw-brain] loaded — provider: ${provider.name}, model: ${provider.model}${fbInfo}`,
 		)
 	},
 
