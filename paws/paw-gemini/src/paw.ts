@@ -18,7 +18,7 @@ import type {
 
 let genAI: GoogleGenerativeAI | undefined
 let generativeModel: GenerativeModel | undefined
-let model: string = 'gemini-2.0-flash'
+let model: string = 'gemini-2.5-flash'
 
 function getModel(): GenerativeModel {
 	if (!generativeModel) {
@@ -26,7 +26,7 @@ function getModel(): GenerativeModel {
 		if (!apiKey) {
 			throw new Error('GEMINI_API_KEY environment variable is required')
 		}
-		model = process.env.GEMINI_MODEL || 'gemini-2.0-flash'
+		model = process.env.GEMINI_MODEL || 'gemini-2.5-flash'
 		genAI = new GoogleGenerativeAI(apiKey)
 		generativeModel = genAI.getGenerativeModel({ model })
 	}
@@ -244,6 +244,7 @@ export const paw: PawDefinition = {
 	},
 
 	async onLoad() {
+		console.warn('[paw-gemini] DEPRECATED — use @openvole/paw-brain instead. It supports all providers in a single paw.')
 		getModel()
 		console.log(
 			`[paw-gemini] loaded — model: ${model}`,

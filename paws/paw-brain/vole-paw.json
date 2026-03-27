@@ -1,0 +1,32 @@
+{
+  "name": "@openvole/paw-brain",
+  "version": "1.0.0",
+  "description": "Unified Brain Paw — multi-provider LLM adapter (Anthropic, OpenAI, Gemini, Ollama, xAI)",
+  "entry": "./dist/index.js",
+  "brain": true,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [],
+  "permissions": {
+    "network": ["*"],
+    "listen": [],
+    "filesystem": [],
+    "env": [
+      "BRAIN_PROVIDER",
+      "BRAIN_API_KEY",
+      "BRAIN_MODEL",
+      "BRAIN_BASE_URL",
+      "ANTHROPIC_API_KEY",
+      "ANTHROPIC_MODEL",
+      "OPENAI_API_KEY",
+      "OPENAI_MODEL",
+      "GEMINI_API_KEY",
+      "GEMINI_MODEL",
+      "OLLAMA_HOST",
+      "OLLAMA_MODEL",
+      "OLLAMA_API_KEY",
+      "XAI_API_KEY",
+      "XAI_MODEL"
+    ]
+  }
+}

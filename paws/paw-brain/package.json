@@ -1,8 +1,7 @@
 {
-  "name": "@openvole/paw-ollama",
-  "version": "1.0.3",
-  "description": "[DEPRECATED — use @openvole/paw-brain] Brain Paw powered by Ollama for local LLM inference",
-  "deprecated": "Use @openvole/paw-brain instead. It supports all providers (Anthropic, OpenAI, Gemini, xAI, Ollama) in a single paw.",
+  "name": "@openvole/paw-brain",
+  "version": "1.0.0",
+  "description": "Unified Brain Paw — multi-provider LLM adapter for OpenVole",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -17,7 +16,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "ollama": "^0.5.0"
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@google/generative-ai": "^0.24.0",
+    "ollama": "^0.5.0",
+    "openai": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
@@ -38,14 +40,18 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/openvole/pawhub",
-    "directory": "paws/paw-ollama"
+    "directory": "paws/paw-brain"
   },
   "keywords": [
     "openvole",
     "paw",
-    "ollama",
     "brain",
-    "llm"
+    "llm",
+    "multi-provider",
+    "anthropic",
+    "openai",
+    "gemini",
+    "ollama"
   ],
   "peerDependencies": {
     "@openvole/paw-sdk": "^1.0.0"

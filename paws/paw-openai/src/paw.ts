@@ -233,6 +233,7 @@ export const paw: PawDefinition = {
 	},
 
 	async onLoad() {
+		console.warn('[paw-openai] DEPRECATED — use @openvole/paw-brain instead. It supports all providers in a single paw.')
 		if (!process.env.OPENAI_API_KEY) {
 			console.log('[paw-openai] OPENAI_API_KEY not set — paw will not function')
 			return

@@ -231,6 +231,7 @@ export const paw: PawDefinition = {
 	},
 
 	async onLoad() {
+		console.warn('[paw-xai] DEPRECATED — use @openvole/paw-brain instead. It supports all providers in a single paw.')
 		if (!process.env.XAI_API_KEY) {
 			console.log('[paw-xai] XAI_API_KEY not set — paw will not function')
 			return

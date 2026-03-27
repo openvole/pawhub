@@ -212,6 +212,7 @@ export const paw: PawDefinition = {
 	},
 
 	async onLoad() {
+		console.warn('[paw-claude] DEPRECATED — use @openvole/paw-brain instead. It supports all providers in a single paw.')
 		getClient()
 		console.log(
 			`[paw-claude] loaded — model: ${model}`,

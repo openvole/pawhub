@@ -77,6 +77,7 @@ export const paw: PawDefinition = {
 	},
 
 	async onLoad() {
+		console.warn('[paw-ollama] DEPRECATED — use @openvole/paw-brain instead. It supports all providers in a single paw.')
 		const ollamaClient = getClient()
 		console.log(
 			`[paw-ollama] loaded — model: ${ollamaClient.getModel()}, host: ${process.env.OLLAMA_HOST || 'http://localhost:11434'}`,

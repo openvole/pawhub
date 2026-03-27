@@ -1,7 +1,8 @@
 {
   "name": "@openvole/paw-gemini",
   "version": "1.0.3",
-  "description": "Brain Paw powered by Google Gemini",
+  "description": "[DEPRECATED — use @openvole/paw-brain] Brain Paw powered by Google Gemini",
+  "deprecated": "Use @openvole/paw-brain instead. It supports all providers (Anthropic, OpenAI, Gemini, xAI, Ollama) in a single paw.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
