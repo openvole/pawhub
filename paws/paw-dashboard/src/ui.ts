@@ -322,7 +322,7 @@ export function getDashboardHtml(wsPort: number): string {
       <div class="panel-header"><h2>Tasks <span class="count" id="tasks-count">0</span></h2></div>
       <div class="panel-body">
         <table id="tasks-table">
-          <thead><tr><th>ID</th><th>Source</th><th>Input</th><th>Status</th><th>Time</th></tr></thead>
+          <thead><tr><th>ID</th><th>Source</th><th>Input</th><th>Status</th><th>Time</th><th>Cost</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -445,7 +445,7 @@ function renderTasks(tasks) {
   document.getElementById('tasks-count').textContent = tasks.length;
   const tbody = document.querySelector('#tasks-table tbody');
   tbody.innerHTML = sorted.length === 0
-    ? '<tr><td colspan="5" class="empty">No tasks</td></tr>'
+    ? '<tr><td colspan="6" class="empty">No tasks</td></tr>'
     : sorted.map(t => {
       const elapsed = formatElapsed(t);
       const sourceTag = sourceClass(t.source);
@@ -455,6 +455,7 @@ function renderTasks(tasks) {
         + '<td title="' + esc(t.input || '') + '">' + esc((t.input ?? '').substring(0, 50)) + '</td>'
         + '<td><span class="tag ' + statusClass(t.status) + '">' + esc(t.status) + '</span></td>'
         + '<td>' + elapsed + '</td>'
+        + '<td>' + formatCost(t) + '</td>'
         + '</tr>';
     }).join('');
 }
@@ -477,6 +478,17 @@ function formatElapsed(t) {
   }
   if (t.status === 'queued') return 'waiting';
   return '\\u2014';
+}
+
+function formatCost(t) {
+  const cost = t.metadata?.cost;
+  if (!cost) return '\u2014';
+  const total = cost.totalCost;
+  if (total === 0) return 'free';
+  const tokens = (cost.totalInputTokens || 0) + (cost.totalOutputTokens || 0);
+  const tokensStr = tokens > 1000 ? (tokens / 1000).toFixed(1) + 'K' : tokens;
+  if (total < 0.001) return tokensStr + ' tok';
+  return '$' + total.toFixed(4) + ' (' + tokensStr + ' tok)';
 }
 
 function formatMs(ms) {
