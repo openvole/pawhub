@@ -66,3 +66,27 @@ Just change `BRAIN_PROVIDER` and the corresponding API key — no config file ch
 BRAIN_PROVIDER=anthropic
 ANTHROPIC_API_KEY=sk-ant-...
 ```
+
+## Fallback provider
+
+If the primary provider errors (rate limit, timeout, outage), paw-brain can automatically retry with a fallback:
+
+```env
+BRAIN_PROVIDER=anthropic
+ANTHROPIC_API_KEY=sk-ant-...
+
+BRAIN_FALLBACK=openai
+OPENAI_API_KEY=sk-...
+BRAIN_FALLBACK_MODEL=gpt-4o          # optional
+```
+
+The fallback is only used when the primary throws an error — not for empty responses or tool narration.
+
+## Cost tracking
+
+paw-brain reports token usage (input/output tokens, model, provider) back to core via `AgentPlan.usage`. Core uses this for per-task cost estimation.
+
+- Cloud providers are priced from a built-in pricing table
+- Local Ollama models (no `:cloud` suffix) show as free in `auto` mode
+- Ollama cloud models (e.g. `kimi-k2.5:cloud`) are priced
+- Set `costTracking: "enabled"` in loop config to track all providers
