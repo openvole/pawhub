@@ -183,6 +183,8 @@ export function getDashboardHtml(wsPort: number): string {
   .tag-yellow { background: #3a2e1b; color: var(--yellow); }
   .tag-blue { background: #1b2a3a; color: var(--accent); }
   .tag-orange { background: #3a2a1b; color: var(--orange); }
+  .tag-purple { background: #2a1b3a; color: #c084fc; }
+  .group-header td { border-top: 1px solid var(--border); padding: 8px 12px; background: var(--surface); }
   .events-bar {
     background: var(--surface);
     border-top: 1px solid var(--border);
@@ -295,7 +297,7 @@ export function getDashboardHtml(wsPort: number): string {
       <div class="panel-header"><h2>Paws <span class="count" id="paws-count">0</span></h2></div>
       <div class="panel-body">
         <table id="paws-table">
-          <thead><tr><th>Name</th><th>Type</th><th>Tools</th><th>Health</th></tr></thead>
+          <thead><tr><th>Name</th><th>Category</th><th>Tools</th><th>Health</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -396,17 +398,46 @@ ws.onmessage = (evt) => {
   }
 };
 
+function categoryTag(cat) {
+  const colors = { brain: 'tag-purple', channel: 'tag-green', tool: 'tag-blue', infrastructure: 'tag-yellow' };
+  return '<span class="tag ' + (colors[cat] || 'tag-blue') + '">' + esc(cat || 'tool') + '</span>';
+}
+
 function renderPaws(paws) {
   document.getElementById('paws-count').textContent = paws.length;
   const tbody = document.querySelector('#paws-table tbody');
-  tbody.innerHTML = paws.length === 0
-    ? '<tr><td colspan="4" class="empty">No paws loaded</td></tr>'
-    : paws.map(p => '<tr>'
-      + '<td title="' + esc(p.name) + '">' + esc(p.name) + '</td>'
-      + '<td><span class="tag tag-blue">' + (p.inProcess ? 'in-process' : 'subprocess') + '</span></td>'
-      + '<td>' + (p.toolCount ?? 0) + '</td>'
-      + '<td>' + (p.healthy ? '<span class="tag tag-green">ok</span>' : '<span class="tag tag-red">down</span>') + '</td>'
-      + '</tr>').join('');
+  if (paws.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" class="empty">No paws loaded</td></tr>';
+    return;
+  }
+
+  // Group by category, ordered: brain → channel → tool → infrastructure
+  const order = ['brain', 'channel', 'tool', 'infrastructure'];
+  const grouped = {};
+  for (const cat of order) grouped[cat] = [];
+  for (const p of paws) {
+    const cat = p.category || 'tool';
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(p);
+  }
+
+  let html = '';
+  for (const cat of order) {
+    const items = grouped[cat];
+    if (!items || items.length === 0) continue;
+    html += '<tr class="group-header"><td colspan="4">'
+      + categoryTag(cat) + ' <strong>' + cat.charAt(0).toUpperCase() + cat.slice(1)
+      + '</strong> (' + items.length + ')</td></tr>';
+    for (const p of items) {
+      html += '<tr>'
+        + '<td title="' + esc(p.name) + '">' + esc(p.name.replace('@openvole/', '')) + '</td>'
+        + '<td>' + categoryTag(cat) + '</td>'
+        + '<td>' + (p.toolCount ?? 0) + '</td>'
+        + '<td>' + (p.healthy ? '<span class="tag tag-green">ok</span>' : '<span class="tag tag-red">down</span>') + '</td>'
+        + '</tr>';
+    }
+  }
+  tbody.innerHTML = html;
 }
 
 function renderTools(tools) {
