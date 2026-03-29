@@ -1,0 +1,16 @@
+{
+  "name": "@openvole/paw-social",
+  "version": "1.0.0",
+  "description": "Social media Paw for OpenVole — post to Twitter/X and LinkedIn",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "import": "./dist/index.js", "types": "./dist/index.d.ts" } },
+  "scripts": { "build": "tsup", "typecheck": "tsc --noEmit" },
+  "devDependencies": { "@types/node": "^22.0.0", "tsup": "^8.3.0", "typescript": "^5.6.0", "@openvole/paw-sdk": "^1.0.0" },
+  "engines": { "node": ">=20.0.0" },
+  "files": ["dist", "vole-paw.json", "README.md"],
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/openvole/pawhub", "directory": "paws/paw-social" },
+  "peerDependencies": { "@openvole/paw-sdk": "^1.0.0" }
+}

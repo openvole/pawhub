@@ -1,0 +1,21 @@
+{
+  "name": "@openvole/paw-scraper",
+  "version": "1.0.0",
+  "description": "Extract structured data from web pages",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "scrape_page", "description": "Fetch a URL and extract structured data (text, links, tables, headings)" },
+    { "name": "scrape_links", "description": "Extract all links from a web page" },
+    { "name": "scrape_tables", "description": "Extract HTML tables as structured data" },
+    { "name": "scrape_selector", "description": "Extract content matching a CSS selector" }
+  ],
+  "permissions": {
+    "network": ["*"],
+    "listen": [],
+    "filesystem": [],
+    "env": []
+  }
+}

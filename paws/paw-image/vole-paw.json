@@ -1,0 +1,23 @@
+{
+  "name": "@openvole/paw-image",
+  "version": "1.0.0",
+  "description": "Resize, crop, watermark, compress, and convert images",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "image_resize", "description": "Resize an image" },
+    { "name": "image_crop", "description": "Crop an image" },
+    { "name": "image_compress", "description": "Compress an image (reduce file size)" },
+    { "name": "image_convert", "description": "Convert image format (PNG, JPEG, WebP, AVIF)" },
+    { "name": "image_info", "description": "Get image metadata (dimensions, format, size)" },
+    { "name": "image_watermark", "description": "Add text watermark to an image" }
+  ],
+  "permissions": {
+    "network": [],
+    "listen": [],
+    "filesystem": ["./"],
+    "env": []
+  }
+}

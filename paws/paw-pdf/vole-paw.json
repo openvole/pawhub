@@ -1,0 +1,21 @@
+{
+  "name": "@openvole/paw-pdf",
+  "version": "1.0.0",
+  "description": "Read, merge, split, and extract text from PDFs",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "pdf_read", "description": "Extract text from a PDF file" },
+    { "name": "pdf_info", "description": "Get PDF metadata and page count" },
+    { "name": "pdf_merge", "description": "Merge multiple PDFs into one" },
+    { "name": "pdf_split", "description": "Extract pages from a PDF" }
+  ],
+  "permissions": {
+    "network": [],
+    "listen": [],
+    "filesystem": ["./"],
+    "env": []
+  }
+}

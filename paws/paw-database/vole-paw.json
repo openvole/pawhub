@@ -1,0 +1,24 @@
+{
+  "name": "@openvole/paw-database",
+  "version": "1.0.0",
+  "description": "Query PostgreSQL, MySQL, and SQLite databases",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "db_query", "description": "Execute a SQL query and return results" },
+    { "name": "db_schema", "description": "List tables and their columns" },
+    { "name": "db_execute", "description": "Execute a write statement (INSERT/UPDATE/DELETE)" }
+  ],
+  "permissions": {
+    "network": ["*"],
+    "listen": [],
+    "filesystem": ["./"],
+    "env": [
+      "DATABASE_URL",
+      "DATABASE_TYPE",
+      "VOLE_DB_READONLY"
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "@openvole/paw-social",
+  "version": "1.0.0",
+  "description": "Post to Twitter/X and LinkedIn",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "twitter_post", "description": "Post a tweet to Twitter/X" },
+    { "name": "twitter_search", "description": "Search tweets on Twitter/X" },
+    { "name": "linkedin_post", "description": "Post to LinkedIn" }
+  ],
+  "permissions": {
+    "network": ["api.twitter.com", "api.x.com", "api.linkedin.com"],
+    "listen": [],
+    "filesystem": [],
+    "env": [
+      "TWITTER_BEARER_TOKEN",
+      "TWITTER_API_KEY",
+      "TWITTER_API_SECRET",
+      "TWITTER_ACCESS_TOKEN",
+      "TWITTER_ACCESS_SECRET",
+      "LINKEDIN_ACCESS_TOKEN"
+    ]
+  }
+}
