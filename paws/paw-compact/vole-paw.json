@@ -7,9 +7,17 @@
   "inProcess": true,
   "tools": [],
   "permissions": {
-    "network": [],
+    "network": ["*"],
     "listen": [],
     "filesystem": [],
-    "env": ["VOLE_COMPACT_KEEP_RECENT"]
+    "env": [
+      "VOLE_COMPACT_KEEP_RECENT",
+      "VOLE_COMPACT_MODEL",
+      "OLLAMA_HOST",
+      "OPENAI_API_KEY",
+      "GEMINI_API_KEY",
+      "ANTHROPIC_API_KEY",
+      "XAI_API_KEY"
+    ]
   }
 }
