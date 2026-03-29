@@ -14,15 +14,16 @@
 
 ## Paws
 
-### Brain Paws (5)
+### Brain
 
 | Package | Description | npm |
 |---------|-------------|-----|
-| `@openvole/paw-ollama` | Local LLM via Ollama | [![npm](https://img.shields.io/npm/v/@openvole/paw-ollama)](https://www.npmjs.com/package/@openvole/paw-ollama) |
-| `@openvole/paw-claude` | Anthropic Claude | [![npm](https://img.shields.io/npm/v/@openvole/paw-claude)](https://www.npmjs.com/package/@openvole/paw-claude) |
-| `@openvole/paw-openai` | OpenAI GPT | [![npm](https://img.shields.io/npm/v/@openvole/paw-openai)](https://www.npmjs.com/package/@openvole/paw-openai) |
-| `@openvole/paw-gemini` | Google Gemini | [![npm](https://img.shields.io/npm/v/@openvole/paw-gemini)](https://www.npmjs.com/package/@openvole/paw-gemini) |
-| `@openvole/paw-xai` | xAI Grok | [![npm](https://img.shields.io/npm/v/@openvole/paw-xai)](https://www.npmjs.com/package/@openvole/paw-xai) |
+| `@openvole/paw-brain` | **Unified multi-provider brain** (Anthropic, OpenAI, Gemini, xAI, Ollama) | [![npm](https://img.shields.io/npm/v/@openvole/paw-brain)](https://www.npmjs.com/package/@openvole/paw-brain) |
+| `@openvole/paw-ollama` | *(deprecated)* Local LLM via Ollama | [![npm](https://img.shields.io/npm/v/@openvole/paw-ollama)](https://www.npmjs.com/package/@openvole/paw-ollama) |
+| `@openvole/paw-claude` | *(deprecated)* Anthropic Claude | [![npm](https://img.shields.io/npm/v/@openvole/paw-claude)](https://www.npmjs.com/package/@openvole/paw-claude) |
+| `@openvole/paw-openai` | *(deprecated)* OpenAI GPT | [![npm](https://img.shields.io/npm/v/@openvole/paw-openai)](https://www.npmjs.com/package/@openvole/paw-openai) |
+| `@openvole/paw-gemini` | *(deprecated)* Google Gemini | [![npm](https://img.shields.io/npm/v/@openvole/paw-gemini)](https://www.npmjs.com/package/@openvole/paw-gemini) |
+| `@openvole/paw-xai` | *(deprecated)* xAI Grok | [![npm](https://img.shields.io/npm/v/@openvole/paw-xai)](https://www.npmjs.com/package/@openvole/paw-xai) |
 
 ### Channel Paws (6)
 
@@ -55,24 +56,25 @@
 
 | Package | Description | npm |
 |---------|-------------|-----|
-| `@openvole/paw-memory` | Persistent memory with source isolation | [![npm](https://img.shields.io/npm/v/@openvole/paw-memory)](https://www.npmjs.com/package/@openvole/paw-memory) |
+| `@openvole/paw-memory` | Persistent memory — hybrid semantic + keyword search | [![npm](https://img.shields.io/npm/v/@openvole/paw-memory)](https://www.npmjs.com/package/@openvole/paw-memory) |
 | `@openvole/paw-session` | Session/conversation management | [![npm](https://img.shields.io/npm/v/@openvole/paw-session)](https://www.npmjs.com/package/@openvole/paw-session) |
-| `@openvole/paw-compact` | Context compaction (in-process) | [![npm](https://img.shields.io/npm/v/@openvole/paw-compact)](https://www.npmjs.com/package/@openvole/paw-compact) |
+| `@openvole/paw-compact` | Context compaction — heuristic + optional LLM summarization | [![npm](https://img.shields.io/npm/v/@openvole/paw-compact)](https://www.npmjs.com/package/@openvole/paw-compact) |
 | `@openvole/paw-dashboard` | Real-time web dashboard | [![npm](https://img.shields.io/npm/v/@openvole/paw-dashboard)](https://www.npmjs.com/package/@openvole/paw-dashboard) |
 
 ## Install
 
 ```bash
-npm install @openvole/paw-ollama @openvole/paw-memory @openvole/paw-dashboard
+npm install @openvole/paw-brain @openvole/paw-memory @openvole/paw-dashboard
 ```
 
 Then add to `vole.config.json`:
 
 ```json
 {
+  "brain": "@openvole/paw-brain",
   "paws": [
-    { "name": "@openvole/paw-ollama", "allow": { "network": ["127.0.0.1"], "env": ["OLLAMA_HOST", "OLLAMA_MODEL"] } },
-    { "name": "@openvole/paw-memory", "allow": { "env": ["VOLE_MEMORY_DIR"] } },
+    { "name": "@openvole/paw-brain", "allow": { "network": ["*"], "env": ["BRAIN_PROVIDER", "BRAIN_API_KEY", "BRAIN_MODEL", "OLLAMA_HOST", "OLLAMA_MODEL", "GEMINI_API_KEY", "GEMINI_MODEL"] } },
+    { "name": "@openvole/paw-memory", "allow": { "network": ["*"], "env": ["VOLE_MEMORY_DIR", "OLLAMA_HOST"] } },
     { "name": "@openvole/paw-dashboard", "allow": { "listen": [3001] } }
   ]
 }
