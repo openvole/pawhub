@@ -1,7 +1,11 @@
 import { z, type PawDefinition } from '@openvole/paw-sdk'
 import { MemoryStore, type MemorySource } from './memory.js'
+import { VectorStore } from './vector-store.js'
+import { createEmbeddingProvider, type EmbeddingProvider } from './embeddings.js'
 
 let store: MemoryStore | undefined
+let vectorStore: VectorStore | undefined
+let embedder: EmbeddingProvider | null = null
 
 /** Current task source — set during bootstrap, used by tools */
 let currentSource: MemorySource = 'user'
@@ -10,6 +14,19 @@ let currentSource: MemorySource = 'user'
 let successfulToolCalls = 0
 const AUTO_EXTRACT_INTERVAL = 10
 const learnedPatterns = new Set<string>()
+
+/** Index a file into the vector store (if available) */
+async function indexFileIfNeeded(file: string, source: MemorySource, content: string): Promise<void> {
+	if (!vectorStore || !content.trim()) return
+	try {
+		const count = await vectorStore.indexFile(file, source, content, Date.now())
+		if (count > 0) {
+			console.log(`[paw-memory] Indexed ${count} chunks from ${file}`)
+		}
+	} catch (err) {
+		console.log(`[paw-memory] Vector indexing failed for ${file}: ${err instanceof Error ? err.message : String(err)}`)
+	}
+}
 
 export const paw: PawDefinition = {
 	name: '@openvole/paw-memory',
@@ -74,14 +91,18 @@ export const paw: PawDefinition = {
 				if (!store) throw new Error('Memory store not initialized')
 				// Accept both "mode" and "append" params
 				const mode = p.mode ?? (p.append === false ? 'overwrite' : 'append')
-				await store.write(p.file, p.content, mode, p.source ?? currentSource)
+				const src = p.source ?? currentSource
+				await store.write(p.file, p.content, mode, src)
+				// Auto-index for vector search
+				const fullContent = await store.read(p.file, src)
+				await indexFileIfNeeded(p.file, src, fullContent)
 				return { ok: true }
 			},
 		},
 		{
 			name: 'memory_search',
 			description:
-				'Search memory files using BM25 ranked retrieval. Returns results scored by relevance. By default searches the current source + shared MEMORY.md. Use source "all" to search everything.',
+				'Search memory using hybrid retrieval (semantic + keyword). Returns results scored by relevance. Falls back to keyword-only (BM25) if vector search is unavailable. By default searches the current source + shared MEMORY.md. Use source "all" to search everything.',
 			parameters: z.object({
 				query: z.string().describe('Search query'),
 				limit: z
@@ -100,12 +121,39 @@ export const paw: PawDefinition = {
 					source?: MemorySource | 'all'
 				}
 				if (!store) throw new Error('Memory store not initialized')
+
+				// Use hybrid search if vector store is available
+				if (vectorStore) {
+					try {
+						const sourceFilter = source === 'all' ? undefined : (source ?? currentSource)
+						const results = await vectorStore.search(query, {
+							source: sourceFilter,
+							limit: limit ?? 10,
+							temporalDecayDays: 30,
+						})
+						return {
+							ok: true,
+							searchMode: 'hybrid',
+							results: results.map((r) => ({
+								file: r.path,
+								source: r.source,
+								score: r.score,
+								snippet: r.content.slice(0, 300),
+								lines: `${r.startLine}-${r.endLine}`,
+							})),
+						}
+					} catch (err) {
+						console.log(`[paw-memory] Hybrid search failed, falling back to BM25: ${err instanceof Error ? err.message : String(err)}`)
+					}
+				}
+
+				// Fallback: BM25 only
 				const results = await store.search(
 					query,
 					source ?? currentSource,
 					limit ?? 10,
 				)
-				return { ok: true, results }
+				return { ok: true, searchMode: 'bm25', results }
 			},
 		},
 		{
@@ -277,10 +325,48 @@ export const paw: PawDefinition = {
 
 		store = new MemoryStore(memoryDir)
 		await store.init()
-		console.log(`[paw-memory] loaded — memory dir: ${memoryDir}`)
+
+		// Initialize vector store if an embedding provider is available
+		try {
+			embedder = await createEmbeddingProvider()
+			if (embedder) {
+				const dbPath = join(memoryDir, 'vectors.db')
+				vectorStore = new VectorStore(dbPath, embedder)
+				await vectorStore.init()
+
+				// Index existing memory files
+				const files = await store.list('all')
+				let indexed = 0
+				for (const file of files) {
+					const content = await store.read(file.name, file.source as MemorySource)
+					if (content.trim()) {
+						const count = await vectorStore.indexFile(
+							`${file.source}/${file.name}`,
+							file.source,
+							content,
+							new Date(file.modified).getTime(),
+						)
+						indexed += count
+					}
+				}
+				console.log(
+					`[paw-memory] loaded — memory dir: ${memoryDir}, vector search: ${embedder.name}/${embedder.model} (${vectorStore.getFileCount()} files, ${vectorStore.getChunkCount()} chunks)`,
+				)
+			} else {
+				console.log(`[paw-memory] loaded — memory dir: ${memoryDir}, vector search: disabled (no embedding provider)`)
+			}
+		} catch (err) {
+			console.log(`[paw-memory] loaded — memory dir: ${memoryDir}, vector search: failed (${err instanceof Error ? err.message : String(err)})`)
+			vectorStore = undefined
+		}
 	},
 
 	async onUnload() {
+		if (vectorStore) {
+			vectorStore.close()
+			vectorStore = undefined
+		}
+		embedder = null
 		store = undefined
 		console.log('[paw-memory] unloaded')
 	},
