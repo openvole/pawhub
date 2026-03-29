@@ -426,7 +426,7 @@ function renderPaws(paws) {
     const items = grouped[cat];
     if (!items || items.length === 0) continue;
     html += '<tr class="group-header"><td colspan="4">'
-      + categoryTag(cat) + ' <strong>' + cat.charAt(0).toUpperCase() + cat.slice(1)
+      + '<strong>' + cat.charAt(0).toUpperCase() + cat.slice(1)
       + '</strong> (' + items.length + ')</td></tr>';
     for (const p of items) {
       html += '<tr>'
