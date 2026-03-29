@@ -4,6 +4,7 @@
   "description": "Read, merge, split, and extract text from PDFs",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "tool",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

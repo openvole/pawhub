@@ -4,6 +4,7 @@
   "description": "Microsoft Teams channel for OpenVole",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "channel",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

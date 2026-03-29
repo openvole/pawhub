@@ -4,6 +4,7 @@
   "description": "Bridges MCP servers into OpenVole's tool registry",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "tool",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

@@ -4,6 +4,7 @@
   "description": "Speech-to-text tool Paw using OpenAI Whisper",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "tool",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

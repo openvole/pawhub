@@ -4,6 +4,7 @@
   "description": "Query PostgreSQL, MySQL, and SQLite databases",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "tool",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

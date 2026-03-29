@@ -4,6 +4,7 @@
   "description": "Extract structured data from web pages",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "tool",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

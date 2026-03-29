@@ -4,6 +4,7 @@
   "description": "Paw for sending and reading emails via SMTP and IMAP",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "tool",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

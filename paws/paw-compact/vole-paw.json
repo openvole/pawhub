@@ -4,6 +4,7 @@
   "description": "Default context compactor — summarizes old messages to free context window space",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "infrastructure",
   "inProcess": true,
   "tools": [],
   "permissions": {

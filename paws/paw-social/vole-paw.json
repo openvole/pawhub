@@ -4,6 +4,7 @@
   "description": "Post to Twitter/X and LinkedIn",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "tool",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

@@ -4,6 +4,7 @@
   "description": "Session management — per-session transcript and metadata tracking",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "infrastructure",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

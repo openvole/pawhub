@@ -4,6 +4,7 @@
   "description": "Paw for executing shell commands with safety restrictions",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "tool",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

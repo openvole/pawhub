@@ -4,6 +4,7 @@
   "description": "Web dashboard for real-time agent monitoring",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "infrastructure",
   "inProcess": false,
   "transport": "ipc",
   "tools": [],

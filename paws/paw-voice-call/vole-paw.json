@@ -4,6 +4,7 @@
   "description": "Voice call channel for OpenVole via Twilio",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "channel",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

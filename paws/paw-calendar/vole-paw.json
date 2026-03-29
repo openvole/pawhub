@@ -4,6 +4,7 @@
   "description": "Paw for managing Google Calendar events",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "tool",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

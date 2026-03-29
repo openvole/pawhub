@@ -4,6 +4,7 @@
   "description": "Persistent memory — markdown-based long-term and daily memory",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "infrastructure",
   "inProcess": false,
   "transport": "ipc",
   "tools": [
