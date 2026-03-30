@@ -338,6 +338,16 @@ export function getDashboardHtml(wsPort: number): string {
         </table>
       </div>
     </div>
+    <div class="panel" id="volenet-panel" style="display:none">
+      <div class="panel-header"><h2>VoleNet</h2></div>
+      <div class="panel-body">
+        <div id="volenet-status"></div>
+        <table id="volenet-peers-table" style="margin-top:8px">
+          <thead><tr><th>Peer</th><th>Role</th><th>Capabilities</th><th>Last Seen</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <div class="events-bar">
@@ -384,6 +394,7 @@ ws.onmessage = (evt) => {
     renderSkills(d.skills || []);
     renderTasks(d.tasks || []);
     renderSchedules(d.schedules || []);
+    renderVoleNet(d.volenet || { enabled: false });
     document.getElementById('stat-paws').textContent = (d.paws || []).length;
     document.getElementById('stat-tools').textContent = (d.tools || []).length;
     document.getElementById('stat-skills').textContent = (d.skills || []).length;
@@ -540,6 +551,49 @@ function renderSchedules(schedules) {
         + '<td title="' + esc(s.input) + '">' + esc((s.input || '').substring(0, 40)) + '</td>'
         + '<td><span class="tag tag-yellow">' + esc(s.cron) + '</span></td>'
         + '<td>' + nextRun + '</td>'
+        + '</tr>';
+    }).join('');
+}
+
+function renderVoleNet(data) {
+  const panel = document.getElementById('volenet-panel');
+  if (!data || !data.enabled) {
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = '';
+
+  const status = document.getElementById('volenet-status');
+  const leaderBadge = data.isLeader
+    ? '<span class="tag tag-green">leader</span>'
+    : '<span class="tag tag-blue">follower</span>';
+  const leaderInfo = data.leaderState?.leaderName
+    ? ' \u2014 leader: ' + esc(data.leaderState.leaderName)
+    : '';
+
+  status.innerHTML = '<strong>' + esc(data.instanceName || 'vole') + '</strong> '
+    + '<span class="tag tag-purple">' + esc(data.instanceId || '') + '</span> '
+    + leaderBadge
+    + ' \u2014 ' + (data.peers?.length || 0) + ' peer(s), '
+    + (data.remoteTools || 0) + ' remote tool(s)'
+    + leaderInfo;
+
+  const peers = data.peers || [];
+  const tbody = document.querySelector('#volenet-peers-table tbody');
+  tbody.innerHTML = peers.length === 0
+    ? '<tr><td colspan="4" class="empty">No peers connected</td></tr>'
+    : peers.map(function(p) {
+      const roleTag = p.role === 'coordinator'
+        ? '<span class="tag tag-yellow">coordinator</span>'
+        : p.role === 'worker'
+          ? '<span class="tag tag-blue">worker</span>'
+          : '<span class="tag tag-green">peer</span>';
+      const ago = p.lastSeen ? Math.round((Date.now() - p.lastSeen) / 1000) + 's ago' : '\u2014';
+      return '<tr>'
+        + '<td><strong>' + esc(p.name) + '</strong> <span class="tag tag-purple">' + esc(p.id) + '</span></td>'
+        + '<td>' + roleTag + '</td>'
+        + '<td>' + (p.capabilities || 0) + '</td>'
+        + '<td>' + ago + '</td>'
         + '</tr>';
     }).join('');
 }
