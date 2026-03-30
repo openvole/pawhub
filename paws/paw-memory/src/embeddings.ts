@@ -175,7 +175,8 @@ export async function createEmbeddingProvider(): Promise<EmbeddingProvider | nul
 		const apiKey = process.env.OPENAI_API_KEY!
 		const model = process.env.VOLE_EMBEDDING_MODEL ?? 'text-embedding-3-small'
 		const dims = parseInt(process.env.VOLE_EMBEDDING_DIMS ?? '1536', 10)
-		return new OpenAIEmbeddings(apiKey, model, dims)
+		const baseURL = process.env.VOLE_EMBEDDING_BASE_URL
+		return new OpenAIEmbeddings(apiKey, model, dims, baseURL)
 	}
 
 	if (provider === 'gemini' || (!provider && process.env.GEMINI_API_KEY)) {
