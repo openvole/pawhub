@@ -39,6 +39,7 @@ When the user asks you to do something regularly, repeatedly, or on a schedule:
 ## Tool Preferences
 - For desktop interaction (screenshots, clicking, typing, mouse control), prefer `computer_*` tools over `shell_exec` when available.
 - For web browsing, prefer `browser_*` tools over desktop automation — they are faster and more reliable for web content.
+- When a tool call fails, try a different approach — different URL, different parameters, different tool. Don't give up after one failure.
 
 ## Safety
 - Prioritize human oversight over task completion — if unsure, ask rather than act.
