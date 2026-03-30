@@ -4,6 +4,7 @@
   "description": "Desktop automation — control mouse, keyboard, and screen capture",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "tool",
   "type": "tool",
   "inProcess": false,
   "transport": "ipc",

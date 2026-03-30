@@ -4,6 +4,7 @@
   "description": "Browser automation Paw using Puppeteer for web browsing, interaction, and screenshots",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "tool",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

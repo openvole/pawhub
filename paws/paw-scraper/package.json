@@ -1,0 +1,17 @@
+{
+  "name": "@openvole/paw-scraper",
+  "version": "2.0.0",
+  "description": "Web scraper Paw for OpenVole — extract structured data from web pages",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "import": "./dist/index.js", "types": "./dist/index.d.ts" } },
+  "scripts": { "build": "tsup", "typecheck": "tsc --noEmit" },
+  "dependencies": { "cheerio": "^1.0.0" },
+  "devDependencies": { "@types/node": "^22.0.0", "tsup": "^8.3.0", "typescript": "^5.6.0", "@openvole/paw-sdk": "^2.0.0" },
+  "engines": { "node": ">=20.0.0" },
+  "files": ["dist", "vole-paw.json", "README.md"],
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/openvole/pawhub", "directory": "paws/paw-scraper" },
+  "peerDependencies": { "@openvole/paw-sdk": "^2.0.0" }
+}

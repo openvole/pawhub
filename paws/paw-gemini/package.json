@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-gemini",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "description": "[DEPRECATED — use @openvole/paw-brain] Brain Paw powered by Google Gemini",
   "deprecated": "Use @openvole/paw-brain instead. It supports all providers (Anthropic, OpenAI, Gemini, xAI, Ollama) in a single paw.",
   "type": "module",
@@ -23,7 +23,7 @@
     "@types/node": "^22.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.0",
-    "@openvole/paw-sdk": "^1.0.0"
+    "@openvole/paw-sdk": "^2.0.0"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -49,6 +49,6 @@
     "llm"
   ],
   "peerDependencies": {
-    "@openvole/paw-sdk": "^1.0.0"
+    "@openvole/paw-sdk": "^2.0.0"
   }
 }

@@ -4,6 +4,7 @@
   "description": "Brain Paw powered by OpenAI",
   "entry": "./dist/index.js",
   "brain": true,
+  "category": "brain",
   "inProcess": false,
   "transport": "ipc",
   "tools": [],

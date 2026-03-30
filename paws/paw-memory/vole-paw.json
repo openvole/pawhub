@@ -4,6 +4,7 @@
   "description": "Persistent memory — markdown-based long-term and daily memory",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "infrastructure",
   "inProcess": false,
   "transport": "ipc",
   "tools": [
@@ -13,9 +14,17 @@
     { "name": "memory_list", "description": "List all memory files with dates" }
   ],
   "permissions": {
-    "network": [],
+    "network": ["*"],
     "listen": [],
     "filesystem": [],
-    "env": ["VOLE_MEMORY_DIR"]
+    "env": [
+      "VOLE_MEMORY_DIR",
+      "VOLE_EMBEDDING_PROVIDER",
+      "VOLE_EMBEDDING_MODEL",
+      "VOLE_EMBEDDING_DIMS",
+      "OLLAMA_HOST",
+      "OPENAI_API_KEY",
+      "GEMINI_API_KEY"
+    ]
   }
 }

@@ -4,6 +4,7 @@
   "description": "Email sending powered by Resend",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "tool",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

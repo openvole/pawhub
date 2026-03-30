@@ -1,0 +1,17 @@
+{
+  "name": "@openvole/paw-pdf",
+  "version": "2.0.0",
+  "description": "PDF Paw for OpenVole — read, merge, split, extract text from PDFs",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "import": "./dist/index.js", "types": "./dist/index.d.ts" } },
+  "scripts": { "build": "tsup", "typecheck": "tsc --noEmit" },
+  "dependencies": { "pdf-lib": "^1.17.1" },
+  "devDependencies": { "@types/node": "^22.0.0", "tsup": "^8.3.0", "typescript": "^5.6.0", "@openvole/paw-sdk": "^2.0.0" },
+  "engines": { "node": ">=20.0.0" },
+  "files": ["dist", "vole-paw.json", "README.md"],
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/openvole/pawhub", "directory": "paws/paw-pdf" },
+  "peerDependencies": { "@openvole/paw-sdk": "^2.0.0" }
+}

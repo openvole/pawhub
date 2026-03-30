@@ -4,6 +4,7 @@
   "description": "Filesystem Paw for reading, writing, editing, and searching files",
   "entry": "./dist/index.js",
   "brain": false,
+  "category": "tool",
   "inProcess": false,
   "transport": "ipc",
   "tools": [
