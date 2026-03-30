@@ -36,14 +36,14 @@
 | `@openvole/paw-msteams` | Microsoft Teams | [![npm](https://img.shields.io/npm/v/@openvole/paw-msteams)](https://www.npmjs.com/package/@openvole/paw-msteams) |
 | `@openvole/paw-voice-call` | Voice calls (Twilio) | [![npm](https://img.shields.io/npm/v/@openvole/paw-voice-call)](https://www.npmjs.com/package/@openvole/paw-voice-call) |
 
-### Tool Paws (11)
+### Tool Paws
 
 | Package | Description | npm |
 |---------|-------------|-----|
 | `@openvole/paw-browser` | Browser automation (Puppeteer) | [![npm](https://img.shields.io/npm/v/@openvole/paw-browser)](https://www.npmjs.com/package/@openvole/paw-browser) |
 | `@openvole/paw-shell` | Shell command execution | [![npm](https://img.shields.io/npm/v/@openvole/paw-shell)](https://www.npmjs.com/package/@openvole/paw-shell) |
 | `@openvole/paw-filesystem` | File system operations | [![npm](https://img.shields.io/npm/v/@openvole/paw-filesystem)](https://www.npmjs.com/package/@openvole/paw-filesystem) |
-| `@openvole/paw-mcp` | MCP server bridge (1000+ tools) | [![npm](https://img.shields.io/npm/v/@openvole/paw-mcp)](https://www.npmjs.com/package/@openvole/paw-mcp) |
+| `@openvole/paw-mcp` | MCP server bridge | [![npm](https://img.shields.io/npm/v/@openvole/paw-mcp)](https://www.npmjs.com/package/@openvole/paw-mcp) |
 | `@openvole/paw-email` | Email (SMTP/IMAP) | [![npm](https://img.shields.io/npm/v/@openvole/paw-email)](https://www.npmjs.com/package/@openvole/paw-email) |
 | `@openvole/paw-resend` | Email via Resend API | [![npm](https://img.shields.io/npm/v/@openvole/paw-resend)](https://www.npmjs.com/package/@openvole/paw-resend) |
 | `@openvole/paw-github` | GitHub API | [![npm](https://img.shields.io/npm/v/@openvole/paw-github)](https://www.npmjs.com/package/@openvole/paw-github) |
@@ -51,6 +51,11 @@
 | `@openvole/paw-tts` | Text-to-speech (ElevenLabs, OpenAI) | [![npm](https://img.shields.io/npm/v/@openvole/paw-tts)](https://www.npmjs.com/package/@openvole/paw-tts) |
 | `@openvole/paw-stt` | Speech-to-text (OpenAI Whisper) | [![npm](https://img.shields.io/npm/v/@openvole/paw-stt)](https://www.npmjs.com/package/@openvole/paw-stt) |
 | `@openvole/paw-computer` | Desktop automation (mouse, keyboard, screen) | [![npm](https://img.shields.io/npm/v/@openvole/paw-computer)](https://www.npmjs.com/package/@openvole/paw-computer) |
+| `@openvole/paw-database` | PostgreSQL, MySQL, SQLite queries | [![npm](https://img.shields.io/npm/v/@openvole/paw-database)](https://www.npmjs.com/package/@openvole/paw-database) |
+| `@openvole/paw-scraper` | Structured web data extraction (cheerio) | [![npm](https://img.shields.io/npm/v/@openvole/paw-scraper)](https://www.npmjs.com/package/@openvole/paw-scraper) |
+| `@openvole/paw-pdf` | Read, merge, split PDFs (pdf-lib) | [![npm](https://img.shields.io/npm/v/@openvole/paw-pdf)](https://www.npmjs.com/package/@openvole/paw-pdf) |
+| `@openvole/paw-image` | Resize, crop, watermark, compress images (sharp) | [![npm](https://img.shields.io/npm/v/@openvole/paw-image)](https://www.npmjs.com/package/@openvole/paw-image) |
+| `@openvole/paw-social` | Twitter/X and LinkedIn posting | [![npm](https://img.shields.io/npm/v/@openvole/paw-social)](https://www.npmjs.com/package/@openvole/paw-social) |
 
 ### Infrastructure Paws
 
