@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-slack",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Slack messaging channel Paw for OpenVole",
   "type": "module",
   "main": "./dist/index.js",
@@ -15,7 +15,7 @@
     "@types/node": "^22.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.0",
-    "@openvole/paw-sdk": "^1.0.0"
+    "@openvole/paw-sdk": "^2.0.0"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -27,6 +27,6 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@openvole/paw-sdk": "^1.0.0"
+    "@openvole/paw-sdk": "^2.0.0"
   }
 }
