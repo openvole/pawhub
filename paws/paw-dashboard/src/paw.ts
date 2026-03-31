@@ -65,6 +65,7 @@ export const paw: PawDefinition = {
 			'task:failed',
 			'task:cancelled',
 			'rate:limited',
+			'volenet:tool:executed',
 		])
 
 		// Forward bus events to WebSocket clients
@@ -74,7 +75,8 @@ export const paw: PawDefinition = {
 			if (
 				event.startsWith('tool:') ||
 				event.startsWith('paw:') ||
-				event.startsWith('task:')
+				event.startsWith('task:') ||
+				event.startsWith('volenet:')
 			) {
 				refreshAndBroadcastState()
 			}
