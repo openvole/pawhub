@@ -104,7 +104,7 @@ export default defineConfig({
 
 | Type | Description | Examples |
 |------|-------------|---------|
-| **brain** | LLM provider — implements think() | paw-ollama, paw-claude, paw-openai |
+| **brain** | LLM provider — implements think() | paw-brain, paw-ollama *(deprecated)*, paw-claude *(deprecated)* |
 | **channel** | Messaging platform — receives/sends messages | paw-telegram, paw-slack, paw-discord |
 | **tool** | Provides tools the Brain can call | paw-browser, paw-shell, paw-filesystem |
 | **infrastructure** | Internal services — memory, sessions, compaction | paw-memory, paw-session, paw-compact |
@@ -115,7 +115,7 @@ Set the `type` field in your `vole-paw.json` manifest to one of these values.
 
 - **Tool paws**: Look at `paw-filesystem` or `paw-github` for reference
 - **Channel paws**: Look at `paw-telegram` for the IPC transport, pendingTasks, and bus event pattern
-- **Brain paws**: Look at `paw-ollama` for the think() interface and BRAIN.md scaffolding
+- **Brain paws**: Look at `paw-brain` for the think() interface and BRAIN.md scaffolding
 
 ## Updating an Existing Paw
 

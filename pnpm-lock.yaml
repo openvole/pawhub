@@ -11,6 +11,7 @@ overrides:
   brace-expansion: '>=5.0.5'
   nodemailer: '>=8.0.4'
   path-to-regexp: '>=8.4.0'
+  lodash: '>=4.18.0'
 
 importers:
 
@@ -39,8 +40,8 @@ importers:
         version: 4.104.0(ws@8.19.0)(zod@3.25.76)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -58,8 +59,8 @@ importers:
         version: 24.40.0(typescript@5.9.3)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -77,8 +78,8 @@ importers:
         version: 140.0.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -96,8 +97,8 @@ importers:
         version: 0.39.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -111,8 +112,8 @@ importers:
   paws/paw-compact:
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -130,8 +131,8 @@ importers:
         version: 4.2.6
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -152,8 +153,8 @@ importers:
         version: 3.25.76
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -174,8 +175,8 @@ importers:
         version: 11.10.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/better-sqlite3':
         specifier: ^7.6.0
         version: 7.6.13
@@ -196,8 +197,8 @@ importers:
         version: 14.25.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -218,8 +219,8 @@ importers:
         version: 8.0.4
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -240,8 +241,8 @@ importers:
         version: 11.1.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -259,8 +260,8 @@ importers:
         version: 0.21.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -278,8 +279,8 @@ importers:
         version: 21.1.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -297,8 +298,8 @@ importers:
         version: 0.33.5
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -316,8 +317,8 @@ importers:
         version: 1.27.1(zod@3.25.76)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -335,8 +336,8 @@ importers:
         version: 11.10.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/better-sqlite3':
         specifier: ^7.6.0
         version: 7.6.13
@@ -357,8 +358,8 @@ importers:
         version: 4.23.3
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -376,8 +377,8 @@ importers:
         version: 0.5.18
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -395,8 +396,8 @@ importers:
         version: 4.104.0(ws@8.19.0)(zod@3.25.76)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -414,8 +415,8 @@ importers:
         version: 1.17.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -433,8 +434,8 @@ importers:
         version: 4.8.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -452,8 +453,8 @@ importers:
         version: 1.2.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -467,8 +468,8 @@ importers:
   paws/paw-session:
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -486,8 +487,8 @@ importers:
         version: 9.6.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -505,8 +506,8 @@ importers:
         version: 4.6.0(@types/express@5.0.6)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -520,8 +521,8 @@ importers:
   paws/paw-social:
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -535,8 +536,8 @@ importers:
   paws/paw-stt:
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -554,8 +555,8 @@ importers:
         version: 1.41.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -569,8 +570,8 @@ importers:
   paws/paw-tts:
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -588,8 +589,8 @@ importers:
         version: 5.13.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -607,8 +608,8 @@ importers:
         version: 1.34.6(typescript@5.9.3)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -626,8 +627,8 @@ importers:
         version: 4.104.0(ws@8.19.0)(zod@3.25.76)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.15
@@ -1382,8 +1383,8 @@ packages:
   '@octokit/types@14.1.0':
     resolution: {integrity: sha512-1y6DgTy8Jomcpu33N+p5w58l6xyt55Ar2I91RPiIA0xCJBXyUAhXCcmZaDWSANiha7R9a6qJJ2CRomGPZ6f46g==}
 
-  '@openvole/paw-sdk@1.0.0':
-    resolution: {integrity: sha512-q/C30IRqskPXsRkcjD3sVFx68DvgGel4e2/cGlKGv90bxIyQkd2hEKuTYVv9XEtHo55K+VHSjQaEsz/H8Z0bNw==}
+  '@openvole/paw-sdk@2.0.0':
+    resolution: {integrity: sha512-VHqD2hGR77af0ptfi7kaK4oLaAuRtLfPDKp1VSspTSJ07vZ8GZF1LAQ9+UH88NuwYGTCljAc0+eTZq+FRi+G3w==}
     engines: {node: '>=20.0.0'}
 
   '@pdf-lib/standard-fonts@1.0.0':
@@ -2799,8 +2800,8 @@ packages:
   lodash.union@4.6.0:
     resolution: {integrity: sha512-c4pB2CdGrGdjMKYLA+XiRDO7Y0PRQbm/Gzg8qMj+QH+pFVAoTp5sBpO0odL3FjoPCGjK96p6qsP+yQoiLoOBcw==}
 
-  lodash@4.17.23:
-    resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
+  lodash@4.18.1:
+    resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
 
   lru-cache@11.2.7:
     resolution: {integrity: sha512-aY/R+aEsRelme17KGQa/1ZSIpLpNYYrhcrepKTZgE+W3WM16YMCaPwOHLHsmopZHELU0Ojin1lPVxKR0MihncA==}
@@ -4552,7 +4553,7 @@ snapshots:
     dependencies:
       '@octokit/openapi-types': 25.1.0
 
-  '@openvole/paw-sdk@1.0.0':
+  '@openvole/paw-sdk@2.0.0':
     dependencies:
       zod: 3.25.76
 
@@ -4671,7 +4672,7 @@ snapshots:
   '@sapphire/shapeshift@4.0.0':
     dependencies:
       fast-deep-equal: 3.1.3
-      lodash: 4.17.23
+      lodash: 4.18.1
 
   '@sapphire/snowflake@3.5.3': {}
 
@@ -6221,7 +6222,7 @@ snapshots:
   lodash.union@4.6.0:
     optional: true
 
-  lodash@4.17.23: {}
+  lodash@4.18.1: {}
 
   lru-cache@11.2.7: {}
 

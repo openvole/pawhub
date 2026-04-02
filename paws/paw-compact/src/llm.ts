@@ -117,35 +117,17 @@ class GeminiLLM implements CompactionLLM {
 export async function createCompactionLLM(): Promise<CompactionLLM | null> {
 	const modelSpec = process.env.VOLE_COMPACT_MODEL
 
-	if (modelSpec) {
-		const slashIdx = modelSpec.indexOf('/')
-		if (slashIdx === -1) {
-			console.log(`[paw-compact] Invalid VOLE_COMPACT_MODEL format: "${modelSpec}". Expected "provider/model".`)
-			return null
-		}
-		const provider = modelSpec.substring(0, slashIdx).toLowerCase()
-		const model = modelSpec.substring(slashIdx + 1)
-		return createLLMByProvider(provider, model)
+	// Only enable LLM compaction when explicitly configured
+	if (!modelSpec) return null
+
+	const slashIdx = modelSpec.indexOf('/')
+	if (slashIdx === -1) {
+		// console.log(`[paw-compact] Invalid VOLE_COMPACT_MODEL format: "${modelSpec}". Expected "provider/model".`)
+		return null
 	}
-
-	// Auto-detect: prefer cheap/local options
-	const ollamaHost = process.env.OLLAMA_HOST ?? 'http://localhost:11434'
-	try {
-		const resp = await fetch(`${ollamaHost}/api/tags`, { signal: AbortSignal.timeout(2000) })
-		if (resp.ok) {
-			return new OllamaLLM(ollamaHost, 'llama3.1:8b')
-		}
-	} catch {}
-
-	if (process.env.OPENAI_API_KEY) {
-		return new OpenAILLM(process.env.OPENAI_API_KEY, 'gpt-4o-mini')
-	}
-
-	if (process.env.GEMINI_API_KEY) {
-		return new GeminiLLM(process.env.GEMINI_API_KEY, 'gemini-2.0-flash')
-	}
-
-	return null
+	const provider = modelSpec.substring(0, slashIdx).toLowerCase()
+	const model = modelSpec.substring(slashIdx + 1)
+	return createLLMByProvider(provider, model)
 }
 
 function createLLMByProvider(provider: string, model: string): CompactionLLM | null {
@@ -156,27 +138,26 @@ function createLLMByProvider(provider: string, model: string): CompactionLLM | n
 		}
 		case 'openai': {
 			const apiKey = process.env.OPENAI_API_KEY
-			if (!apiKey) { console.log('[paw-compact] OPENAI_API_KEY required for openai compaction model'); return null }
+			if (!apiKey) return null
 			return new OpenAILLM(apiKey, model)
 		}
 		case 'gemini': {
 			const apiKey = process.env.GEMINI_API_KEY
-			if (!apiKey) { console.log('[paw-compact] GEMINI_API_KEY required for gemini compaction model'); return null }
+			if (!apiKey) return null
 			return new GeminiLLM(apiKey, model)
 		}
 		case 'anthropic': {
 			const apiKey = process.env.ANTHROPIC_API_KEY
-			if (!apiKey) { console.log('[paw-compact] ANTHROPIC_API_KEY required for anthropic compaction model'); return null }
-			// Anthropic uses messages API but we can wrap it as OpenAI-compatible
+			if (!apiKey) return null
 			return new OpenAILLM(apiKey, model, 'https://api.anthropic.com/v1', 'anthropic')
 		}
 		case 'xai': {
 			const apiKey = process.env.XAI_API_KEY
-			if (!apiKey) { console.log('[paw-compact] XAI_API_KEY required for xai compaction model'); return null }
+			if (!apiKey) return null
 			return new OpenAILLM(apiKey, model, 'https://api.x.ai/v1', 'xai')
 		}
 		default:
-			console.log(`[paw-compact] Unknown compaction provider: "${provider}"`)
+			// console.log(`[paw-compact] Unknown compaction provider: "${provider}"`)
 			return null
 	}
 }

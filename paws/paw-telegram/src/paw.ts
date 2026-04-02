@@ -4,6 +4,7 @@ import { TelegramClient } from './telegram.js'
 
 let client: TelegramClient | undefined
 let transport: ReturnType<typeof createIpcTransport> | undefined
+let defaultChatId: string | undefined
 
 /** Map from taskId to the originating Telegram chat/message + placeholder for reply routing */
 const pendingTasks = new Map<string, { chatId: number; messageId: number; placeholderMessageId?: number }>()
@@ -28,47 +29,53 @@ export const paw: PawDefinition = {
 	tools: [
 		{
 			name: 'telegram_send',
-			description: 'Send a message to a Telegram chat',
+			description: 'Send a message to a Telegram chat. If chat_id is omitted, sends to the default user.',
 			parameters: z.object({
-				chat_id: z.string().describe('The Telegram chat ID'),
+				chat_id: z.string().optional().describe('The Telegram chat ID (optional — defaults to TELEGRAM_ALLOW_FROM)'),
 				text: z.string().describe('The message text to send'),
 			}),
 			async execute(params) {
-				const { chat_id, text } = params as { chat_id: string; text: string }
+				const { chat_id, text } = params as { chat_id?: string; text: string }
 				if (!client) throw new Error('Telegram client not initialized')
-				await client.sendMessage(chat_id, text)
+				const target = chat_id || defaultChatId
+				if (!target) throw new Error('No chat_id provided and TELEGRAM_ALLOW_FROM not set')
+				await client.sendMessage(target, text)
 				return { ok: true }
 			},
 		},
 		{
 			name: 'telegram_reply',
-			description: 'Reply to a specific message in a Telegram chat',
+			description: 'Reply to a specific message in a Telegram chat. If chat_id is omitted, sends to the default user.',
 			parameters: z.object({
-				chat_id: z.string().describe('The Telegram chat ID'),
+				chat_id: z.string().optional().describe('The Telegram chat ID (optional — defaults to TELEGRAM_ALLOW_FROM)'),
 				text: z.string().describe('The reply text'),
 				reply_to: z.number().describe('The message ID to reply to'),
 			}),
 			async execute(params) {
 				const { chat_id, text, reply_to } = params as {
-					chat_id: string
+					chat_id?: string
 					text: string
 					reply_to: number
 				}
 				if (!client) throw new Error('Telegram client not initialized')
-				await client.sendMessage(chat_id, text, reply_to)
+				const target = chat_id || defaultChatId
+				if (!target) throw new Error('No chat_id provided and TELEGRAM_ALLOW_FROM not set')
+				await client.sendMessage(target, text, reply_to)
 				return { ok: true }
 			},
 		},
 		{
 			name: 'telegram_get_chat',
-			description: 'Get information about a Telegram chat',
+			description: 'Get information about a Telegram chat. If chat_id is omitted, uses the default user.',
 			parameters: z.object({
-				chat_id: z.string().describe('The Telegram chat ID'),
+				chat_id: z.string().optional().describe('The Telegram chat ID (optional — defaults to TELEGRAM_ALLOW_FROM)'),
 			}),
 			async execute(params) {
-				const { chat_id } = params as { chat_id: string }
+				const { chat_id } = params as { chat_id?: string }
 				if (!client) throw new Error('Telegram client not initialized')
-				return client.getChatInfo(chat_id)
+				const target = chat_id || defaultChatId
+				if (!target) throw new Error('No chat_id provided and TELEGRAM_ALLOW_FROM not set')
+				return client.getChatInfo(target)
 			},
 		},
 	],
@@ -85,6 +92,8 @@ export const paw: PawDefinition = {
 		const allowFrom = parseAllowList(process.env.TELEGRAM_ALLOW_FROM)
 		if (allowFrom) {
 			console.log(`[paw-telegram] Restricted to ${allowFrom.size} allowed user(s)`)
+			// Use the first allowed ID as default chat target for outbound messages
+			defaultChatId = String([...allowFrom][0])
 		} else {
 			console.warn('[paw-telegram] TELEGRAM_ALLOW_FROM not set — bot accepts messages from anyone')
 		}

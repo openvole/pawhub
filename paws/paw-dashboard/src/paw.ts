@@ -10,15 +10,16 @@ let transport: ReturnType<typeof createIpcTransport> | undefined
 async function fetchFullState(): Promise<unknown> {
 	if (!transport) return {}
 
-	const [tools, paws, skills, tasks, schedules] = await Promise.all([
+	const [tools, paws, skills, tasks, schedules, volenet] = await Promise.all([
 		transport.query('tools').catch(() => []),
 		transport.query('paws').catch(() => []),
 		transport.query('skills').catch(() => []),
 		transport.query('tasks').catch(() => []),
 		transport.query('schedules').catch(() => []),
+		transport.query('volenet').catch(() => ({ enabled: false })),
 	])
 
-	return { tools, paws, skills, tasks, schedules }
+	return { tools, paws, skills, tasks, schedules, volenet }
 }
 
 /** Refresh state and broadcast to all clients (coalesced — at most one in-flight) */
@@ -64,6 +65,7 @@ export const paw: PawDefinition = {
 			'task:failed',
 			'task:cancelled',
 			'rate:limited',
+			'volenet:tool:executed',
 		])
 
 		// Forward bus events to WebSocket clients
@@ -73,7 +75,8 @@ export const paw: PawDefinition = {
 			if (
 				event.startsWith('tool:') ||
 				event.startsWith('paw:') ||
-				event.startsWith('task:')
+				event.startsWith('task:') ||
+				event.startsWith('volenet:')
 			) {
 				refreshAndBroadcastState()
 			}

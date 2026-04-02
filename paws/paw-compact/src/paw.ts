@@ -171,12 +171,10 @@ async function llmSummarize(messages: AgentMessage[]): Promise<string | null> {
 		const summary = await compactionLLM.summarize(prompt)
 		const durationMs = Date.now() - start
 		const outputTokens = estimateTokens(summary)
-		console.log(
-			`[paw-compact] LLM summarization — ${compactionLLM.provider}/${compactionLLM.model}, input: ~${inputTokens} tokens, output: ~${outputTokens} tokens, ${durationMs}ms`,
-		)
+		// LLM summarization logged to file only (not console — in-process paw)
 		return summary
 	} catch (err) {
-		console.log(`[paw-compact] LLM summarization failed: ${err instanceof Error ? err.message : String(err)}`)
+		// console.log(`[paw-compact] LLM summarization failed: ${err instanceof Error ? err.message : String(err)}`)
 		return null
 	}
 }
@@ -208,7 +206,7 @@ export const paw: PawDefinition = {
 				}
 			}
 			if (tokensSaved > 0) {
-				console.log(`[paw-compact] Phase 1: shrunk seen tool results, saved ~${tokensSaved} tokens`)
+				// console.log(`[paw-compact] Phase 1: shrunk seen tool results, saved ~${tokensSaved} tokens`)
 			}
 
 			// Phase 2: Full compaction (if enough messages)
@@ -223,7 +221,7 @@ export const paw: PawDefinition = {
 					try {
 						compactionLLM = await createCompactionLLM()
 						if (compactionLLM) {
-							console.log(`[paw-compact] LLM compaction enabled: ${compactionLLM.provider}/${compactionLLM.model}`)
+							// console.log(`[paw-compact] LLM compaction enabled: ${compactionLLM.provider}/${compactionLLM.model}`)
 						}
 					} catch {
 						compactionLLM = null
@@ -235,10 +233,10 @@ export const paw: PawDefinition = {
 				const llmSummary = await llmSummarize(oldMessages)
 				if (llmSummary) {
 					summary = `[LLM Summary — ${oldMessages.length} messages compacted]\n${llmSummary}`
-					console.log(`[paw-compact] Phase 2: LLM summarized ${oldMessages.length} messages`)
+					// console.log(`[paw-compact] Phase 2: LLM summarized ${oldMessages.length} messages`)
 				} else {
 					summary = buildHeuristicSummary(oldMessages)
-					console.log(`[paw-compact] Phase 2: heuristic summary of ${oldMessages.length} messages`)
+					// console.log(`[paw-compact] Phase 2: heuristic summary of ${oldMessages.length} messages`)
 				}
 
 				context.messages = [
@@ -260,7 +258,7 @@ export const paw: PawDefinition = {
 		// LLM initialized lazily on first compaction (don't slow startup)
 		const modelSpec = process.env.VOLE_COMPACT_MODEL
 		if (modelSpec) {
-			console.log(`[paw-compact] LLM compaction configured: ${modelSpec} (will initialize on first use)`)
+			// console.log(`[paw-compact] LLM compaction configured: ${modelSpec} (will initialize on first use)`)
 		}
 	},
 
