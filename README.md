@@ -85,6 +85,16 @@ Then add to `vole.config.json`:
 }
 ```
 
+## VoleNet Compatibility
+
+Several paws have built-in VoleNet support for distributed deployments:
+
+- **paw-dashboard** — VoleNet panel showing connected peers, leader status, and remote tool execution feed
+- **paw-memory** — Cross-peer memory sync (write propagation + remote search)
+- **paw-session** — Session transcript replication across devices
+
+Any paw's tools can be shared across VoleNet instances — remote tools appear in the coordinator's registry and work transparently.
+
 ## How Paws Work
 
 When a Paw is loaded, its tools are registered into the **Tool Registry** — a flat list that the Brain sees alongside core tools and MCP tools. The Brain calls them by name without knowing which Paw provides them.
