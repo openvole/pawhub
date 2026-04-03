@@ -16,9 +16,18 @@ export interface DashboardServer {
 	close(): Promise<void>
 }
 
+export interface DashboardCallbacks {
+	fetchState: () => Promise<unknown>
+	readConfig: () => Promise<unknown>
+	writeConfig: (config: unknown) => Promise<unknown>
+	readIdentity: () => Promise<unknown>
+	writeIdentity: (filename: string, content: string) => Promise<unknown>
+	restartEngine: () => Promise<unknown>
+}
+
 export function createDashboardServer(
 	port: number,
-	onClientConnected: () => Promise<unknown>,
+	callbacks: DashboardCallbacks,
 ): DashboardServer {
 	const clients = new Set<WebSocket>()
 
@@ -86,7 +95,47 @@ export function createDashboardServer(
 		res.end(getDashboardHtml(port))
 	})
 
-	// WebSocket server — real-time events
+	/** Handle incoming WebSocket commands from the browser */
+	async function handleCommand(
+		ws: WebSocket,
+		cmd: { type: string; id: string; params?: unknown },
+	): Promise<void> {
+		const respond = (data?: unknown, error?: string) => {
+			if (ws.readyState === ws.OPEN) {
+				ws.send(JSON.stringify({ type: 'response', id: cmd.id, data, error }))
+			}
+		}
+
+		try {
+			switch (cmd.type) {
+				case 'read_config':
+					respond(await callbacks.readConfig())
+					break
+				case 'write_config': {
+					const p = cmd.params as { config: unknown }
+					respond(await callbacks.writeConfig(p?.config))
+					break
+				}
+				case 'read_identity':
+					respond(await callbacks.readIdentity())
+					break
+				case 'write_identity': {
+					const p = cmd.params as { filename: string; content: string }
+					respond(await callbacks.writeIdentity(p?.filename, p?.content))
+					break
+				}
+				case 'restart_engine':
+					respond(await callbacks.restartEngine())
+					break
+				default:
+					respond(undefined, `Unknown command: ${cmd.type}`)
+			}
+		} catch (err) {
+			respond(undefined, err instanceof Error ? err.message : String(err))
+		}
+	}
+
+	// WebSocket server — real-time events + commands
 	const wss = new WebSocketServer({ server: httpServer, path: '/ws' })
 
 	wss.on('connection', async (ws) => {
@@ -103,9 +152,21 @@ export function createDashboardServer(
 			clients.delete(ws)
 		})
 
+		// Handle incoming commands from the browser
+		ws.on('message', (raw) => {
+			try {
+				const msg = JSON.parse(raw.toString())
+				if (msg.type && msg.id) {
+					handleCommand(ws, msg)
+				}
+			} catch {
+				// Ignore malformed messages
+			}
+		})
+
 		// Send initial state snapshot on connect
 		try {
-			const state = await onClientConnected()
+			const state = await callbacks.fetchState()
 			ws.send(JSON.stringify({ type: 'state', data: state }))
 		} catch (err) {
 			logger.error(`Failed to send initial state: ${err}`)

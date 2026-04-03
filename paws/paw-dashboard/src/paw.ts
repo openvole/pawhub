@@ -46,7 +46,7 @@ async function refreshAndBroadcastState(): Promise<void> {
 export const paw: PawDefinition = {
 	name: '@openvole/paw-dashboard',
 	version: '0.1.0',
-	description: 'Web dashboard for real-time agent monitoring',
+	description: 'Web dashboard for real-time agent monitoring and control',
 
 	async onLoad() {
 		const port = Number(process.env.VOLE_DASHBOARD_PORT) || DEFAULT_PORT
@@ -83,8 +83,14 @@ export const paw: PawDefinition = {
 		})
 
 		// Create the dashboard HTTP + WebSocket server
-		server = createDashboardServer(port, async () => {
-			return fetchFullState()
+		server = createDashboardServer(port, {
+			fetchState: () => fetchFullState(),
+			readConfig: () => transport!.request('read_config'),
+			writeConfig: (config) => transport!.request('write_config', { config }),
+			readIdentity: () => transport!.request('read_identity'),
+			writeIdentity: (filename, content) =>
+				transport!.request('write_identity', { filename, content }),
+			restartEngine: () => transport!.request('restart_engine'),
 		})
 	},
 

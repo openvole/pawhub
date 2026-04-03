@@ -81,6 +81,21 @@ export function getDashboardHtml(wsPort: number): string {
   .stat-val.stat-yellow { color: var(--yellow); }
   .stat-val.stat-red { color: var(--red); }
   .stat-sep { color: var(--border); margin: 0 2px; }
+  .btn-restart {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--mono);
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-restart:hover {
+    border-color: var(--text-dim);
+    color: var(--text);
+  }
   .status {
     display: flex;
     align-items: center;
@@ -95,6 +110,44 @@ export function getDashboardHtml(wsPort: number): string {
     background: var(--red);
   }
   .status-dot.connected { background: var(--green); }
+
+  /* Tab Navigation */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+    padding: 0 24px;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 10px 16px 8px;
+    cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab-btn:hover {
+    color: var(--text);
+  }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .tab-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
   .main {
     flex: 1;
     display: flex;
@@ -254,6 +307,320 @@ export function getDashboardHtml(wsPort: number): string {
   footer a { color: var(--accent); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
   .footer-sep { color: var(--border); margin: 0 6px; }
+
+  /* Config Page */
+  .config-page {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .config-page::-webkit-scrollbar { width: 6px; }
+  .config-page::-webkit-scrollbar-track { background: var(--bg); }
+  .config-page::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+  .config-page::-webkit-scrollbar-thumb:hover { background: #555; }
+  .config-section {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .config-section-header {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    background: var(--surface);
+    transition: background 0.15s;
+  }
+  .config-section-header:hover {
+    background: var(--surface-hover);
+  }
+  .config-section-header h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .config-section-arrow {
+    color: var(--text-dim);
+    font-size: 12px;
+    transition: transform 0.2s;
+  }
+  .config-section.collapsed .config-section-arrow {
+    transform: rotate(-90deg);
+  }
+  .config-section.collapsed .config-section-body {
+    display: none;
+  }
+  .config-section-body {
+    padding: 12px 16px 16px;
+    border-top: 1px solid var(--border);
+  }
+  .form-field {
+    margin-bottom: 14px;
+  }
+  .form-field:last-child {
+    margin-bottom: 0;
+  }
+  .form-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+    font-family: var(--mono);
+  }
+  .form-help {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .form-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-size: 12px;
+    padding: 6px 10px;
+    font-family: var(--mono);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-input:focus {
+    border-color: var(--accent);
+  }
+  .form-input[type="number"] {
+    width: 140px;
+  }
+  .form-select {
+    width: 180px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-size: 12px;
+    padding: 6px 10px;
+    font-family: var(--mono);
+    outline: none;
+    transition: border-color 0.15s;
+    cursor: pointer;
+  }
+  .form-select:focus {
+    border-color: var(--accent);
+  }
+  .form-textarea {
+    width: 100%;
+    min-height: 120px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-size: 12px;
+    padding: 8px 10px;
+    font-family: var(--mono);
+    outline: none;
+    resize: vertical;
+    line-height: 1.5;
+    transition: border-color 0.15s;
+  }
+  .form-textarea:focus {
+    border-color: var(--accent);
+  }
+  .form-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .form-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .form-checkbox-label {
+    font-size: 12px;
+    color: var(--text);
+    font-family: var(--mono);
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--mono);
+    transition: opacity 0.15s;
+  }
+  .btn-primary:hover {
+    opacity: 0.85;
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-danger {
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--mono);
+    transition: opacity 0.15s;
+  }
+  .btn-danger:hover {
+    opacity: 0.85;
+  }
+  .btn-subtle {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    border-radius: 4px;
+    padding: 8px 20px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: var(--mono);
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-subtle:hover {
+    border-color: var(--text-dim);
+    color: var(--text);
+  }
+  .config-save-row {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  /* Identity Page */
+  .identity-page {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 24px;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .identity-file-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 16px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .identity-file-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 500;
+    font-family: var(--mono);
+    padding: 8px 14px 6px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .identity-file-btn:hover {
+    color: var(--text);
+  }
+  .identity-file-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .identity-description {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+    flex-shrink: 0;
+    line-height: 1.5;
+  }
+  .identity-textarea {
+    flex: 1;
+    width: 100%;
+    min-height: 500px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 13px;
+    padding: 16px;
+    font-family: var(--mono);
+    outline: none;
+    resize: none;
+    line-height: 1.6;
+    transition: border-color 0.15s;
+  }
+  .identity-textarea:focus {
+    border-color: var(--accent);
+  }
+  .identity-save-row {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+  }
+
+  /* Toast Notifications */
+  .toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+  }
+  .toast {
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--mono);
+    color: #fff;
+    pointer-events: auto;
+    animation: toast-in 0.25s ease-out;
+    opacity: 1;
+    transition: opacity 0.3s;
+  }
+  .toast.toast-success {
+    background: var(--green);
+    color: #000;
+  }
+  .toast.toast-error {
+    background: var(--red);
+    color: #fff;
+  }
+  .toast.toast-out {
+    opacity: 0;
+  }
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   @media (max-width: 1000px) {
     .grid { grid-template-columns: 1fr 1fr; }
     .panel.span-2 { grid-column: span 2; }
@@ -284,6 +651,7 @@ export function getDashboardHtml(wsPort: number): string {
       <span><span class="stat-val stat-yellow" id="stat-queued">0</span> queued</span>
       <span><span class="stat-val stat-red" id="stat-failed">0</span> failed</span>
     </div>
+    <button class="btn-restart" id="btn-restart" title="Restart engine">Restart</button>
     <div class="status">
       <div class="status-dot" id="ws-dot"></div>
       <span id="ws-status">Connecting...</span>
@@ -291,82 +659,297 @@ export function getDashboardHtml(wsPort: number): string {
   </div>
 </header>
 
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
+  <button class="tab-btn" data-tab="config" onclick="switchTab('config')">Config</button>
+  <button class="tab-btn" data-tab="identity" onclick="switchTab('identity')">Identity</button>
+</div>
+
 <div class="main">
-  <div class="grid">
-    <div class="panel">
-      <div class="panel-header"><h2>Paws <span class="count" id="paws-count">0</span></h2></div>
-      <div class="panel-body">
-        <table id="paws-table">
-          <thead><tr><th>Name</th><th>Category</th><th>Tools</th><th>Health</th></tr></thead>
-          <tbody></tbody>
-        </table>
+  <div id="tab-overview" class="tab-content">
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-header"><h2>Paws <span class="count" id="paws-count">0</span></h2></div>
+        <div class="panel-body">
+          <table id="paws-table">
+            <thead><tr><th>Name</th><th>Category</th><th>Tools</th><th>Health</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h2>Tools <span class="count" id="tools-count">0</span></h2></div>
+        <div class="panel-body">
+          <table id="tools-table">
+            <thead><tr><th>Name</th><th>Paw</th><th>Type</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h2>Skills <span class="count" id="skills-count">0</span></h2></div>
+        <div class="panel-body">
+          <table id="skills-table">
+            <thead><tr><th>Name</th><th>Status</th><th>Missing</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel span-2">
+        <div class="panel-header"><h2>Tasks <span class="count" id="tasks-count">0</span></h2></div>
+        <div class="panel-body">
+          <table id="tasks-table">
+            <thead><tr><th>ID</th><th>Source</th><th>Input</th><th>Status</th><th>Time</th><th>Cost</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h2>Schedules <span class="count" id="schedules-count">0</span></h2></div>
+        <div class="panel-body">
+          <table id="schedules-table">
+            <thead><tr><th>ID</th><th>Input</th><th>Cron</th><th>Next Run</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel" id="volenet-panel" style="display:none">
+        <div class="panel-header"><h2>VoleNet</h2></div>
+        <div class="panel-body">
+          <div id="volenet-status"></div>
+          <table id="volenet-peers-table" style="margin-top:8px">
+            <thead><tr><th>Peer</th><th>Role</th><th>Capabilities</th><th>Last Seen</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </div>
-    <div class="panel">
-      <div class="panel-header"><h2>Tools <span class="count" id="tools-count">0</span></h2></div>
-      <div class="panel-body">
-        <table id="tools-table">
-          <thead><tr><th>Name</th><th>Paw</th><th>Type</th></tr></thead>
-          <tbody></tbody>
-        </table>
+
+    <div class="events-bar">
+      <div class="events-header">
+        <h2>Live Events</h2>
+        <button onclick="document.getElementById('event-log').innerHTML=''">Clear</button>
       </div>
+      <div class="events-body" id="event-log"></div>
     </div>
-    <div class="panel">
-      <div class="panel-header"><h2>Skills <span class="count" id="skills-count">0</span></h2></div>
-      <div class="panel-body">
-        <table id="skills-table">
-          <thead><tr><th>Name</th><th>Status</th><th>Missing</th></tr></thead>
-          <tbody></tbody>
-        </table>
+  </div>
+
+  <div id="tab-config" class="tab-content" style="display:none">
+    <div class="config-page" id="config-page">
+
+      <div class="config-section">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3>Brain</h3>
+          <span class="config-section-arrow">&#9660;</span>
+        </div>
+        <div class="config-section-body">
+          <div class="form-field">
+            <label class="form-label">brain</label>
+            <div class="form-help">Which paw handles the Think phase (e.g. @openvole/paw-brain)</div>
+            <input type="text" class="form-input" id="cfg-brain" placeholder="@openvole/paw-brain">
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="panel span-2">
-      <div class="panel-header"><h2>Tasks <span class="count" id="tasks-count">0</span></h2></div>
-      <div class="panel-body">
-        <table id="tasks-table">
-          <thead><tr><th>ID</th><th>Source</th><th>Input</th><th>Status</th><th>Time</th><th>Cost</th></tr></thead>
-          <tbody></tbody>
-        </table>
+
+      <div class="config-section">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3>Loop</h3>
+          <span class="config-section-arrow">&#9660;</span>
+        </div>
+        <div class="config-section-body">
+          <div class="form-field">
+            <label class="form-label">loop.maxIterations</label>
+            <div class="form-help">Maximum loop iterations per task. Resets on successful tool execution.</div>
+            <input type="number" class="form-input" id="cfg-loop-maxIterations" value="10" min="1">
+          </div>
+          <div class="form-field">
+            <div class="form-help">Ask user confirmation before executing tools.</div>
+            <div class="form-checkbox-row">
+              <input type="checkbox" class="form-checkbox" id="cfg-loop-confirmBeforeAct">
+              <label class="form-checkbox-label" for="cfg-loop-confirmBeforeAct">loop.confirmBeforeAct</label>
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">loop.taskConcurrency</label>
+            <div class="form-help">Max tasks running in parallel.</div>
+            <input type="number" class="form-input" id="cfg-loop-taskConcurrency" value="1" min="1">
+          </div>
+          <div class="form-field">
+            <label class="form-label">loop.compactThreshold</label>
+            <div class="form-help">Message count before triggering context compaction. 0 to disable.</div>
+            <input type="number" class="form-input" id="cfg-loop-compactThreshold" value="50" min="0">
+          </div>
+          <div class="form-field">
+            <div class="form-help">Brain starts with core tools only, discovers others via discover_tools.</div>
+            <div class="form-checkbox-row">
+              <input type="checkbox" class="form-checkbox" id="cfg-loop-toolHorizon" checked>
+              <label class="form-checkbox-label" for="cfg-loop-toolHorizon">loop.toolHorizon</label>
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">loop.maxContextTokens</label>
+            <div class="form-help">Max context window in tokens. Core trims by priority to fit.</div>
+            <input type="number" class="form-input" id="cfg-loop-maxContextTokens" value="128000" min="1000">
+          </div>
+          <div class="form-field">
+            <label class="form-label">loop.responseReserve</label>
+            <div class="form-help">Tokens reserved for the Brain's response output.</div>
+            <input type="number" class="form-input" id="cfg-loop-responseReserve" value="4000" min="100">
+          </div>
+          <div class="form-field">
+            <label class="form-label">loop.costTracking</label>
+            <div class="form-help">auto: track for cloud. enabled: always track. disabled: off.</div>
+            <select class="form-select" id="cfg-loop-costTracking">
+              <option value="auto" selected>auto</option>
+              <option value="enabled">enabled</option>
+              <option value="disabled">disabled</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label">loop.costAlertThreshold</label>
+            <div class="form-help">Warn when a single task exceeds this USD amount.</div>
+            <input type="number" class="form-input" id="cfg-loop-costAlertThreshold" placeholder="(optional)" step="0.01" min="0">
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="panel">
-      <div class="panel-header"><h2>Schedules <span class="count" id="schedules-count">0</span></h2></div>
-      <div class="panel-body">
-        <table id="schedules-table">
-          <thead><tr><th>ID</th><th>Input</th><th>Cron</th><th>Next Run</th></tr></thead>
-          <tbody></tbody>
-        </table>
+
+      <div class="config-section">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3>Heartbeat</h3>
+          <span class="config-section-arrow">&#9660;</span>
+        </div>
+        <div class="config-section-body">
+          <div class="form-field">
+            <div class="form-help">Enable periodic autonomous wake-up.</div>
+            <div class="form-checkbox-row">
+              <input type="checkbox" class="form-checkbox" id="cfg-heartbeat-enabled">
+              <label class="form-checkbox-label" for="cfg-heartbeat-enabled">heartbeat.enabled</label>
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">heartbeat.intervalMinutes</label>
+            <div class="form-help">Minutes between heartbeat wake-ups.</div>
+            <input type="number" class="form-input" id="cfg-heartbeat-intervalMinutes" value="30" min="1">
+          </div>
+          <div class="form-field">
+            <div class="form-help">Run a heartbeat immediately on startup.</div>
+            <div class="form-checkbox-row">
+              <input type="checkbox" class="form-checkbox" id="cfg-heartbeat-runOnStart">
+              <label class="form-checkbox-label" for="cfg-heartbeat-runOnStart">heartbeat.runOnStart</label>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <div class="config-section">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3>Security</h3>
+          <span class="config-section-arrow">&#9660;</span>
+        </div>
+        <div class="config-section-body">
+          <div class="form-field">
+            <div class="form-help">Enable Node.js --permission sandbox for paw subprocesses.</div>
+            <div class="form-checkbox-row">
+              <input type="checkbox" class="form-checkbox" id="cfg-security-sandboxFilesystem" checked>
+              <label class="form-checkbox-label" for="cfg-security-sandboxFilesystem">security.sandboxFilesystem</label>
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">security.allowedPaths</label>
+            <div class="form-help">Additional filesystem paths paws can access.</div>
+            <textarea class="form-textarea" id="cfg-security-allowedPaths" rows="4" placeholder='["./data", "/tmp"]'>[]</textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-section">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3>Paws</h3>
+          <span class="config-section-arrow">&#9660;</span>
+        </div>
+        <div class="config-section-body">
+          <div class="form-field">
+            <div class="form-help">Array of paw configurations. Each entry is a string or { name, allow: { network, listen, filesystem, env, childProcess } }</div>
+            <textarea class="form-textarea" id="cfg-paws" rows="8" placeholder='["@openvole/paw-brain"]'>[]</textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-section">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3>Tool Profiles</h3>
+          <span class="config-section-arrow">&#9660;</span>
+        </div>
+        <div class="config-section-body">
+          <div class="form-field">
+            <div class="form-help">Per-source tool filtering. Keys are task sources (cli, telegram, heartbeat). Values have allow/deny arrays.</div>
+            <textarea class="form-textarea" id="cfg-toolProfiles" rows="8" placeholder='{"cli": {"allow": ["*"]}}'>{ }</textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-section">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3>Agents</h3>
+          <span class="config-section-arrow">&#9660;</span>
+        </div>
+        <div class="config-section-body">
+          <div class="form-field">
+            <div class="form-help">Named agent profiles for sub-agent spawning. Each has role, instructions, allowTools, denyTools, maxIterations.</div>
+            <textarea class="form-textarea" id="cfg-agents" rows="8" placeholder='{"researcher": {"role": "...", "instructions": "..."}}'>{}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-section">
+        <div class="config-section-header" onclick="toggleSection(this)">
+          <h3>Net (VoleNet)</h3>
+          <span class="config-section-arrow">&#9660;</span>
+        </div>
+        <div class="config-section-body">
+          <div class="form-field">
+            <div class="form-help">VoleNet distributed networking config. See docs for architecture patterns.</div>
+            <textarea class="form-textarea" id="cfg-net" rows="8" placeholder='{"enabled": false}'>{}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-save-row">
+        <button class="btn-primary" id="btn-save-config" onclick="saveConfig()">Save Config</button>
+      </div>
+
     </div>
-    <div class="panel" id="volenet-panel" style="display:none">
-      <div class="panel-header"><h2>VoleNet</h2></div>
-      <div class="panel-body">
-        <div id="volenet-status"></div>
-        <table id="volenet-peers-table" style="margin-top:8px">
-          <thead><tr><th>Peer</th><th>Role</th><th>Capabilities</th><th>Last Seen</th></tr></thead>
-          <tbody></tbody>
-        </table>
+  </div>
+
+  <div id="tab-identity" class="tab-content" style="display:none">
+    <div class="identity-page" id="identity-page">
+      <div class="identity-file-tabs" id="identity-file-tabs">
+        <button class="identity-file-btn active" data-file="SOUL.md" onclick="switchIdentityFile('SOUL.md')">SOUL.md</button>
+        <button class="identity-file-btn" data-file="USER.md" onclick="switchIdentityFile('USER.md')">USER.md</button>
+        <button class="identity-file-btn" data-file="AGENT.md" onclick="switchIdentityFile('AGENT.md')">AGENT.md</button>
+        <button class="identity-file-btn" data-file="HEARTBEAT.md" onclick="switchIdentityFile('HEARTBEAT.md')">HEARTBEAT.md</button>
+        <button class="identity-file-btn" data-file="BRAIN.md" onclick="switchIdentityFile('BRAIN.md')">BRAIN.md</button>
+      </div>
+      <div class="identity-description" id="identity-description">Agent personality, tone, and identity. Shapes how the agent communicates.</div>
+      <textarea class="identity-textarea" id="identity-editor" spellcheck="false"></textarea>
+      <div class="identity-save-row">
+        <button class="btn-primary" id="btn-save-identity" onclick="saveIdentity()">Save File</button>
       </div>
     </div>
   </div>
 
-  <div class="events-bar">
-    <div class="events-header">
-      <h2>Live Events</h2>
-      <button onclick="document.getElementById('event-log').innerHTML=''">Clear</button>
-    </div>
-    <div class="events-body" id="event-log"></div>
-  </div>
   <footer>
     <a href="https://github.com/openvole/openvole" target="_blank">GitHub</a>
-    <span class="footer-sep">·</span>
+    <span class="footer-sep">&middot;</span>
     <a href="https://github.com/openvole/pawhub" target="_blank">PawHub</a>
-    <span class="footer-sep">·</span>
+    <span class="footer-sep">&middot;</span>
     <a href="https://www.npmjs.com/package/openvole" target="_blank">npm</a>
-    <span class="footer-sep">·</span>
+    <span class="footer-sep">&middot;</span>
     <a href="https://clawhub.ai" target="_blank">ClawHub Skills</a>
   </footer>
 </div>
+
+<div class="toast-container" id="toast-container"></div>
 
 <script>
 const ws = new WebSocket('ws://' + location.hostname + ':' + ${wsPort} + '/ws');
@@ -375,20 +958,307 @@ const statusText = document.getElementById('ws-status');
 const eventLog = document.getElementById('event-log');
 const MAX_EVENTS = 500;
 
-ws.onopen = () => {
+/* ── Command / Response Protocol ── */
+const pendingCommands = new Map();
+let cmdIdCounter = 0;
+
+function sendCommand(type, params) {
+  return new Promise(function(resolve, reject) {
+    const id = 'cmd-' + (++cmdIdCounter) + '-' + Math.random().toString(36).substring(2, 8);
+    const timeout = setTimeout(function() {
+      pendingCommands.delete(id);
+      reject(new Error('Command timed out: ' + type));
+    }, 10000);
+    pendingCommands.set(id, { resolve: resolve, reject: reject, timeout: timeout });
+    ws.send(JSON.stringify({ type: type, id: id, params: params || {} }));
+  });
+}
+
+/* ── Toast Notifications ── */
+function showToast(message, type) {
+  var container = document.getElementById('toast-container');
+  var el = document.createElement('div');
+  el.className = 'toast toast-' + (type || 'success');
+  el.textContent = message;
+  container.appendChild(el);
+  setTimeout(function() {
+    el.classList.add('toast-out');
+    setTimeout(function() {
+      if (el.parentNode) el.parentNode.removeChild(el);
+    }, 300);
+  }, 3000);
+}
+
+/* ── Tab Navigation ── */
+var currentTab = 'overview';
+var configLoaded = false;
+var identityLoaded = false;
+
+function switchTab(tabName) {
+  currentTab = tabName;
+  var tabs = document.querySelectorAll('.tab-btn');
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].classList.toggle('active', tabs[i].getAttribute('data-tab') === tabName);
+  }
+  document.getElementById('tab-overview').style.display = tabName === 'overview' ? '' : 'none';
+  document.getElementById('tab-config').style.display = tabName === 'config' ? '' : 'none';
+  document.getElementById('tab-identity').style.display = tabName === 'identity' ? '' : 'none';
+
+  if (tabName === 'config' && !configLoaded) {
+    loadConfig();
+  }
+  if (tabName === 'identity' && !identityLoaded) {
+    loadIdentity();
+  }
+}
+
+/* ── Collapsible Sections ── */
+function toggleSection(headerEl) {
+  var section = headerEl.parentElement;
+  section.classList.toggle('collapsed');
+}
+
+/* ── Config Page ── */
+var cachedConfig = null;
+
+function loadConfig() {
+  sendCommand('read_config').then(function(data) {
+    cachedConfig = data || {};
+    populateConfig(cachedConfig);
+    configLoaded = true;
+    showToast('Config loaded', 'success');
+  }).catch(function(err) {
+    showToast('Failed to load config: ' + err.message, 'error');
+  });
+}
+
+function populateConfig(cfg) {
+  document.getElementById('cfg-brain').value = cfg.brain || '';
+
+  var loop = cfg.loop || {};
+  document.getElementById('cfg-loop-maxIterations').value = loop.maxIterations != null ? loop.maxIterations : 10;
+  document.getElementById('cfg-loop-confirmBeforeAct').checked = !!loop.confirmBeforeAct;
+  document.getElementById('cfg-loop-taskConcurrency').value = loop.taskConcurrency != null ? loop.taskConcurrency : 1;
+  document.getElementById('cfg-loop-compactThreshold').value = loop.compactThreshold != null ? loop.compactThreshold : 50;
+  document.getElementById('cfg-loop-toolHorizon').checked = loop.toolHorizon != null ? loop.toolHorizon : true;
+  document.getElementById('cfg-loop-maxContextTokens').value = loop.maxContextTokens != null ? loop.maxContextTokens : 128000;
+  document.getElementById('cfg-loop-responseReserve').value = loop.responseReserve != null ? loop.responseReserve : 4000;
+  document.getElementById('cfg-loop-costTracking').value = loop.costTracking || 'auto';
+  document.getElementById('cfg-loop-costAlertThreshold').value = loop.costAlertThreshold != null ? loop.costAlertThreshold : '';
+
+  var hb = cfg.heartbeat || {};
+  document.getElementById('cfg-heartbeat-enabled').checked = !!hb.enabled;
+  document.getElementById('cfg-heartbeat-intervalMinutes').value = hb.intervalMinutes != null ? hb.intervalMinutes : 30;
+  document.getElementById('cfg-heartbeat-runOnStart').checked = !!hb.runOnStart;
+
+  var sec = cfg.security || {};
+  document.getElementById('cfg-security-sandboxFilesystem').checked = sec.sandboxFilesystem != null ? sec.sandboxFilesystem : true;
+  document.getElementById('cfg-security-allowedPaths').value = JSON.stringify(sec.allowedPaths || [], null, 2);
+
+  document.getElementById('cfg-paws').value = JSON.stringify(cfg.paws || [], null, 2);
+  document.getElementById('cfg-toolProfiles').value = JSON.stringify(cfg.toolProfiles || {}, null, 2);
+  document.getElementById('cfg-agents').value = JSON.stringify(cfg.agents || {}, null, 2);
+  document.getElementById('cfg-net').value = JSON.stringify(cfg.net || {}, null, 2);
+}
+
+function readConfigFromForm() {
+  var cfg = {};
+
+  var brain = document.getElementById('cfg-brain').value.trim();
+  if (brain) cfg.brain = brain;
+
+  cfg.loop = {};
+  var maxIter = parseInt(document.getElementById('cfg-loop-maxIterations').value, 10);
+  if (!isNaN(maxIter)) cfg.loop.maxIterations = maxIter;
+  cfg.loop.confirmBeforeAct = document.getElementById('cfg-loop-confirmBeforeAct').checked;
+  var taskConc = parseInt(document.getElementById('cfg-loop-taskConcurrency').value, 10);
+  if (!isNaN(taskConc)) cfg.loop.taskConcurrency = taskConc;
+  var compThresh = parseInt(document.getElementById('cfg-loop-compactThreshold').value, 10);
+  if (!isNaN(compThresh)) cfg.loop.compactThreshold = compThresh;
+  cfg.loop.toolHorizon = document.getElementById('cfg-loop-toolHorizon').checked;
+  var maxCtx = parseInt(document.getElementById('cfg-loop-maxContextTokens').value, 10);
+  if (!isNaN(maxCtx)) cfg.loop.maxContextTokens = maxCtx;
+  var resReserve = parseInt(document.getElementById('cfg-loop-responseReserve').value, 10);
+  if (!isNaN(resReserve)) cfg.loop.responseReserve = resReserve;
+  cfg.loop.costTracking = document.getElementById('cfg-loop-costTracking').value;
+  var costAlert = parseFloat(document.getElementById('cfg-loop-costAlertThreshold').value);
+  if (!isNaN(costAlert)) cfg.loop.costAlertThreshold = costAlert;
+
+  cfg.heartbeat = {};
+  cfg.heartbeat.enabled = document.getElementById('cfg-heartbeat-enabled').checked;
+  var hbInt = parseInt(document.getElementById('cfg-heartbeat-intervalMinutes').value, 10);
+  if (!isNaN(hbInt)) cfg.heartbeat.intervalMinutes = hbInt;
+  cfg.heartbeat.runOnStart = document.getElementById('cfg-heartbeat-runOnStart').checked;
+
+  cfg.security = {};
+  cfg.security.sandboxFilesystem = document.getElementById('cfg-security-sandboxFilesystem').checked;
+  try {
+    cfg.security.allowedPaths = JSON.parse(document.getElementById('cfg-security-allowedPaths').value);
+  } catch (e) {
+    throw new Error('Invalid JSON in security.allowedPaths');
+  }
+
+  try {
+    cfg.paws = JSON.parse(document.getElementById('cfg-paws').value);
+  } catch (e) {
+    throw new Error('Invalid JSON in Paws');
+  }
+
+  try {
+    cfg.toolProfiles = JSON.parse(document.getElementById('cfg-toolProfiles').value);
+  } catch (e) {
+    throw new Error('Invalid JSON in Tool Profiles');
+  }
+
+  try {
+    cfg.agents = JSON.parse(document.getElementById('cfg-agents').value);
+  } catch (e) {
+    throw new Error('Invalid JSON in Agents');
+  }
+
+  try {
+    cfg.net = JSON.parse(document.getElementById('cfg-net').value);
+  } catch (e) {
+    throw new Error('Invalid JSON in Net (VoleNet)');
+  }
+
+  return cfg;
+}
+
+function saveConfig() {
+  var cfg;
+  try {
+    cfg = readConfigFromForm();
+  } catch (e) {
+    showToast(e.message, 'error');
+    return;
+  }
+
+  var btn = document.getElementById('btn-save-config');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  sendCommand('write_config', { config: cfg }).then(function() {
+    showToast('Config saved successfully', 'success');
+    cachedConfig = cfg;
+  }).catch(function(err) {
+    showToast('Failed to save config: ' + err.message, 'error');
+  }).finally(function() {
+    btn.disabled = false;
+    btn.textContent = 'Save Config';
+  });
+}
+
+/* ── Identity Page ── */
+var identityFiles = {
+  'SOUL.md': '',
+  'USER.md': '',
+  'AGENT.md': '',
+  'HEARTBEAT.md': '',
+  'BRAIN.md': ''
+};
+var currentIdentityFile = 'SOUL.md';
+
+var identityDescriptions = {
+  'SOUL.md': 'Agent personality, tone, and identity. Shapes how the agent communicates.',
+  'USER.md': 'User profile and preferences. Helps the agent tailor responses.',
+  'AGENT.md': 'Operating rules and behavioral constraints. The agent follows these strictly.',
+  'HEARTBEAT.md': 'Recurring job definitions. The agent reads this on each heartbeat wake-up and acts on the instructions.',
+  'BRAIN.md': 'Custom system prompt. Overrides the default prompt entirely. Use with care.'
+};
+
+function switchIdentityFile(filename) {
+  // Save current editor content to cache before switching
+  identityFiles[currentIdentityFile] = document.getElementById('identity-editor').value;
+
+  currentIdentityFile = filename;
+  var btns = document.querySelectorAll('.identity-file-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.toggle('active', btns[i].getAttribute('data-file') === filename);
+  }
+  document.getElementById('identity-description').textContent = identityDescriptions[filename] || '';
+  document.getElementById('identity-editor').value = identityFiles[filename] || '';
+}
+
+function loadIdentity() {
+  sendCommand('read_identity').then(function(data) {
+    if (data && typeof data === 'object') {
+      var keys = Object.keys(data);
+      for (var i = 0; i < keys.length; i++) {
+        if (identityFiles.hasOwnProperty(keys[i])) {
+          identityFiles[keys[i]] = data[keys[i]] || '';
+        }
+      }
+    }
+    identityLoaded = true;
+    document.getElementById('identity-editor').value = identityFiles[currentIdentityFile] || '';
+    showToast('Identity files loaded', 'success');
+  }).catch(function(err) {
+    showToast('Failed to load identity files: ' + err.message, 'error');
+  });
+}
+
+function saveIdentity() {
+  var filename = currentIdentityFile;
+  var content = document.getElementById('identity-editor').value;
+  identityFiles[filename] = content;
+
+  var btn = document.getElementById('btn-save-identity');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  sendCommand('write_identity', { filename: filename, content: content }).then(function() {
+    showToast(filename + ' saved successfully', 'success');
+  }).catch(function(err) {
+    showToast('Failed to save ' + filename + ': ' + err.message, 'error');
+  }).finally(function() {
+    btn.disabled = false;
+    btn.textContent = 'Save File';
+  });
+}
+
+/* ── Restart Button ── */
+document.getElementById('btn-restart').addEventListener('click', function() {
+  if (confirm('Are you sure you want to restart the engine?')) {
+    sendCommand('restart_engine').then(function() {
+      showToast('Restarting...', 'success');
+    }).catch(function(err) {
+      showToast('Failed to restart: ' + err.message, 'error');
+    });
+  }
+});
+
+/* ── WebSocket Handlers ── */
+ws.onopen = function() {
   dot.classList.add('connected');
   statusText.textContent = 'Connected';
 };
-ws.onclose = () => {
+ws.onclose = function() {
   dot.classList.remove('connected');
   statusText.textContent = 'Disconnected';
-  setTimeout(() => location.reload(), 3000);
+  setTimeout(function() { location.reload(); }, 3000);
 };
 
-ws.onmessage = (evt) => {
-  const msg = JSON.parse(evt.data);
+ws.onmessage = function(evt) {
+  var msg = JSON.parse(evt.data);
+
+  // Handle command responses
+  if (msg.type === 'response' && msg.id) {
+    var pending = pendingCommands.get(msg.id);
+    if (pending) {
+      clearTimeout(pending.timeout);
+      pendingCommands.delete(msg.id);
+      if (msg.error) {
+        pending.reject(new Error(msg.error));
+      } else {
+        pending.resolve(msg.data);
+      }
+    }
+    return;
+  }
+
   if (msg.type === 'state') {
-    const d = msg.data;
+    var d = msg.data;
     renderPaws(d.paws || []);
     renderTools(d.tools || []);
     renderSkills(d.skills || []);
@@ -399,51 +1269,53 @@ ws.onmessage = (evt) => {
     document.getElementById('stat-tools').textContent = (d.tools || []).length;
     document.getElementById('stat-skills').textContent = (d.skills || []).length;
     // Task breakdown by status
-    const tasks = d.tasks || [];
-    document.getElementById('stat-completed').textContent = tasks.filter(t => t.status === 'completed').length;
-    document.getElementById('stat-running').textContent = tasks.filter(t => t.status === 'running').length;
-    document.getElementById('stat-queued').textContent = tasks.filter(t => t.status === 'queued').length;
-    document.getElementById('stat-failed').textContent = tasks.filter(t => t.status === 'failed' || t.status === 'cancelled').length;
+    var tasks = d.tasks || [];
+    document.getElementById('stat-completed').textContent = tasks.filter(function(t) { return t.status === 'completed'; }).length;
+    document.getElementById('stat-running').textContent = tasks.filter(function(t) { return t.status === 'running'; }).length;
+    document.getElementById('stat-queued').textContent = tasks.filter(function(t) { return t.status === 'queued'; }).length;
+    document.getElementById('stat-failed').textContent = tasks.filter(function(t) { return t.status === 'failed' || t.status === 'cancelled'; }).length;
   } else if (msg.type === 'event') {
     addEvent(msg.event, msg.data);
   }
 };
 
 function categoryTag(cat) {
-  const colors = { brain: 'tag-purple', channel: 'tag-green', tool: 'tag-blue', infrastructure: 'tag-yellow' };
+  var colors = { brain: 'tag-purple', channel: 'tag-green', tool: 'tag-blue', infrastructure: 'tag-yellow' };
   return '<span class="tag ' + (colors[cat] || 'tag-blue') + '">' + esc(cat || 'tool') + '</span>';
 }
 
 function renderPaws(paws) {
   document.getElementById('paws-count').textContent = paws.length;
-  const tbody = document.querySelector('#paws-table tbody');
+  var tbody = document.querySelector('#paws-table tbody');
   if (paws.length === 0) {
     tbody.innerHTML = '<tr><td colspan="4" class="empty">No paws loaded</td></tr>';
     return;
   }
 
-  // Group by category, ordered: brain → channel → tool → infrastructure
-  const order = ['brain', 'channel', 'tool', 'infrastructure'];
-  const grouped = {};
-  for (const cat of order) grouped[cat] = [];
-  for (const p of paws) {
-    const cat = p.category || 'tool';
+  // Group by category, ordered: brain -> channel -> tool -> infrastructure
+  var order = ['brain', 'channel', 'tool', 'infrastructure'];
+  var grouped = {};
+  for (var i = 0; i < order.length; i++) grouped[order[i]] = [];
+  for (var j = 0; j < paws.length; j++) {
+    var cat = paws[j].category || 'tool';
     if (!grouped[cat]) grouped[cat] = [];
-    grouped[cat].push(p);
+    grouped[cat].push(paws[j]);
   }
 
-  let html = '';
-  for (const cat of order) {
-    const items = grouped[cat];
+  var html = '';
+  for (var k = 0; k < order.length; k++) {
+    var catName = order[k];
+    var items = grouped[catName];
     if (!items || items.length === 0) continue;
     html += '<tr class="group-header"><td colspan="4">'
-      + '<strong>' + cat.charAt(0).toUpperCase() + cat.slice(1)
+      + '<strong>' + catName.charAt(0).toUpperCase() + catName.slice(1)
       + '</strong> (' + items.length + ')</td></tr>';
-    for (const p of items) {
+    for (var m = 0; m < items.length; m++) {
+      var p = items[m];
       html += '<tr>'
         + '<td title="' + esc(p.name) + '">' + esc(p.name.replace('@openvole/', '')) + '</td>'
-        + '<td>' + categoryTag(cat) + '</td>'
-        + '<td>' + (p.toolCount ?? 0) + '</td>'
+        + '<td>' + categoryTag(catName) + '</td>'
+        + '<td>' + (p.toolCount != null ? p.toolCount : 0) + '</td>'
         + '<td>' + (p.healthy ? '<span class="tag tag-green">ok</span>' : '<span class="tag tag-red">down</span>') + '</td>'
         + '</tr>';
     }
@@ -453,48 +1325,48 @@ function renderPaws(paws) {
 
 function renderTools(tools) {
   document.getElementById('tools-count').textContent = tools.length;
-  const tbody = document.querySelector('#tools-table tbody');
+  var tbody = document.querySelector('#tools-table tbody');
   tbody.innerHTML = tools.length === 0
     ? '<tr><td colspan="3" class="empty">No tools registered</td></tr>'
-    : tools.map(t => '<tr>'
+    : tools.map(function(t) { return '<tr>'
       + '<td title="' + esc(t.name) + '">' + esc(t.name) + '</td>'
       + '<td title="' + esc(t.pawName) + '">' + esc(t.pawName) + '</td>'
       + '<td><span class="tag tag-blue">' + (t.inProcess ? 'in-process' : 'subprocess') + '</span></td>'
-      + '</tr>').join('');
+      + '</tr>'; }).join('');
 }
 
 function renderSkills(skills) {
   document.getElementById('skills-count').textContent = skills.length;
-  const tbody = document.querySelector('#skills-table tbody');
+  var tbody = document.querySelector('#skills-table tbody');
   tbody.innerHTML = skills.length === 0
     ? '<tr><td colspan="3" class="empty">No skills loaded</td></tr>'
-    : skills.map(s => '<tr>'
+    : skills.map(function(s) { return '<tr>'
       + '<td title="' + esc(s.name) + '">' + esc(s.name) + '</td>'
       + '<td>' + (s.active ? '<span class="tag tag-green">active</span>' : '<span class="tag tag-red">inactive</span>') + '</td>'
-      + '<td>' + (s.missingTools?.length ? esc(s.missingTools.join(', ')) : '\\u2014') + '</td>'
-      + '</tr>').join('');
+      + '<td>' + (s.missingTools && s.missingTools.length ? esc(s.missingTools.join(', ')) : '\\u2014') + '</td>'
+      + '</tr>'; }).join('');
 }
 
 function renderTasks(tasks) {
   // Sort: running first, then queued, then completed/failed (most recent first)
-  const sorted = [...tasks].sort((a, b) => {
-    const order = { running: 0, queued: 1, completed: 2, failed: 3, cancelled: 4 };
-    const oa = order[a.status] ?? 5;
-    const ob = order[b.status] ?? 5;
+  var sorted = tasks.slice().sort(function(a, b) {
+    var orderMap = { running: 0, queued: 1, completed: 2, failed: 3, cancelled: 4 };
+    var oa = orderMap[a.status] != null ? orderMap[a.status] : 5;
+    var ob = orderMap[b.status] != null ? orderMap[b.status] : 5;
     if (oa !== ob) return oa - ob;
     return (b.createdAt || 0) - (a.createdAt || 0);
   });
   document.getElementById('tasks-count').textContent = tasks.length;
-  const tbody = document.querySelector('#tasks-table tbody');
+  var tbody = document.querySelector('#tasks-table tbody');
   tbody.innerHTML = sorted.length === 0
     ? '<tr><td colspan="6" class="empty">No tasks</td></tr>'
-    : sorted.map(t => {
-      const elapsed = formatElapsed(t);
-      const sourceTag = sourceClass(t.source);
+    : sorted.map(function(t) {
+      var elapsed = formatElapsed(t);
+      var sTag = sourceClass(t.source);
       return '<tr>'
-        + '<td>' + esc(t.id?.substring(0, 8) ?? '') + '</td>'
-        + '<td><span class="tag ' + sourceTag + '">' + esc(t.source) + '</span></td>'
-        + '<td title="' + esc(t.input || '') + '">' + esc((t.input ?? '').substring(0, 50)) + '</td>'
+        + '<td>' + esc(t.id ? t.id.substring(0, 8) : '') + '</td>'
+        + '<td><span class="tag ' + sTag + '">' + esc(t.source) + '</span></td>'
+        + '<td title="' + esc(t.input || '') + '">' + esc((t.input || '').substring(0, 50)) + '</td>'
         + '<td><span class="tag ' + statusClass(t.status) + '">' + esc(t.status) + '</span></td>'
         + '<td>' + elapsed + '</td>'
         + '<td>' + formatCost(t) + '</td>'
@@ -512,7 +1384,7 @@ function sourceClass(s) {
 
 function formatElapsed(t) {
   if (t.status === 'running' && t.startedAt) {
-    const ms = Date.now() - t.startedAt;
+    var ms = Date.now() - t.startedAt;
     return formatMs(ms) + '...';
   }
   if (t.completedAt && t.startedAt) {
@@ -523,12 +1395,12 @@ function formatElapsed(t) {
 }
 
 function formatCost(t) {
-  const cost = t.metadata?.cost;
-  if (!cost) return '\u2014';
-  const total = cost.totalCost;
+  var cost = t.metadata ? t.metadata.cost : null;
+  if (!cost) return '\\u2014';
+  var total = cost.totalCost;
   if (total === 0) return 'free';
-  const tokens = (cost.totalInputTokens || 0) + (cost.totalOutputTokens || 0);
-  const tokensStr = tokens > 1000 ? (tokens / 1000).toFixed(1) + 'K' : tokens;
+  var tokens = (cost.totalInputTokens || 0) + (cost.totalOutputTokens || 0);
+  var tokensStr = tokens > 1000 ? (tokens / 1000).toFixed(1) + 'K' : tokens;
   if (total < 0.001) return tokensStr + ' tok';
   return '$' + total.toFixed(4) + ' (' + tokensStr + ' tok)';
 }
@@ -541,11 +1413,11 @@ function formatMs(ms) {
 
 function renderSchedules(schedules) {
   document.getElementById('schedules-count').textContent = schedules.length;
-  const tbody = document.querySelector('#schedules-table tbody');
+  var tbody = document.querySelector('#schedules-table tbody');
   tbody.innerHTML = schedules.length === 0
     ? '<tr><td colspan="4" class="empty">No active schedules</td></tr>'
-    : schedules.map(s => {
-      const nextRun = s.nextRun ? new Date(s.nextRun).toLocaleString() : '\\u2014';
+    : schedules.map(function(s) {
+      var nextRun = s.nextRun ? new Date(s.nextRun).toLocaleString() : '\\u2014';
       return '<tr>'
         + '<td>' + esc(s.id) + '</td>'
         + '<td title="' + esc(s.input) + '">' + esc((s.input || '').substring(0, 40)) + '</td>'
@@ -556,39 +1428,39 @@ function renderSchedules(schedules) {
 }
 
 function renderVoleNet(data) {
-  const panel = document.getElementById('volenet-panel');
+  var panel = document.getElementById('volenet-panel');
   if (!data || !data.enabled) {
     panel.style.display = 'none';
     return;
   }
   panel.style.display = '';
 
-  const status = document.getElementById('volenet-status');
-  const leaderBadge = data.isLeader
+  var status = document.getElementById('volenet-status');
+  var leaderBadge = data.isLeader
     ? '<span class="tag tag-green">leader</span>'
     : '<span class="tag tag-blue">follower</span>';
-  const leaderInfo = data.leaderState?.leaderName
-    ? ' \u2014 leader: ' + esc(data.leaderState.leaderName)
+  var leaderInfo = data.leaderState && data.leaderState.leaderName
+    ? ' \\u2014 leader: ' + esc(data.leaderState.leaderName)
     : '';
 
   status.innerHTML = '<strong>' + esc(data.instanceName || 'vole') + '</strong> '
     + '<span class="tag tag-purple">' + esc(data.instanceId || '') + '</span> '
     + leaderBadge
-    + ' \u2014 ' + (data.peers?.length || 0) + ' peer(s), '
+    + ' \\u2014 ' + (data.peers ? data.peers.length : 0) + ' peer(s), '
     + (data.remoteTools || 0) + ' remote tool(s)'
     + leaderInfo;
 
-  const peers = data.peers || [];
-  const tbody = document.querySelector('#volenet-peers-table tbody');
+  var peers = data.peers || [];
+  var tbody = document.querySelector('#volenet-peers-table tbody');
   tbody.innerHTML = peers.length === 0
     ? '<tr><td colspan="4" class="empty">No peers connected</td></tr>'
     : peers.map(function(p) {
-      const roleTag = p.role === 'coordinator'
+      var roleTag = p.role === 'coordinator'
         ? '<span class="tag tag-yellow">coordinator</span>'
         : p.role === 'worker'
           ? '<span class="tag tag-blue">worker</span>'
           : '<span class="tag tag-green">peer</span>';
-      const ago = p.lastSeen ? Math.round((Date.now() - p.lastSeen) / 1000) + 's ago' : '\u2014';
+      var ago = p.lastSeen ? Math.round((Date.now() - p.lastSeen) / 1000) + 's ago' : '\\u2014';
       return '<tr>'
         + '<td><strong>' + esc(p.name) + '</strong> <span class="tag tag-purple">' + esc(p.id) + '</span></td>'
         + '<td>' + roleTag + '</td>'
@@ -606,12 +1478,12 @@ function statusClass(s) {
 }
 
 function addEvent(name, data) {
-  const el = document.createElement('div');
+  var el = document.createElement('div');
   el.className = 'event-line';
   if (name === 'rate:limited') el.className += ' rate-limited';
   if (name === 'task:failed') el.className += ' task-failed';
-  const time = new Date().toLocaleTimeString();
-  const dataStr = typeof data === 'object' ? JSON.stringify(data) : String(data || '');
+  var time = new Date().toLocaleTimeString();
+  var dataStr = typeof data === 'object' ? JSON.stringify(data) : String(data || '');
   el.innerHTML = '<span class="time">' + time + '</span>'
     + '<span class="name">' + esc(name) + '</span>'
     + '<span class="data">' + esc(dataStr) + '</span>';
@@ -621,7 +1493,7 @@ function addEvent(name, data) {
 
 function esc(s) {
   if (!s) return '';
-  const d = document.createElement('div');
+  var d = document.createElement('div');
   d.textContent = String(s);
   return d.innerHTML;
 }
