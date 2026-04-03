@@ -970,7 +970,7 @@ export function getDashboardHtml(wsPort: number): string {
     <span class="footer-sep">&middot;</span>
     <a href="https://volehub.dev" target="_blank">VoleHub</a>
     <span class="footer-sep">&middot;</span>
-    <a href="https://clawhub.ai" target="_blank">ClawHub</a>
+    <a href="https://clawhub.ai" target="_blank">ClawHub Skills</a>
   </footer>
 </div>
 
