@@ -38,8 +38,13 @@ async function resolveProvider(): Promise<BrainProvider> {
 	if (process.env.XAI_API_KEY) {
 		return createProvider('xai', brainApiKey, brainModel, brainBaseURL)
 	}
-	// Ollama doesn't need an API key — default fallback
-	return createProvider('ollama', brainApiKey, brainModel, brainBaseURL)
+	if (process.env.OLLAMA_HOST || process.env.OLLAMA_MODEL) {
+		return createProvider('ollama', brainApiKey, brainModel, brainBaseURL)
+	}
+
+	throw new Error(
+		'No brain provider configured. Set BRAIN_PROVIDER in .env (anthropic, openai, gemini, xai, ollama) or provide a provider-specific API key (e.g. GEMINI_API_KEY).',
+	)
 }
 
 /** Resolve fallback provider from BRAIN_FALLBACK env var */
