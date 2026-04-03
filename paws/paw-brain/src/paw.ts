@@ -223,6 +223,30 @@ export const paw: PawDefinition = {
 	},
 
 	async onLoad() {
+		// Scaffold BRAIN.md if it doesn't exist in the local data directory
+		try {
+			const { resolve, join, dirname } = await import('node:path')
+			const fsModule = await import('node:fs/promises')
+			const dataDir = resolve(process.cwd(), '.openvole', 'paws', 'paw-brain')
+			const brainPath = join(dataDir, 'BRAIN.md')
+			try {
+				await fsModule.access(brainPath)
+			} catch {
+				// BRAIN.md doesn't exist — copy from package
+				const pkgBrainPath = join(dirname(new URL(import.meta.url).pathname), '..', 'BRAIN.md')
+				try {
+					const content = await fsModule.readFile(pkgBrainPath, 'utf-8')
+					await fsModule.mkdir(dataDir, { recursive: true })
+					await fsModule.writeFile(brainPath, content, 'utf-8')
+					console.log('[paw-brain] Scaffolded BRAIN.md')
+				} catch {
+					// Package BRAIN.md not found — skip
+				}
+			}
+		} catch {
+			// Scaffold failed — non-fatal
+		}
+
 		provider = await resolveProvider()
 		fallbackProvider = await resolveFallbackProvider()
 		const fbInfo = fallbackProvider ? `, fallback: ${fallbackProvider.name}/${fallbackProvider.model}` : ''
