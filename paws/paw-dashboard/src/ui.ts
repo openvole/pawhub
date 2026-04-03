@@ -753,6 +753,34 @@ export function getDashboardHtml(wsPort: number): string {
 
       <div class="config-section">
         <div class="config-section-header" onclick="toggleSection(this)">
+          <h3>Heartbeat</h3>
+          <span class="config-section-arrow">&#9660;</span>
+        </div>
+        <div class="config-section-body">
+          <div class="form-field">
+            <div class="form-help">Enable periodic autonomous wake-up.</div>
+            <div class="form-checkbox-row">
+              <input type="checkbox" class="form-checkbox" id="cfg-heartbeat-enabled">
+              <label class="form-checkbox-label" for="cfg-heartbeat-enabled">heartbeat.enabled</label>
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">heartbeat.intervalMinutes</label>
+            <div class="form-help">Minutes between heartbeat wake-ups.</div>
+            <input type="number" class="form-input" id="cfg-heartbeat-intervalMinutes" value="30" min="1">
+          </div>
+          <div class="form-field">
+            <div class="form-help">Run a heartbeat immediately on startup.</div>
+            <div class="form-checkbox-row">
+              <input type="checkbox" class="form-checkbox" id="cfg-heartbeat-runOnStart">
+              <label class="form-checkbox-label" for="cfg-heartbeat-runOnStart">heartbeat.runOnStart</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-section">
+        <div class="config-section-header" onclick="toggleSection(this)">
           <h3>Loop</h3>
           <span class="config-section-arrow">&#9660;</span>
         </div>
@@ -814,34 +842,6 @@ export function getDashboardHtml(wsPort: number): string {
             <label class="form-label">Rate Limits</label>
             <div class="form-help">Prevent runaway costs. Keys: llmCallsPerMinute, llmCallsPerHour, toolExecutionsPerTask, tasksPerHour (per source).</div>
             <textarea class="form-textarea" id="cfg-loop-rateLimits" rows="6" placeholder='{"llmCallsPerMinute": 30, "llmCallsPerHour": 500}'>{}</textarea>
-          </div>
-        </div>
-      </div>
-
-      <div class="config-section">
-        <div class="config-section-header" onclick="toggleSection(this)">
-          <h3>Heartbeat</h3>
-          <span class="config-section-arrow">&#9660;</span>
-        </div>
-        <div class="config-section-body">
-          <div class="form-field">
-            <div class="form-help">Enable periodic autonomous wake-up.</div>
-            <div class="form-checkbox-row">
-              <input type="checkbox" class="form-checkbox" id="cfg-heartbeat-enabled">
-              <label class="form-checkbox-label" for="cfg-heartbeat-enabled">heartbeat.enabled</label>
-            </div>
-          </div>
-          <div class="form-field">
-            <label class="form-label">heartbeat.intervalMinutes</label>
-            <div class="form-help">Minutes between heartbeat wake-ups.</div>
-            <input type="number" class="form-input" id="cfg-heartbeat-intervalMinutes" value="30" min="1">
-          </div>
-          <div class="form-field">
-            <div class="form-help">Run a heartbeat immediately on startup.</div>
-            <div class="form-checkbox-row">
-              <input type="checkbox" class="form-checkbox" id="cfg-heartbeat-runOnStart">
-              <label class="form-checkbox-label" for="cfg-heartbeat-runOnStart">heartbeat.runOnStart</label>
-            </div>
           </div>
         </div>
       </div>
