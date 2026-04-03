@@ -1,7 +1,7 @@
 import { createIpcTransport, type PawDefinition } from '@openvole/paw-sdk'
 import { createDashboardServer, type DashboardServer } from './server.js'
 
-const DEFAULT_PORT = 3000
+const DEFAULT_PORT = 3001
 
 let server: DashboardServer | undefined
 let transport: ReturnType<typeof createIpcTransport> | undefined
