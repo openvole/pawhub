@@ -810,6 +810,11 @@ export function getDashboardHtml(wsPort: number): string {
             <div class="form-help">Warn when a single task exceeds this USD amount.</div>
             <input type="number" class="form-input" id="cfg-loop-costAlertThreshold" placeholder="(optional)" step="0.01" min="0">
           </div>
+          <div class="form-field">
+            <label class="form-label">Rate Limits</label>
+            <div class="form-help">Prevent runaway costs. Keys: llmCallsPerMinute, llmCallsPerHour, toolExecutionsPerTask, tasksPerHour (per source).</div>
+            <textarea class="form-textarea" id="cfg-loop-rateLimits" rows="6" placeholder='{"llmCallsPerMinute": 30, "llmCallsPerHour": 500}'>{}</textarea>
+          </div>
         </div>
       </div>
 
@@ -858,6 +863,11 @@ export function getDashboardHtml(wsPort: number): string {
             <label class="form-label">security.allowedPaths</label>
             <div class="form-help">Additional filesystem paths paws can access.</div>
             <textarea class="form-textarea" id="cfg-security-allowedPaths" rows="4" placeholder='["./data", "/tmp"]'>[]</textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Docker Sandbox</label>
+            <div class="form-help">Optional container-level isolation. Keys: enabled, image, memory, cpus, scope (session/shared), network (none/bridge/host), allowedDomains.</div>
+            <textarea class="form-textarea" id="cfg-security-docker" rows="6" placeholder='{"enabled": false, "image": "node:20-slim", "memory": "512m"}'>{}</textarea>
           </div>
         </div>
       </div>
@@ -1045,6 +1055,7 @@ function populateConfig(cfg) {
   document.getElementById('cfg-loop-responseReserve').value = loop.responseReserve != null ? loop.responseReserve : 4000;
   document.getElementById('cfg-loop-costTracking').value = loop.costTracking || 'auto';
   document.getElementById('cfg-loop-costAlertThreshold').value = loop.costAlertThreshold != null ? loop.costAlertThreshold : '';
+  document.getElementById('cfg-loop-rateLimits').value = JSON.stringify(loop.rateLimits || {}, null, 2);
 
   var hb = cfg.heartbeat || {};
   document.getElementById('cfg-heartbeat-enabled').checked = !!hb.enabled;
@@ -1054,6 +1065,7 @@ function populateConfig(cfg) {
   var sec = cfg.security || {};
   document.getElementById('cfg-security-sandboxFilesystem').checked = sec.sandboxFilesystem != null ? sec.sandboxFilesystem : true;
   document.getElementById('cfg-security-allowedPaths').value = JSON.stringify(sec.allowedPaths || [], null, 2);
+  document.getElementById('cfg-security-docker').value = JSON.stringify(sec.docker || {}, null, 2);
 
   document.getElementById('cfg-paws').value = JSON.stringify(cfg.paws || [], null, 2);
   document.getElementById('cfg-toolProfiles').value = JSON.stringify(cfg.toolProfiles || {}, null, 2);
@@ -1083,6 +1095,12 @@ function readConfigFromForm() {
   cfg.loop.costTracking = document.getElementById('cfg-loop-costTracking').value;
   var costAlert = parseFloat(document.getElementById('cfg-loop-costAlertThreshold').value);
   if (!isNaN(costAlert)) cfg.loop.costAlertThreshold = costAlert;
+  try {
+    var rl = JSON.parse(document.getElementById('cfg-loop-rateLimits').value);
+    if (rl && Object.keys(rl).length > 0) cfg.loop.rateLimits = rl;
+  } catch (e) {
+    throw new Error('Invalid JSON in Rate Limits');
+  }
 
   cfg.heartbeat = {};
   cfg.heartbeat.enabled = document.getElementById('cfg-heartbeat-enabled').checked;
@@ -1096,6 +1114,12 @@ function readConfigFromForm() {
     cfg.security.allowedPaths = JSON.parse(document.getElementById('cfg-security-allowedPaths').value);
   } catch (e) {
     throw new Error('Invalid JSON in security.allowedPaths');
+  }
+  try {
+    var docker = JSON.parse(document.getElementById('cfg-security-docker').value);
+    if (docker && Object.keys(docker).length > 0) cfg.security.docker = docker;
+  } catch (e) {
+    throw new Error('Invalid JSON in Docker Sandbox');
   }
 
   try {
