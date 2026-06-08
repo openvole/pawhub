@@ -33,7 +33,7 @@ Provider-specific vars take precedence over generic `BRAIN_*` vars.
 
 ### Option 3: Auto-detect
 
-If `BRAIN_PROVIDER` is not set, paw-brain auto-detects the provider from available API keys in this order: Anthropic, OpenAI, Gemini, xAI, Ollama.
+If `BRAIN_PROVIDER` is not set, paw-brain auto-detects the provider in this order: Anthropic, OpenAI, Gemini, xAI (whichever API key is present), then Ollama if `OLLAMA_HOST` or `OLLAMA_MODEL` is set. If none are configured it exits with a clear error — it no longer silently defaults to Ollama.
 
 ### vole.config.json
 

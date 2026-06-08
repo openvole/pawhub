@@ -37,7 +37,7 @@ importers:
         version: 0.5.18
       openai:
         specifier: ^4.0.0
-        version: 4.104.0(ws@8.19.0)(zod@3.25.76)
+        version: 4.104.0(ws@8.21.0)(zod@3.25.76)
     devDependencies:
       '@openvole/paw-sdk':
         specifier: ^2.0.0
@@ -146,8 +146,8 @@ importers:
   paws/paw-dashboard:
     dependencies:
       ws:
-        specifier: ^8.18.0
-        version: 8.19.0
+        specifier: ^8.20.1
+        version: 8.21.0
       zod:
         specifier: ^3.23.0
         version: 3.25.76
@@ -393,7 +393,7 @@ importers:
     dependencies:
       openai:
         specifier: ^4.73.0
-        version: 4.104.0(ws@8.19.0)(zod@3.25.76)
+        version: 4.104.0(ws@8.21.0)(zod@3.25.76)
     devDependencies:
       '@openvole/paw-sdk':
         specifier: ^2.0.0
@@ -624,7 +624,7 @@ importers:
     dependencies:
       openai:
         specifier: ^4.73.0
-        version: 4.104.0(ws@8.19.0)(zod@3.25.76)
+        version: 4.104.0(ws@8.21.0)(zod@3.25.76)
     devDependencies:
       '@openvole/paw-sdk':
         specifier: ^2.0.0
@@ -3723,8 +3723,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  ws@8.19.0:
-    resolution: {integrity: sha512-blAT2mjOEIi0ZzruJfIhb3nps74PRWTCz1IjglWEEpQl5XS/UNama6u2/rjFkDDouqr4L67ry+1aGIALViWjDg==}
+  ws@8.21.0:
+    resolution: {integrity: sha512-Vsp28b7DRcimFQvrqu2Wek3z1iYxDCWqHYB8Qsnk/S4RfaCQzPGPyBNuVjJV3cd6UiKtUtp6sNM77gWvzcCH+g==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -3992,7 +3992,7 @@ snapshots:
       '@vladfrangu/async_event_emitter': 2.4.7
       discord-api-types: 0.38.42
       tslib: 2.8.1
-      ws: 8.19.0
+      ws: 8.21.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -4725,7 +4725,7 @@ snapshots:
       '@types/node': 22.19.15
       '@types/ws': 8.18.1
       eventemitter3: 5.0.4
-      ws: 8.19.0
+      ws: 8.21.0
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -6374,7 +6374,7 @@ snapshots:
       is-inside-container: 1.0.0
       wsl-utils: 0.1.0
 
-  openai@4.104.0(ws@8.19.0)(zod@3.25.76):
+  openai@4.104.0(ws@8.21.0)(zod@3.25.76):
     dependencies:
       '@types/node': 18.19.130
       '@types/node-fetch': 2.6.13
@@ -6384,7 +6384,7 @@ snapshots:
       formdata-node: 4.4.1
       node-fetch: 2.7.0
     optionalDependencies:
-      ws: 8.19.0
+      ws: 8.21.0
       zod: 3.25.76
     transitivePeerDependencies:
       - encoding
@@ -6617,7 +6617,7 @@ snapshots:
       devtools-protocol: 0.0.1581282
       typed-query-selector: 2.12.1
       webdriver-bidi-protocol: 0.4.1
-      ws: 8.19.0
+      ws: 8.21.0
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
@@ -7242,7 +7242,7 @@ snapshots:
 
   ws@7.5.10: {}
 
-  ws@8.19.0: {}
+  ws@8.21.0: {}
 
   wsl-utils@0.1.0:
     dependencies:

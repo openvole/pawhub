@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-brain",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "Unified Brain Paw — multi-provider LLM adapter (Anthropic, OpenAI, Gemini, Ollama, xAI)",
   "entry": "./dist/index.js",
   "brain": true,
