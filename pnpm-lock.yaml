@@ -8,10 +8,19 @@ overrides:
   undici: '>=6.24.0'
   file-type: '>=21.3.1'
   picomatch: '>=4.0.4'
-  brace-expansion: '>=5.0.5'
-  nodemailer: '>=8.0.4'
+  brace-expansion: '>=5.0.6'
+  nodemailer: '>=8.0.5'
   path-to-regexp: '>=8.4.0'
   lodash: '>=4.18.0'
+  axios: '>=1.16.0'
+  basic-ftp: '>=5.3.1'
+  fast-uri: '>=3.1.2'
+  hono: '>=4.12.21'
+  '@hono/node-server': '>=1.19.13'
+  follow-redirects: '>=1.16.0'
+  ip-address: '>=10.1.1'
+  qs: '>=6.15.2'
+  uuid: '>=11.1.1'
 
 importers:
 
@@ -40,7 +49,7 @@ importers:
         version: 4.104.0(ws@8.21.0)(zod@3.25.76)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -59,7 +68,7 @@ importers:
         version: 24.40.0(typescript@5.9.3)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -78,7 +87,7 @@ importers:
         version: 140.0.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -97,7 +106,7 @@ importers:
         version: 0.39.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -112,7 +121,7 @@ importers:
   paws/paw-compact:
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -131,7 +140,7 @@ importers:
         version: 4.2.6
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -153,7 +162,7 @@ importers:
         version: 3.25.76
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -175,7 +184,7 @@ importers:
         version: 11.10.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/better-sqlite3':
         specifier: ^7.6.0
@@ -197,7 +206,7 @@ importers:
         version: 14.25.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -215,11 +224,11 @@ importers:
         specifier: ^1.0.0
         version: 1.2.16
       nodemailer:
-        specifier: '>=8.0.4'
-        version: 8.0.4
+        specifier: '>=8.0.5'
+        version: 8.0.10
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -241,7 +250,7 @@ importers:
         version: 11.1.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -260,7 +269,7 @@ importers:
         version: 0.21.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -279,7 +288,7 @@ importers:
         version: 21.1.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -298,7 +307,7 @@ importers:
         version: 0.33.5
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -317,7 +326,7 @@ importers:
         version: 1.27.1(zod@3.25.76)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -336,7 +345,7 @@ importers:
         version: 11.10.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/better-sqlite3':
         specifier: ^7.6.0
@@ -358,7 +367,7 @@ importers:
         version: 4.23.3
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -377,7 +386,7 @@ importers:
         version: 0.5.18
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -396,7 +405,7 @@ importers:
         version: 4.104.0(ws@8.21.0)(zod@3.25.76)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -415,7 +424,7 @@ importers:
         version: 1.17.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -434,7 +443,7 @@ importers:
         version: 4.8.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -453,7 +462,7 @@ importers:
         version: 1.2.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -468,7 +477,7 @@ importers:
   paws/paw-session:
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -487,7 +496,7 @@ importers:
         version: 9.6.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -506,7 +515,7 @@ importers:
         version: 4.6.0(@types/express@5.0.6)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -521,7 +530,7 @@ importers:
   paws/paw-social:
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -536,7 +545,7 @@ importers:
   paws/paw-stt:
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -555,7 +564,7 @@ importers:
         version: 1.41.1
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -570,7 +579,7 @@ importers:
   paws/paw-tts:
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -589,7 +598,7 @@ importers:
         version: 5.13.0
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -608,7 +617,7 @@ importers:
         version: 1.34.6(typescript@5.9.3)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -627,7 +636,7 @@ importers:
         version: 4.104.0(ws@8.21.0)(zod@3.25.76)
     devDependencies:
       '@openvole/paw-sdk':
-        specifier: ^2.0.0
+        specifier: '>=2.0.0'
         version: 2.0.0
       '@types/node':
         specifier: ^22.0.0
@@ -969,11 +978,11 @@ packages:
   '@grammyjs/types@3.25.0':
     resolution: {integrity: sha512-iN9i5p+8ZOu9OMxWNcguojQfz4K/PDyMPOnL7PPCON+SoA/F8OKMH3uR7CVUkYfdNe0GCz8QOzAWrnqusQYFOg==}
 
-  '@hono/node-server@1.19.11':
-    resolution: {integrity: sha512-dr8/3zEaB+p0D2n/IUrlPF1HZm586qgJNXK1a9fhg/PzdtkK7Ksd5l312tJX2yBuALqDYBlG20QEbayqPyxn+g==}
-    engines: {node: '>=18.14.1'}
+  '@hono/node-server@2.0.4':
+    resolution: {integrity: sha512-Ut3y0dMMPWy6bZ2kVfx25EOVbZlm15dhF4mOsezMlhpNHy+4MkU1qN9Y6lnruYi4wPmFzimGX2X7LF/FwHli4A==}
+    engines: {node: '>=20'}
     peerDependencies:
-      hono: ^4
+      hono: '>=4.12.21'
 
   '@img/sharp-darwin-arm64@0.33.5':
     resolution: {integrity: sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ==}
@@ -1775,8 +1784,8 @@ packages:
     resolution: {integrity: sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==}
     engines: {node: '>=8.0.0'}
 
-  axios@1.13.6:
-    resolution: {integrity: sha512-ChTCHMouEe2kn713WHbQGcuYrr6fXTBiu460OTwWrWob16g1bXn4vtz07Ope7ewMozJAnEquLk5lWQWtBig9DQ==}
+  axios@1.17.0:
+    resolution: {integrity: sha512-J8SwNxprqqpbfenehxWYXE7CW+wM1BB4w3+N+g+/Wx40xM4rsLrfPmHHxSWIxJLYDgSY/HqlFPIYb2/S3rxafw==}
 
   b4a@1.8.0:
     resolution: {integrity: sha512-qRuSmNSkGQaHwNbM7J78Wwy+ghLEYF1zNrSeMxj4Kgw6y33O3mXcQ6Ie9fRvfU/YnxWkOchPXbaLb73TkIsfdg==}
@@ -1835,8 +1844,8 @@ packages:
     resolution: {integrity: sha512-ir1UPr3dkwexU7FdV8qBBbNDRUhMmIekYMFZfi+C/sLNnRESKPl23nB9b2pltqfOQNnGzsDdId90AEtG5tCx4A==}
     engines: {node: '>=6.0.0'}
 
-  basic-ftp@5.2.0:
-    resolution: {integrity: sha512-VoMINM2rqJwJgfdHq6RiUudKt2BV+FY5ZFezP/ypmwayk68+NzzAQy4XXLlqsGD4MCzq3DrmNFD/uUmBJuGoXw==}
+  basic-ftp@6.0.1:
+    resolution: {integrity: sha512-3ilxa3n4276wGQp/ImRAuz4ALdsj/2Wd3FqoZBZlajDYnByCZ0JMb4+26Rde0wGXIbM0G2HWSfr/Fi8b21KX8g==}
     engines: {node: '>=10.0.0'}
 
   before-after-hook@3.0.2:
@@ -1895,8 +1904,8 @@ packages:
   botframework-streaming@4.23.3:
     resolution: {integrity: sha512-GMtciQGfZXtAW6syUqFpFJQ2vDyVbpxL3T1DqFzq/GmmkAu7KTZ1zvo7PTww6+IT1kMW0lmL/XZJVq3Rhg4PQA==}
 
-  brace-expansion@5.0.5:
-    resolution: {integrity: sha512-VZznLgtwhn+Mact9tfiwx64fA9erHH/MCXEUfB/0bX/6Fz6ny5EGTXYltMocqg4xFAQZtnO3DHWWXi8RiuN7cQ==}
+  brace-expansion@5.0.6:
+    resolution: {integrity: sha512-kLpxurY4Z4r9sgMsyG0Z9uzsBlgiU/EFKhj/h91/8yHu0edo7XuixOIH3VcJ8kkxs6/jPzoI6U9Vj3WqbMQ94g==}
     engines: {node: 18 || 20 || >=22}
 
   buffer-crc32@0.2.13:
@@ -2329,8 +2338,8 @@ packages:
   fast-fifo@1.3.2:
     resolution: {integrity: sha512-/d9sfos4yxzpwkDkuN7k2SqFKtYNmCTzgfEpz82x34IM9/zc8KGxQoXg1liNC/izpRM/MBdt44Nmx41ZWqk+FQ==}
 
-  fast-uri@3.1.0:
-    resolution: {integrity: sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==}
+  fast-uri@3.1.2:
+    resolution: {integrity: sha512-rVjf7ArG3LTk+FS6Yw81V1DLuZl1bRbNrev6Tmd/9RaroeeRRJhAt7jg/6YFxbvAQXUCavSoZhPPj6oOx+5KjQ==}
 
   fd-slicer@1.1.0:
     resolution: {integrity: sha512-cE1qsB/VwyQozZ+q1dGxR8LBYNZeofhEdUNGSMbQD3Gw2lAzX9Zb3uIU6Ebc/Fmyjo9AWWfnn0AUCHqtevs/8g==}
@@ -2375,8 +2384,8 @@ packages:
     engines: {node: '>=18'}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
-  follow-redirects@1.15.11:
-    resolution: {integrity: sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==}
+  follow-redirects@1.16.0:
+    resolution: {integrity: sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -2532,8 +2541,8 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
-  hono@4.12.8:
-    resolution: {integrity: sha512-VJCEvtrezO1IAR+kqEYnxUOoStaQPGrCmX3j4wDTNOcD1uRPFpGlwQUIW8niPuvHXaTUxeOUl5MMDGrl+tmO9A==}
+  hono@4.12.25:
+    resolution: {integrity: sha512-2NFaIyNVgJmBs/ecmtGzlmluTFs5cHEWGTdu0t1HBwYzoGXOL5nUQBRMXsXWla5i4KkG//QMzVP88m1+I3fdAQ==}
     engines: {node: '>=16.9.0'}
 
   html-to-text@9.0.5:
@@ -2603,8 +2612,8 @@ packages:
   ini@1.3.8:
     resolution: {integrity: sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==}
 
-  ip-address@10.1.0:
-    resolution: {integrity: sha512-XXADHxXmvT9+CRxhXg56LJovE+bmWnEWB78LB83VZTprKTmaC5QfruXocxzTZ2Kl0DNwKuBdlIhjL8LeY8Sf8Q==}
+  ip-address@10.2.0:
+    resolution: {integrity: sha512-/+S6j4E9AHvW9SWMSEY9Xfy66O5PWvVEJ08O0y5JGyEKQpojb0K0GKpz/v5HJ/G0vi3D2sjGK78119oXZeE0qA==}
     engines: {node: '>= 12'}
 
   ipaddr.js@1.9.1:
@@ -2940,8 +2949,8 @@ packages:
   node-webpmux@3.1.7:
     resolution: {integrity: sha512-ySkL4lBCto86OyQ0blAGzylWSECcn5I0lM3bYEhe75T8Zxt/BFUMHa8ktUguR7zwXNdS/Hms31VfSsYKN1383g==}
 
-  nodemailer@8.0.4:
-    resolution: {integrity: sha512-k+jf6N8PfQJ0Fe8ZhJlgqU5qJU44Lpvp2yvidH3vp1lPnVQMgi4yEEMPXg5eJS1gFIJTVq1NHBk7Ia9ARdSBdQ==}
+  nodemailer@8.0.10:
+    resolution: {integrity: sha512-BLFuSth7QtHOkBzyqTehWWyub0NTRDuK2Q2SQfnGLsrJnzyU+Yeh4WpV1eZGuARFj1xQJHIdnTuJZLP+b9R1GQ==}
     engines: {node: '>=6.0.0'}
 
   normalize-path@3.0.0:
@@ -3211,6 +3220,10 @@ packages:
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
 
+  proxy-from-env@2.1.0:
+    resolution: {integrity: sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==}
+    engines: {node: '>=10'}
+
   pump@3.0.4:
     resolution: {integrity: sha512-VS7sjc6KR7e1ukRFhQSY5LM2uBWAUPiOPa/A3mkKmiMwSmRFUITt0xuj+/lesgnCv+dPIEYlkzrcyXgquIHMcA==}
 
@@ -3223,8 +3236,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  qs@6.15.0:
-    resolution: {integrity: sha512-mAZTtNCeetKMH+pSjrb76NAM8V9a05I9aBZOHztWy/UqcJdQYNsf59vrRKWnojAT9Y+GbIvoTBC++CPHqpDBhQ==}
+  qs@6.15.2:
+    resolution: {integrity: sha512-Rzq0KEyX/w/tEybncDgdkZrJgVUsUMk3xjh3t5bv3S1HTAtg+uOYt72+ZfwiQwKdysThkTBdL/rTi6HDmX9Ddw==}
     engines: {node: '>=0.6'}
 
   quick-format-unescaped@4.0.4:
@@ -3650,16 +3663,8 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
-  uuid@10.0.0:
-    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
-    hasBin: true
-
-  uuid@8.3.2:
-    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
-    hasBin: true
-
-  uuid@9.0.1:
-    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+  uuid@14.0.0:
+    resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
     hasBin: true
 
   vary@1.1.2:
@@ -3895,13 +3900,13 @@ snapshots:
     dependencies:
       '@azure/msal-common': 14.16.1
       jsonwebtoken: 9.0.3
-      uuid: 8.3.2
+      uuid: 14.0.0
 
   '@azure/msal-node@5.1.1':
     dependencies:
       '@azure/msal-common': 16.4.0
       jsonwebtoken: 9.0.3
-      uuid: 8.3.2
+      uuid: 14.0.0
 
   '@babel/code-frame@7.29.0':
     dependencies:
@@ -4086,9 +4091,9 @@ snapshots:
 
   '@grammyjs/types@3.25.0': {}
 
-  '@hono/node-server@1.19.11(hono@4.12.8)':
+  '@hono/node-server@2.0.4(hono@4.12.25)':
     dependencies:
-      hono: 4.12.8
+      hono: 4.12.25
 
   '@img/sharp-darwin-arm64@0.33.5':
     optionalDependencies:
@@ -4401,7 +4406,7 @@ snapshots:
 
   '@modelcontextprotocol/sdk@1.27.1(zod@3.25.76)':
     dependencies:
-      '@hono/node-server': 1.19.11(hono@4.12.8)
+      '@hono/node-server': 2.0.4(hono@4.12.25)
       ajv: 8.18.0
       ajv-formats: 3.0.1(ajv@8.18.0)
       content-type: 1.0.5
@@ -4411,7 +4416,7 @@ snapshots:
       eventsource-parser: 3.0.6
       express: 5.2.1
       express-rate-limit: 8.3.1(express@5.2.1)
-      hono: 4.12.8
+      hono: 4.12.25
       jose: 6.2.2
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
@@ -4693,7 +4698,7 @@ snapshots:
       '@slack/types': 2.20.1
       '@slack/web-api': 7.15.0
       '@types/express': 5.0.6
-      axios: 1.13.6
+      axios: 1.17.0
       express: 5.2.1
       path-to-regexp: 8.4.0
       raw-body: 3.0.2
@@ -4717,6 +4722,7 @@ snapshots:
       jsonwebtoken: 9.0.3
     transitivePeerDependencies:
       - debug
+      - supports-color
 
   '@slack/socket-mode@2.0.6':
     dependencies:
@@ -4729,6 +4735,7 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - debug
+      - supports-color
       - utf-8-validate
 
   '@slack/types@2.20.1': {}
@@ -4739,7 +4746,7 @@ snapshots:
       '@slack/types': 2.20.1
       '@types/node': 22.19.15
       '@types/retry': 0.12.0
-      axios: 1.13.6
+      axios: 1.17.0
       eventemitter3: 5.0.4
       form-data: 4.0.5
       is-electron: 2.2.2
@@ -4749,6 +4756,7 @@ snapshots:
       retry: 0.13.1
     transitivePeerDependencies:
       - debug
+      - supports-color
 
   '@tokenizer/inflate@0.4.1':
     dependencies:
@@ -4897,7 +4905,7 @@ snapshots:
   ajv@8.18.0:
     dependencies:
       fast-deep-equal: 3.1.3
-      fast-uri: 3.1.0
+      fast-uri: 3.1.2
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
@@ -4967,13 +4975,15 @@ snapshots:
 
   atomic-sleep@1.0.0: {}
 
-  axios@1.13.6:
+  axios@1.17.0:
     dependencies:
-      follow-redirects: 1.15.11
+      follow-redirects: 1.16.0
       form-data: 4.0.5
-      proxy-from-env: 1.1.0
+      https-proxy-agent: 5.0.1
+      proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
+      - supports-color
 
   b4a@1.8.0: {}
 
@@ -5016,7 +5026,7 @@ snapshots:
 
   base64url@3.0.1: {}
 
-  basic-ftp@5.2.0: {}
+  basic-ftp@6.0.1: {}
 
   before-after-hook@3.0.2: {}
 
@@ -5059,7 +5069,7 @@ snapshots:
       http-errors: 2.0.1
       iconv-lite: 0.7.2
       on-finished: 2.4.1
-      qs: 6.15.0
+      qs: 6.15.2
       raw-body: 3.0.2
       type-is: 2.0.1
     transitivePeerDependencies:
@@ -5073,7 +5083,7 @@ snapshots:
       botbuilder-stdlib: 4.23.3-internal
       botframework-connector: 4.23.3
       botframework-schema: 4.23.3
-      uuid: 10.0.0
+      uuid: 14.0.0
       zod: 3.25.76
     transitivePeerDependencies:
       - debug
@@ -5099,7 +5109,7 @@ snapshots:
     dependencies:
       '@azure/core-rest-pipeline': 1.23.0
       '@azure/msal-node': 2.16.3
-      axios: 1.13.6
+      axios: 1.17.0
       botbuilder-core: 4.23.3
       botbuilder-stdlib: 4.23.3-internal
       botframework-connector: 4.23.3
@@ -5109,7 +5119,7 @@ snapshots:
       filenamify: 6.0.0
       fs-extra: 11.3.4
       htmlparser2: 9.1.0
-      uuid: 10.0.0
+      uuid: 14.0.0
       zod: 3.25.76
     transitivePeerDependencies:
       - bufferutil
@@ -5124,7 +5134,7 @@ snapshots:
       '@azure/identity': 4.13.1
       '@azure/msal-node': 2.16.3
       '@types/jsonwebtoken': 9.0.6
-      axios: 1.13.6
+      axios: 1.17.0
       base64url: 3.0.1
       botbuilder-stdlib: 4.23.3-internal
       botframework-schema: 4.23.3
@@ -5144,19 +5154,19 @@ snapshots:
   botframework-schema@4.23.3:
     dependencies:
       adaptivecards: 1.2.3
-      uuid: 10.0.0
+      uuid: 14.0.0
       zod: 3.25.76
 
   botframework-streaming@4.23.3:
     dependencies:
       '@types/ws': 6.0.4
-      uuid: 10.0.0
+      uuid: 14.0.0
       ws: 7.5.10
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  brace-expansion@5.0.5:
+  brace-expansion@5.0.6:
     dependencies:
       balanced-match: 4.0.4
 
@@ -5209,7 +5219,7 @@ snapshots:
 
   centra@2.7.0:
     dependencies:
-      follow-redirects: 1.15.11
+      follow-redirects: 1.16.0
     transitivePeerDependencies:
       - debug
 
@@ -5603,7 +5613,7 @@ snapshots:
   express-rate-limit@8.3.1(express@5.2.1):
     dependencies:
       express: 5.2.1
-      ip-address: 10.1.0
+      ip-address: 10.2.0
 
   express@5.2.1:
     dependencies:
@@ -5627,7 +5637,7 @@ snapshots:
       once: 1.4.0
       parseurl: 1.3.3
       proxy-addr: 2.0.7
-      qs: 6.15.0
+      qs: 6.15.2
       range-parser: 1.2.1
       router: 2.2.0
       send: 1.2.1
@@ -5658,7 +5668,7 @@ snapshots:
 
   fast-fifo@1.3.2: {}
 
-  fast-uri@3.1.0: {}
+  fast-uri@3.1.2: {}
 
   fd-slicer@1.1.0:
     dependencies:
@@ -5711,7 +5721,7 @@ snapshots:
       async: 0.2.10
       which: 1.3.1
 
-  follow-redirects@1.15.11: {}
+  follow-redirects@1.16.0: {}
 
   foreground-child@3.3.1:
     dependencies:
@@ -5774,7 +5784,7 @@ snapshots:
       https-proxy-agent: 7.0.6
       is-stream: 2.0.1
       node-fetch: 2.7.0
-      uuid: 9.0.1
+      uuid: 14.0.0
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -5823,7 +5833,7 @@ snapshots:
 
   get-uri@6.0.5:
     dependencies:
-      basic-ftp: 5.2.0
+      basic-ftp: 6.0.1
       data-uri-to-buffer: 6.0.2
       debug: 4.4.3
     transitivePeerDependencies:
@@ -5879,9 +5889,9 @@ snapshots:
       extend: 3.0.2
       gaxios: 6.7.1
       google-auth-library: 9.15.1
-      qs: 6.15.0
+      qs: 6.15.2
       url-template: 2.0.8
-      uuid: 9.0.1
+      uuid: 14.0.0
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -5926,7 +5936,7 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  hono@4.12.8: {}
+  hono@4.12.25: {}
 
   html-to-text@9.0.5:
     dependencies:
@@ -6014,7 +6024,7 @@ snapshots:
       libbase64: 1.3.0
       libmime: 5.3.7
       libqp: 2.1.1
-      nodemailer: 8.0.4
+      nodemailer: 8.0.10
       pino: 10.3.1
       socks: 2.8.7
 
@@ -6033,7 +6043,7 @@ snapshots:
 
   ini@1.3.8: {}
 
-  ip-address@10.1.0: {}
+  ip-address@10.2.0: {}
 
   ipaddr.js@1.9.1: {}
 
@@ -6264,16 +6274,16 @@ snapshots:
 
   minimatch@10.2.4:
     dependencies:
-      brace-expansion: 5.0.5
+      brace-expansion: 5.0.6
 
   minimatch@3.1.5:
     dependencies:
-      brace-expansion: 5.0.5
+      brace-expansion: 5.0.6
     optional: true
 
   minimatch@5.1.9:
     dependencies:
-      brace-expansion: 5.0.5
+      brace-expansion: 5.0.6
     optional: true
 
   minimist@1.2.8: {}
@@ -6329,7 +6339,7 @@ snapshots:
 
   node-webpmux@3.1.7: {}
 
-  nodemailer@8.0.4: {}
+  nodemailer@8.0.10: {}
 
   normalize-path@3.0.0:
     optional: true
@@ -6604,6 +6614,8 @@ snapshots:
 
   proxy-from-env@1.1.0: {}
 
+  proxy-from-env@2.1.0: {}
+
   pump@3.0.4:
     dependencies:
       end-of-stream: 1.4.5
@@ -6643,7 +6655,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  qs@6.15.0:
+  qs@6.15.2:
     dependencies:
       side-channel: 1.1.0
 
@@ -6918,7 +6930,7 @@ snapshots:
 
   socks@2.8.7:
     dependencies:
-      ip-address: 10.1.0
+      ip-address: 10.2.0
       smart-buffer: 4.2.0
 
   sonic-boom@4.2.1:
@@ -7114,11 +7126,11 @@ snapshots:
 
   twilio@5.13.0:
     dependencies:
-      axios: 1.13.6
+      axios: 1.17.0
       dayjs: 1.11.20
       https-proxy-agent: 5.0.1
       jsonwebtoken: 9.0.3
-      qs: 6.15.0
+      qs: 6.15.2
       scmp: 2.1.0
       xmlbuilder: 13.0.2
     transitivePeerDependencies:
@@ -7175,11 +7187,7 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  uuid@10.0.0: {}
-
-  uuid@8.3.2: {}
-
-  uuid@9.0.1: {}
+  uuid@14.0.0: {}
 
   vary@1.1.2: {}
 

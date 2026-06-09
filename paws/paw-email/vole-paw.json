@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-email",
-  "version": "0.1.0",
+  "version": "2.0.1",
   "description": "Paw for sending and reading emails via SMTP and IMAP",
   "entry": "./dist/index.js",
   "brain": false,

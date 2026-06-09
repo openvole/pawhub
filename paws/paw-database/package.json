@@ -23,7 +23,7 @@
     "@types/node": "^22.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.0",
-    "@openvole/paw-sdk": "^2.0.0"
+    "@openvole/paw-sdk": ">=2.0.0"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -40,6 +40,6 @@
     "directory": "paws/paw-database"
   },
   "peerDependencies": {
-    "@openvole/paw-sdk": "^2.0.0"
+    "@openvole/paw-sdk": ">=2.0.0"
   }
 }
