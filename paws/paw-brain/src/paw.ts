@@ -127,12 +127,11 @@ export const paw: PawDefinition = {
 		const start = Date.now()
 		const tag = `[paw-brain:${provider.name}]`
 
+		const systemPrompt = (context as Record<string, unknown>).systemPrompt as string | undefined
+			?? 'You are an AI agent powered by OpenVole.'
+		const sessionHistory = context.metadata?.sessionHistory as string | undefined
+
 		try {
-			const systemPrompt = (context as Record<string, unknown>).systemPrompt as string | undefined
-				?? 'You are an AI agent powered by OpenVole.'
-
-			const sessionHistory = context.metadata?.sessionHistory as string | undefined
-
 			console.log(
 				`${tag} think — model: ${provider.model}, messages: ${context.messages.length}, tools: ${context.availableTools.length}`,
 			)
