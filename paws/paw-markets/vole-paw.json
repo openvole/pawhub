@@ -1,0 +1,37 @@
+{
+  "name": "@openvole/paw-markets",
+  "version": "0.1.0",
+  "description": "US stock market tracking, news, and trend monitoring — brain-free polling, an embedded dashboard panel, and channel alerts",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "category": "infrastructure",
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "stock_quote", "description": "Latest price and change for one or more US tickers (e.g. AAPL, MSFT, NVDA)" },
+    { "name": "stock_trend", "description": "Computed trend indicators for a ticker: % changes (1d/5d/1mo), SMA20/50, 52-week high/low, volume vs average, RSI" },
+    { "name": "stock_history", "description": "Daily closing prices for a US ticker (for charts)" },
+    { "name": "stock_news", "description": "Recent news headlines for a US ticker" },
+    { "name": "stock_watchlist", "description": "Manage the tracked watchlist: list, add, or remove symbols" },
+    { "name": "market_report", "description": "Latest snapshot of the watchlist (quotes + trends + alerts) — call this to comment on the market" }
+  ],
+  "panel": { "title": "Markets", "html": "panel.html" },
+  "permissions": {
+    "network": ["*"],
+    "listen": [],
+    "filesystem": [],
+    "env": [
+      "TWELVEDATA_KEY",
+      "FINNHUB_KEY",
+      "MARKETS_SYMBOLS",
+      "MARKETS_POLL_SECONDS",
+      "MARKETS_MOVE_ALERT_PCT",
+      "MARKETS_VOLUME_SPIKE_X",
+      "MARKETS_SLACK_WEBHOOK",
+      "MARKETS_TELEGRAM_TOKEN",
+      "MARKETS_TELEGRAM_CHAT_ID",
+      "MARKETS_WEBHOOK_URL",
+      "VOLE_MARKETS_DIR"
+    ]
+  }
+}

@@ -1,0 +1,106 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Markets</title>
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#222a35;--text:#e6edf3;--dim:#8b949e;--green:#2ea043;--red:#f85149;--accent:#58a6ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif}
+header{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:5}
+header h1{font-size:16px;margin:0}.badge{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--surface);color:var(--dim);border:1px solid var(--border)}
+.spacer{flex:1}input{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;width:100px;text-transform:uppercase}
+button{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;cursor:pointer}button:hover{border-color:var(--accent)}
+main{padding:14px 18px;max-width:1100px;margin:0 auto}
+table{width:100%;border-collapse:collapse}th{text-align:left;font-size:11px;color:var(--dim);font-weight:600;padding:6px 8px;text-transform:uppercase}
+td{padding:8px;border-top:1px solid var(--border);vertical-align:middle}tr.row{cursor:pointer}tr.row:hover{background:var(--surface)}
+.sym{font-weight:700}.pos{color:var(--green)}.neg{color:var(--red)}.muted{color:var(--dim)}
+.chip{display:inline-block;font-size:10px;padding:1px 6px;border-radius:999px;background:#1f2630;color:var(--dim);margin-right:4px}
+.chip.up{color:var(--green)}.chip.down{color:var(--red)}.chip.hot{color:#d29922}
+.detail{margin-top:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
+.detail h2{margin:0 0 4px}.news a{color:var(--accent);text-decoration:none}.news li{margin:4px 0}
+.alerts{margin-top:22px}.alert{font-size:13px;padding:6px 10px;border-left:2px solid var(--border);margin:4px 0;color:var(--dim)}
+.empty{color:var(--dim);text-align:center;padding:40px}
+</style></head>
+<body>
+<header>
+  <h1>Markets</h1>
+  <span class="badge" id="mode">delayed</span>
+  <span class="muted" id="updated"></span>
+  <span class="spacer"></span>
+  <input id="add" placeholder="TICKER" onkeydown="if(event.key==='Enter')addSym()">
+  <button onclick="addSym()">+ Add</button>
+</header>
+<main>
+  <table><thead><tr><th>Symbol</th><th>Last</th><th>1d</th><th>5d</th><th>1mo</th><th>RSI</th><th>Trend</th><th>Signals</th><th></th></tr></thead>
+  <tbody id="rows"><tr><td colspan="9" class="empty">Loading…</td></tr></tbody></table>
+  <div id="detail"></div>
+  <div class="alerts"><h3 class="muted">Recent alerts</h3><div id="alerts"></div></div>
+</main>
+<script>
+// Data comes from the paw's tools, proxied by the control plane at ./tool/<name> (relative to this panel URL).
+function callTool(name, params){
+  return fetch('tool/' + name, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(params || {}) })
+    .then(function(r){ return r.json() });
+}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function clr(n){return n==null?'muted':(n>=0?'pos':'neg')}
+function pct(n){return n==null?'—':((n>=0?'+':'')+n+'%')}
+function spark(arr,w,h){
+  if(!arr||arr.length<2)return '';
+  var min=Math.min.apply(null,arr),max=Math.max.apply(null,arr),rng=(max-min)||1;
+  var pts=arr.map(function(v,i){var x=(i/(arr.length-1))*w;var y=h-((v-min)/rng)*h;return x.toFixed(1)+','+y.toFixed(1)}).join(' ');
+  var col=arr[arr.length-1]>=arr[0]?'#2ea043':'#f85149';
+  return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'"><polyline fill="none" stroke="'+col+'" stroke-width="1.5" points="'+pts+'"/></svg>';
+}
+function sigChips(sigs){
+  return (sigs||[]).map(function(s){
+    var cls=s.indexOf('gain')>=0||s==='above-sma50'||s==='near-52w-high'?'up':(s.indexOf('drop')>=0||s==='below-sma50'||s==='near-52w-low'||s==='oversold'?'down':'hot');
+    return '<span class="chip '+cls+'">'+esc(s)+'</span>';
+  }).join('');
+}
+function loadReport(){
+  callTool('market_report', {}).then(function(res){
+    var rep=(res && res.report) || {};
+    document.getElementById('mode').textContent=rep.realtime?'realtime':'delayed';
+    if(rep.generatedAt)document.getElementById('updated').textContent='updated '+new Date(rep.generatedAt).toLocaleTimeString()+(rep.marketOpen?' · market open':' · market closed');
+    var rows=rep.symbols||[];
+    var tb=document.getElementById('rows');
+    if(!rows.length){tb.innerHTML='<tr><td colspan="9" class="empty">No symbols. Add one above (or set MARKETS_SYMBOLS).</td></tr>';}
+    else tb.innerHTML=rows.map(function(s){
+      if(s.error)return '<tr class="row" onclick="openSym(\''+esc(s.symbol)+'\')"><td class="sym">'+esc(s.symbol)+'</td><td colspan="8" class="muted">'+esc(s.error)+'</td></tr>';
+      return '<tr class="row" onclick="openSym(\''+esc(s.symbol)+'\')">'+
+        '<td class="sym">'+esc(s.symbol)+'</td>'+
+        '<td>'+(s.price==null?'—':'$'+s.price)+'</td>'+
+        '<td class="'+clr(s.changePct1d)+'">'+pct(s.changePct1d)+'</td>'+
+        '<td class="'+clr(s.changePct5d)+'">'+pct(s.changePct5d)+'</td>'+
+        '<td class="'+clr(s.changePct1mo)+'">'+pct(s.changePct1mo)+'</td>'+
+        '<td>'+(s.rsi14==null?'—':s.rsi14)+'</td>'+
+        '<td>'+spark(s.spark,90,26)+'</td>'+
+        '<td>'+sigChips(s.signals)+'</td>'+
+        '<td><button onclick="event.stopPropagation();removeSym(\''+esc(s.symbol)+'\')">✕</button></td>'+
+      '</tr>';
+    }).join('');
+    var al=rep.recentAlerts||[];
+    document.getElementById('alerts').innerHTML=al.length?al.map(function(x){return '<div class="alert">'+esc(new Date(x.ts).toLocaleString())+' — '+esc(x.symbol)+' '+esc(x.signal)+' @ $'+esc(x.price)+'</div>'}).join(''):'<div class="muted">No alerts yet.</div>';
+  }).catch(function(){});
+}
+function openSym(sym){
+  var d=document.getElementById('detail');
+  d.innerHTML='<div class="detail muted">Loading '+esc(sym)+'…</div>';
+  Promise.all([callTool('stock_history',{symbol:sym}),callTool('stock_news',{symbol:sym,limit:8})]).then(function(res){
+    var pts=(res[0] && res[0].points)||[],news=(res[1] && res[1].news)||[];
+    var closes=pts.map(function(p){return p.c});
+    var first=closes[0],last=closes[closes.length-1],chg=first?(((last-first)/first)*100).toFixed(1):'0';
+    var newsHtml=news.length?('<ul class="news">'+news.map(function(n){return '<li><a href="'+esc(n.url)+'" target="_blank" rel="noopener">'+esc(n.title)+'</a></li>'}).join('')+'</ul>'):'<div class="muted">No recent headlines.</div>';
+    d.innerHTML='<div class="detail"><h2>'+esc(sym)+'</h2><div class="muted">last '+closes.length+' days · '+(chg>=0?'+':'')+chg+'%</div>'+spark(closes,640,120)+'<h3 class="muted">News</h3>'+newsHtml+'</div>';
+  }).catch(function(){d.innerHTML='<div class="detail muted">Could not load '+esc(sym)+'.</div>'});
+}
+function addSym(){
+  var el=document.getElementById('add'),v=el.value.trim().toUpperCase();if(!v)return;el.value='';
+  callTool('stock_watchlist',{action:'add',symbols:[v]}).then(loadReport);
+}
+function removeSym(sym){
+  callTool('stock_watchlist',{action:'remove',symbols:[sym]}).then(loadReport);
+}
+loadReport();
+setInterval(loadReport,30000);
+</script>
+</body></html>

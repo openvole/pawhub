@@ -1,0 +1,51 @@
+{
+  "name": "@openvole/paw-markets",
+  "version": "0.1.0",
+  "description": "US stock market tracking, news & trend monitoring Paw for OpenVole — brain-free polling, an embedded dashboard panel, and channel alerts",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "@openvole/paw-sdk": ">=2.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "files": [
+    "dist",
+    "vole-paw.json",
+    "README.md",
+    "panel.html"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openvole/pawhub",
+    "directory": "paws/paw-markets"
+  },
+  "keywords": [
+    "openvole",
+    "paw",
+    "stocks",
+    "markets",
+    "nasdaq",
+    "trends"
+  ],
+  "peerDependencies": {
+    "@openvole/paw-sdk": ">=2.0.0"
+  }
+}
