@@ -1,4 +1,4 @@
-import { z, type PawDefinition } from '@openvole/paw-sdk'
+import { type PawDefinition, z } from '@openvole/paw-sdk'
 import { SessionStore } from './session.js'
 
 let store: SessionStore | undefined
@@ -61,7 +61,7 @@ function pruneSessionHistory(lines: string[]): string {
 function getTtl(): number {
 	const envTtl = process.env.VOLE_SESSION_TTL
 	if (envTtl) {
-		const parsed = parseInt(envTtl, 10)
+		const parsed = Number.parseInt(envTtl, 10)
 		if (!Number.isNaN(parsed) && parsed > 0) return parsed
 	}
 	return DEFAULT_TTL
@@ -75,7 +75,8 @@ export const paw: PawDefinition = {
 	tools: [
 		{
 			name: 'session_history',
-			description: 'Read conversation history for a session. Uses the current session if no sessionId is provided.',
+			description:
+				'Read conversation history for a session as messages [{ts, role, content}]. Uses the current session if no sessionId is provided.',
 			parameters: z.object({
 				sessionId: z
 					.string()
@@ -95,10 +96,13 @@ export const paw: PawDefinition = {
 
 				const id = sessionId ?? currentSessionId
 				if (!id) {
-					return { ok: false, error: 'No session ID provided and no active session' }
+					return {
+						ok: false,
+						error: 'No session ID provided and no active session',
+					}
 				}
 
-				const history = await store.getHistory(id, maxMessages)
+				const history = await store.getMessages(id, maxMessages)
 				const meta = await store.getMeta(id)
 				return { ok: true, sessionId: id, history, meta }
 			},
@@ -156,13 +160,15 @@ export const paw: PawDefinition = {
 				await store.clear(sessionId)
 			}
 
-			// Load recent history with 4-layer pruning
-			const rawHistory = await store.getHistory(sessionId, BOOTSTRAP_HISTORY_LIMIT)
-			if (rawHistory) {
-				const lines = rawHistory.split('\n').filter((l) => l.startsWith('['))
-				if (lines.length > 0) {
-					context.metadata.sessionHistory = pruneSessionHistory(lines)
-				}
+			// Load recent history with 4-layer pruning. Context injection flattens newlines —
+			// the transcript keeps them (JSONL), but the LLM context stays line-oriented.
+			const messages = await store.getMessages(sessionId, BOOTSTRAP_HISTORY_LIMIT)
+			if (messages.length > 0) {
+				const lines = messages.map((m) => {
+					const time = m.ts.includes('T') ? new Date(m.ts).toTimeString().slice(0, 8) : m.ts
+					return `[${time}] ${m.role}: ${m.content.replace(/\n/g, ' ')}`
+				})
+				context.metadata.sessionHistory = pruneSessionHistory(lines)
 			}
 
 			// Append the user's input to the transcript
@@ -189,16 +195,10 @@ export const paw: PawDefinition = {
 				? typeof result.output === 'string'
 					? result.output
 					: JSON.stringify(result.output)
-				: result.error?.message ?? 'error'
-			const content = rawContent.length > 300
-				? rawContent.substring(0, 300) + '...'
-				: rawContent
+				: (result.error?.message ?? 'error')
+			const content = rawContent.length > 300 ? rawContent.substring(0, 300) + '...' : rawContent
 
-			await store.appendMessage(
-				currentSessionId,
-				`tool:${result.toolName}`,
-				content,
-			)
+			await store.appendMessage(currentSessionId, `tool:${result.toolName}`, content)
 		},
 	},
 
@@ -211,9 +211,10 @@ export const paw: PawDefinition = {
 			if (event === 'task:completed' && store && currentSessionId) {
 				const taskData = data as { result?: string }
 				if (taskData.result) {
-					const content = taskData.result.length > 1000
-						? taskData.result.substring(0, 1000) + '... [truncated]'
-						: taskData.result
+					const content =
+						taskData.result.length > 1000
+							? taskData.result.substring(0, 1000) + '... [truncated]'
+							: taskData.result
 					await store.appendMessage(currentSessionId, 'brain', content)
 				}
 			}
@@ -222,8 +223,7 @@ export const paw: PawDefinition = {
 		const { resolve, join } = await import('node:path')
 		const fsModule = await import('node:fs/promises')
 		const sessionDir =
-			process.env.VOLE_SESSION_DIR ||
-			resolve(process.cwd(), '.openvole', 'paws', 'paw-session')
+			process.env.VOLE_SESSION_DIR || resolve(process.cwd(), '.openvole', 'paws', 'paw-session')
 
 		// Auto-migrate from old location (.openvole/sessions/ → .openvole/paws/paw-session/)
 		try {
@@ -236,7 +236,9 @@ export const paw: PawDefinition = {
 					const src = join(oldDir, entry)
 					const dest = join(sessionDir, entry)
 					const srcStat = await fsModule.stat(src)
-					try { await fsModule.stat(dest) } catch {
+					try {
+						await fsModule.stat(dest)
+					} catch {
 						if (srcStat.isDirectory()) {
 							await fsModule.cp(src, dest, { recursive: true })
 						} else {
@@ -248,7 +250,9 @@ export const paw: PawDefinition = {
 				await fsModule.rm(oldDir, { recursive: true }).catch(() => {})
 				console.log(`[paw-session] migration complete`)
 			}
-		} catch { /* no old data */ }
+		} catch {
+			/* no old data */
+		}
 
 		store = new SessionStore(sessionDir)
 		await store.init()

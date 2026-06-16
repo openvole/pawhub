@@ -8,6 +8,33 @@ export interface SessionMeta {
 	messageCount: number
 }
 
+/** A single transcript message. Content preserves newlines. */
+export interface SessionMessage {
+	ts: string
+	role: string
+	content: string
+}
+
+/** Parse one transcript line: JSONL (current) or legacy `[HH:MM:SS] role: content`. */
+function parseTranscriptLine(line: string): SessionMessage | null {
+	if (!line.trim()) return null
+	if (line.startsWith('{')) {
+		try {
+			const obj = JSON.parse(line) as Partial<SessionMessage>
+			if (typeof obj.role === 'string' && typeof obj.content === 'string') {
+				return { ts: obj.ts ?? '', role: obj.role, content: obj.content }
+			}
+		} catch {
+			return null
+		}
+		return null
+	}
+	// Legacy single-line format (multiline content was flattened on write)
+	const m = line.match(/^\[([^\]]+)\] (user|brain|tool:[^\s:]*|[^:]+): ?(.*)$/)
+	if (!m) return null
+	return { ts: m[1], role: m[2], content: m[3] }
+}
+
 /** Validates sessionId to prevent path traversal */
 function sanitizeSessionId(sessionId: string): string {
 	// Strip any path separators or parent directory references
@@ -41,30 +68,33 @@ export class SessionStore {
 		return path.join(this.sessionDir(sessionId), 'meta.json')
 	}
 
-	/** Read recent transcript entries */
-	async getHistory(sessionId: string, maxMessages?: number): Promise<string> {
+	/** Read recent transcript messages (parses JSONL and legacy single-line entries) */
+	async getMessages(sessionId: string, maxMessages?: number): Promise<SessionMessage[]> {
 		const filePath = this.transcriptPath(sessionId)
 		try {
 			const content = await fs.readFile(filePath, 'utf-8')
-			if (!maxMessages) return content
-
-			const lines = content.split('\n').filter((l) => l.startsWith('['))
-			return lines.slice(-maxMessages).join('\n')
+			const messages: SessionMessage[] = []
+			for (const line of content.split('\n')) {
+				const msg = parseTranscriptLine(line)
+				if (msg) messages.push(msg)
+			}
+			return maxMessages ? messages.slice(-maxMessages) : messages
 		} catch {
-			return ''
+			return []
 		}
 	}
 
-	/** Append a message to the session transcript */
+	/** Append a message to the session transcript (JSONL — newlines in content preserved) */
 	async appendMessage(sessionId: string, role: string, content: string): Promise<void> {
 		const dir = this.sessionDir(sessionId)
 		await fs.mkdir(dir, { recursive: true })
 
 		const now = new Date()
-		const timestamp = now.toTimeString().slice(0, 8) // HH:MM:SS
-		// Collapse multiline content into a single line for the transcript
-		const singleLine = content.replace(/\n/g, ' ').substring(0, 2000)
-		const entry = `[${timestamp}] ${role}: ${singleLine}\n`
+		const entry = `${JSON.stringify({
+			ts: now.toISOString(),
+			role,
+			content: content.substring(0, 4000),
+		})}\n`
 
 		await fs.appendFile(this.transcriptPath(sessionId), entry, 'utf-8')
 
