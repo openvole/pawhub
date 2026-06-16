@@ -6,6 +6,12 @@
 
 Part of [OpenVole](https://github.com/openvole/openvole) — the microkernel AI agent framework.
 
+> [!WARNING]
+> **Deprecated.** This single-engine dashboard paw is superseded by **`vole serve`** — the built-in
+> control-plane dashboard that runs **one** web server for **all** your spaces, with each paw's UI
+> embedded as a panel under the **Apps** tab (no per-paw web server, no extra ports). Just run
+> `vole serve` from an OpenVole root. `paw-dashboard` will be removed in a future release.
+
 ## Install
 
 ```bash

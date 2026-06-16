@@ -46,9 +46,14 @@ async function refreshAndBroadcastState(): Promise<void> {
 export const paw: PawDefinition = {
 	name: '@openvole/paw-dashboard',
 	version: '0.1.0',
-	description: 'Web dashboard for real-time agent monitoring and control',
+	description: '[DEPRECATED — use `vole serve`] Web dashboard for real-time agent monitoring and control',
 
 	async onLoad() {
+		console.warn(
+			'[paw-dashboard] DEPRECATED: this paw is superseded by `vole serve` — the control-plane ' +
+				'dashboard runs ONE web server for all spaces, with embedded paw panels (the Apps tab). ' +
+				'Migrate by running `vole serve`. paw-dashboard will be removed in a future release.',
+		)
 		const port = Number(process.env.VOLE_DASHBOARD_PORT) || DEFAULT_PORT
 		transport = createIpcTransport()
 
