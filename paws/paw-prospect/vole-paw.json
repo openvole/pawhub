@@ -1,0 +1,21 @@
+{
+  "name": "@openvole/paw-prospect",
+  "version": "0.1.0",
+  "description": "Prospect & lead enrichment from a company website URL — structured profile + embedded dashboard panel.",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "category": "tool",
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "prospect_lookup", "description": "Fetch a company website (URL or bare domain) and return a structured profile: name, tagline, description, logo, social links, detected tech, location, and key pages." },
+    { "name": "prospect_history", "description": "Recent prospect lookups (for the panel). action: 'list' | 'clear'." }
+  ],
+  "panel": { "title": "Prospect", "html": "panel.html" },
+  "permissions": {
+    "network": ["*"],
+    "listen": [],
+    "filesystem": [],
+    "env": ["VOLE_PROSPECT_DIR"]
+  }
+}

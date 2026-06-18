@@ -1,7 +1,7 @@
 {
-  "name": "@openvole/paw-markets",
-  "version": "0.1.1",
-  "description": "US stock market tracking, news & trend monitoring Paw for OpenVole — brain-free polling, an embedded dashboard panel, and channel alerts",
+  "name": "@openvole/paw-prospect",
+  "version": "0.1.0",
+  "description": "Prospect & lead enrichment from a company website URL for OpenVole — fetch a public site, return a structured company profile, with an embedded dashboard panel",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -35,15 +35,16 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/openvole/pawhub",
-    "directory": "paws/paw-markets"
+    "directory": "paws/paw-prospect"
   },
   "keywords": [
     "openvole",
     "paw",
-    "stocks",
-    "markets",
-    "nasdaq",
-    "trends"
+    "prospect",
+    "lead",
+    "enrichment",
+    "company",
+    "lookup"
   ],
   "peerDependencies": {
     "@openvole/paw-sdk": ">=2.0.0"

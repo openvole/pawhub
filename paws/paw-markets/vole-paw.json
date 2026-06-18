@@ -1,10 +1,10 @@
 {
   "name": "@openvole/paw-markets",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "US stock market tracking, news, and trend monitoring — brain-free polling, an embedded dashboard panel, and channel alerts",
   "entry": "./dist/index.js",
   "brain": false,
-  "category": "infrastructure",
+  "category": "tool",
   "inProcess": false,
   "transport": "ipc",
   "tools": [

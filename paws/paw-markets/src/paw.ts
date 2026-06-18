@@ -165,10 +165,10 @@ async function buildReport(): Promise<Record<string, unknown>> {
 
 export const paw: PawDefinition = {
 	name: '@openvole/paw-markets',
-	version: '0.1.0',
+	version: '0.1.1',
 	description:
 		'US stock market tracking, news, and trend monitoring — brain-free polling + commentary tools',
-	category: 'infrastructure',
+	category: 'tool',
 
 	tools: [
 		{

@@ -1,0 +1,91 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prospect Lookup</title>
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#222a35;--text:#e6edf3;--dim:#8b949e;--accent:#58a6ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 -apple-system,Segoe UI,Roboto,sans-serif}
+header{display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:5}
+header h1{font-size:16px;margin:0}.spacer{flex:1}
+input{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 10px;width:240px}
+button{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 12px;cursor:pointer}button:hover{border-color:var(--accent)}
+main{padding:16px 18px;max-width:900px;margin:0 auto}
+.muted{color:var(--dim)}.err{color:#f85149}.empty{color:var(--dim);text-align:center;padding:44px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;display:flex;gap:16px}
+.logo{width:64px;height:64px;border-radius:12px;object-fit:contain;background:#fff;flex-shrink:0}
+.card h2{margin:0 0 2px;font-size:20px}.tagline{color:var(--dim);margin:0 0 8px}.desc{margin:8px 0 12px}
+.chip{display:inline-block;font-size:11px;padding:2px 9px;border-radius:999px;background:#1f2630;color:var(--dim);margin:0 5px 5px 0}
+.chip.tech{color:var(--accent)}
+.socials{margin:10px 0}.socials a{display:inline-block;margin-right:8px;font-size:12px;padding:3px 9px;border:1px solid var(--border);border-radius:6px;color:var(--text);text-decoration:none}
+.socials a:hover{border-color:var(--accent)}
+.links a{color:var(--accent);text-decoration:none;margin-right:14px;font-size:13px}.links a:hover{text-decoration:underline}
+.meta{font-size:12px;color:var(--dim);margin-top:10px}
+h3{font-size:12px;text-transform:uppercase;color:var(--dim);margin:26px 0 10px;font-weight:600}
+.recent{display:flex;flex-wrap:wrap;gap:8px}
+.rec{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer}
+.rec:hover{border-color:var(--accent)}.rec img{width:20px;height:20px;border-radius:4px;object-fit:contain;background:#fff}
+</style></head>
+<body>
+<header>
+  <h1>Prospect Lookup</h1>
+  <span class="spacer"></span>
+  <input id="q" placeholder="company.com" onkeydown="if(event.key==='Enter')go()">
+  <button onclick="go()">Look up</button>
+</header>
+<main>
+  <div id="result"><div class="empty">Enter a company website above — e.g. <strong>stripe.com</strong>.</div></div>
+  <h3>Recent lookups</h3>
+  <div class="recent" id="recent"></div>
+</main>
+<script>
+// Data comes from the paw's tools, proxied by the control plane at ./tool/<name> — no LLM in the loop.
+function callTool(name, params){
+  return fetch('tool/' + name, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(params||{}) }).then(function(r){return r.json()});
+}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function host(u){try{return new URL(/^https?:\/\//.test(u)?u:'https://'+u).hostname.replace(/^www\./,'')}catch(e){return u}}
+
+function renderProfile(p){
+  var r=document.getElementById('result');
+  if(!p||!p.ok){r.innerHTML='<div class="card"><div><h2>Couldn’t read that site</h2><p class="err">'+esc((p&&p.error)||'Unknown error.')+'</p></div></div>';return}
+  var chips=[];
+  if(p.industry)chips.push('<span class="chip">'+esc(p.industry)+'</span>');
+  if(p.location)chips.push('<span class="chip">📍 '+esc(p.location)+'</span>');
+  (p.techHints||[]).forEach(function(t){chips.push('<span class="chip tech">'+esc(t)+'</span>')});
+  var s=p.socials||{},socials=[];
+  ['linkedin','twitter','github','youtube','facebook','instagram'].forEach(function(k){
+    if(s[k])socials.push('<a href="'+esc(s[k])+'" target="_blank" rel="noopener">'+k+'</a>');
+  });
+  var links=(p.keyLinks||[]).map(function(l){return '<a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.label)+'</a>'}).join('');
+  var emails=(p.emails||[]).map(function(e){return '<a href="mailto:'+esc(e)+'" style="color:var(--accent);text-decoration:none">'+esc(e)+'</a>'}).join(' · ');
+  r.innerHTML='<div class="card">'+
+    (p.logo?'<img class="logo" src="'+esc(p.logo)+'" onerror="this.style.display=\'none\'">':'')+
+    '<div style="flex:1;min-width:0">'+
+      '<h2>'+esc(p.name||p.domain)+'</h2>'+
+      (p.tagline?'<p class="tagline">'+esc(p.tagline)+'</p>':'')+
+      (p.description?'<p class="desc">'+esc(p.description)+'</p>':'')+
+      (chips.length?'<div>'+chips.join('')+'</div>':'')+
+      (socials.length?'<div class="socials">'+socials.join('')+'</div>':'')+
+      (links?'<div class="links">'+links+'</div>':'')+
+      (emails?'<div class="meta">'+emails+'</div>':'')+
+      '<div class="meta"><a href="'+esc(p.url)+'" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">'+esc(p.domain)+'</a> · read '+esc((p.pages||[]).length)+' page(s)</div>'+
+    '</div>'+
+  '</div>';
+}
+function go(){
+  var el=document.getElementById('q'),v=el.value.trim();if(!v)return;
+  document.getElementById('result').innerHTML='<div class="card muted">Looking up '+esc(host(v))+'…</div>';
+  callTool('prospect_lookup',{url:v}).then(function(p){renderProfile(p);loadRecent()}).catch(function(){document.getElementById('result').innerHTML='<div class="card err">Lookup failed.</div>'});
+}
+function loadRecent(){
+  callTool('prospect_history',{action:'list'}).then(function(res){
+    var h=(res&&res.history)||[],box=document.getElementById('recent');
+    if(!h.length){box.innerHTML='<span class="muted">No lookups yet.</span>';return}
+    box.innerHTML=h.map(function(e){
+      return '<div class="rec" onclick="lookupDomain(\''+esc(e.domain)+'\')">'+(e.logo?'<img src="'+esc(e.logo)+'" onerror="this.style.display=\'none\'">':'')+'<span>'+esc(e.name||e.domain)+'</span></div>';
+    }).join('');
+  }).catch(function(){});
+}
+function lookupDomain(d){document.getElementById('q').value=d;go()}
+loadRecent();
+</script>
+</body></html>
