@@ -140,6 +140,26 @@ export const paw: PawDefinition = {
 				}
 			},
 		},
+		{
+			name: 'session_append',
+			description:
+				'Append a message to a session transcript (sessionId, role, content). For messages that do not flow through the brain loop, e.g. peer-to-peer chat.',
+			parameters: z.object({
+				sessionId: z.string().describe('The session ID to append to'),
+				role: z.string().describe('Message role, e.g. "user", "brain", "out", "in"'),
+				content: z.string().describe('Message text'),
+			}),
+			async execute(params) {
+				const { sessionId, role, content } = params as {
+					sessionId: string
+					role: string
+					content: string
+				}
+				if (!store) throw new Error('Session store not initialized')
+				await store.appendMessage(sessionId, role, content)
+				return { ok: true, sessionId }
+			},
+		},
 	],
 
 	hooks: {

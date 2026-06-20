@@ -109,8 +109,28 @@ async function createProvider(
 			const model = process.env.OLLAMA_MODEL ?? brainModel ?? 'qwen3:latest'
 			return new OllamaProvider(host, model)
 		}
+		case 'mock':
+		case 'echo':
+		case 'test': {
+			const { MockProvider } = await import('./providers/mock.js')
+			const model = process.env.BRAIN_MODEL ?? brainModel ?? 'mock'
+			let script: Array<{ tool: string; params?: Record<string, unknown> } | { response: string }> | undefined
+			const raw = process.env.BRAIN_MOCK_SCRIPT
+			if (raw) {
+				try {
+					script = JSON.parse(raw)
+				} catch {
+					throw new Error(
+						'BRAIN_MOCK_SCRIPT must be valid JSON — an array of {"tool","params"} | {"response"} steps',
+					)
+				}
+			}
+			return new MockProvider(model, script)
+		}
 		default:
-			throw new Error(`Unknown brain provider: "${name}". Supported: anthropic, openai, gemini, xai, ollama`)
+			throw new Error(
+				`Unknown brain provider: "${name}". Supported: anthropic, openai, gemini, xai, ollama, mock`,
+			)
 	}
 }
 
