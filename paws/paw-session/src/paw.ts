@@ -148,15 +148,21 @@ export const paw: PawDefinition = {
 				sessionId: z.string().describe('The session ID to append to'),
 				role: z.string().describe('Message role, e.g. "user", "brain", "out", "in"'),
 				content: z.string().describe('Message text'),
+				maxMessages: z
+					.number()
+					.optional()
+					.describe('If set, trim the transcript to the last N messages after appending'),
 			}),
 			async execute(params) {
-				const { sessionId, role, content } = params as {
+				const { sessionId, role, content, maxMessages } = params as {
 					sessionId: string
 					role: string
 					content: string
+					maxMessages?: number
 				}
 				if (!store) throw new Error('Session store not initialized')
 				await store.appendMessage(sessionId, role, content)
+				if (typeof maxMessages === 'number') await store.trimToLast(sessionId, maxMessages)
 				return { ok: true, sessionId }
 			},
 		},

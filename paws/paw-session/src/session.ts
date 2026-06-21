@@ -105,6 +105,20 @@ export class SessionStore {
 		await this.writeMeta(sessionId, meta)
 	}
 
+	/** Trim a session's transcript to its most recent `maxMessages` entries (retention cap). */
+	async trimToLast(sessionId: string, maxMessages: number): Promise<void> {
+		if (!Number.isFinite(maxMessages) || maxMessages <= 0) return
+		const filePath = this.transcriptPath(sessionId)
+		try {
+			const content = await fs.readFile(filePath, 'utf-8')
+			const lines = content.split('\n').filter((l) => l.trim())
+			if (lines.length <= maxMessages) return
+			await fs.writeFile(filePath, `${lines.slice(-maxMessages).join('\n')}\n`, 'utf-8')
+		} catch {
+			// no transcript yet — nothing to trim
+		}
+	}
+
 	/** Read meta.json for a session */
 	async getMeta(sessionId: string): Promise<SessionMeta | null> {
 		try {
