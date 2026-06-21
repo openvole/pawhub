@@ -11,6 +11,7 @@ Unified Brain Paw for OpenVole — a single paw that supports multiple LLM provi
 | Google Gemini | `gemini` | `GEMINI_API_KEY` | `GEMINI_MODEL` | `gemini-2.5-flash` |
 | xAI | `xai` | `XAI_API_KEY` | `XAI_MODEL` | `grok-3` |
 | Ollama | `ollama` | — | `OLLAMA_MODEL` | `qwen3:latest` |
+| Mock | `mock` | — | `BRAIN_MODEL` | `mock` |
 
 ## Configuration
 
@@ -65,6 +66,21 @@ Just change `BRAIN_PROVIDER` and the corresponding API key — no config file ch
 # Switch from Gemini to Claude
 BRAIN_PROVIDER=anthropic
 ANTHROPIC_API_KEY=sk-ant-...
+```
+
+## Mock provider (testing)
+
+For free, deterministic tests without a real LLM, set `BRAIN_PROVIDER=mock`. No API key or network is used. Two modes:
+
+- **Echo** (default): replies with the latest incoming message — useful for proving a message arrived and a reply round-trips. Set `BRAIN_MOCK_REPLY` to return a fixed string instead of echoing.
+- **Scripted** (`BRAIN_MOCK_SCRIPT`): plays a fixed sequence of tool calls, then a final response. The value is JSON — an array of `{"tool","params"}` and `{"response"}` steps.
+
+```env
+BRAIN_PROVIDER=mock
+# Echo mode: fixed reply
+BRAIN_MOCK_REPLY=hello from mock
+# Scripted mode: call a tool, then respond
+BRAIN_MOCK_SCRIPT='[{"tool":"net_message","params":{"to":"hub","text":"hi"}},{"response":"done"}]'
 ```
 
 ## Fallback provider

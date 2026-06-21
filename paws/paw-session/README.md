@@ -37,6 +37,7 @@ npm install @openvole/paw-session
 | `session_history` | Read conversation history for a session |
 | `session_clear` | Clear a session's transcript and metadata |
 | `session_list` | List all active sessions with their last activity time |
+| `session_append` | Append a single message to a session transcript (outside the Brain loop, e.g. peer-to-peer chat); optional `maxMessages` trims to the last N |
 
 ## License
 

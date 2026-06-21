@@ -41,7 +41,7 @@ npm install @openvole/paw-email
 |------|-------------|
 | `email_send` | Send an email via SMTP |
 | `email_search` | Search emails in a mailbox folder |
-| `email_read` | Read a specific email by its message ID |
+| `email_read` | Read a specific email by its UID |
 | `email_list_folders` | List available mailbox folders |
 
 ## License
