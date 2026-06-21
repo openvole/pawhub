@@ -1,5 +1,11 @@
 # Changelog
 
+## r2026-6-21
+
+### Changed
+- **`@openvole/paw-brain` 2.2.0** — new **mock provider** (`BRAIN_PROVIDER=mock`) for free, deterministic testing without a real LLM: echo replies (`BRAIN_MOCK_REPLY`) or scripted turns (`BRAIN_MOCK_SCRIPT`). Useful for exercising VoleNet meshes and hubs without API cost.
+- **`@openvole/paw-session` 2.2.0** — new **`session_append`** tool for writing a single transcript entry outside the brain loop (backs VoleNet peer-to-peer chat persistence), plus an optional `maxMessages` retention cap (`trimToLast`) to bound transcript growth.
+
 ## r2026-6-18
 
 ### New
