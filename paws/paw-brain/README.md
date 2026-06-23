@@ -11,6 +11,7 @@ Unified Brain Paw for OpenVole — a single paw that supports multiple LLM provi
 | Google Gemini | `gemini` | `GEMINI_API_KEY` | `GEMINI_MODEL` | `gemini-2.5-flash` |
 | xAI | `xai` | `XAI_API_KEY` | `XAI_MODEL` | `grok-3` |
 | Ollama | `ollama` | — | `OLLAMA_MODEL` | `qwen3:latest` |
+| Claude Code | `claude-code` | — (uses CLI auth) | `CLAUDE_CODE_MODEL` | CLI default |
 | Mock | `mock` | — | `BRAIN_MODEL` | `mock` |
 
 ## Configuration
@@ -97,6 +98,26 @@ BRAIN_FALLBACK_MODEL=gpt-4o          # optional
 ```
 
 The fallback is only used when the primary throws an error — not for empty responses or tool narration.
+
+## Claude Code provider
+
+Use the local, already-authenticated [Claude Code](https://claude.ai/code) CLI as the brain — no API key, it uses the CLI's own auth:
+
+```env
+BRAIN_PROVIDER=claude-code
+```
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `CLAUDE_CODE_CMD` | Path or name of the CLI binary | `claude` |
+| `CLAUDE_CODE_CONFIG_DIR` | Config dir to run the CLI against (e.g. `~/.claude-ep`) | — |
+| `CLAUDE_CODE_MODEL` | Model to request from the CLI | CLI default |
+| `CLAUDE_CODE_PERMISSION_MODE` | Permission mode passed to the CLI | — |
+| `CLAUDE_CODE_ARGS` | Extra CLI arguments | — |
+| `CLAUDE_CODE_TIMEOUT_MS` | Per-call timeout in milliseconds | — |
+| `CLAUDE_CODE_EXPOSE_TOOLS` | Set to `1` to let Claude Code call OpenVole's own tools over MCP | — |
+
+When `CLAUDE_CODE_EXPOSE_TOOLS=1`, the brain connects Claude Code to the space's MCP endpoint (`/mcp/<space>`) so it can call OpenVole tools directly.
 
 ## Cost tracking
 

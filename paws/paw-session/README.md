@@ -39,6 +39,11 @@ npm install @openvole/paw-session
 | `session_list` | List all active sessions with their last activity time |
 | `session_append` | Append a single message to a session transcript (outside the Brain loop, e.g. peer-to-peer chat); optional `maxMessages` trims to the last N |
 
+## Behavior
+
+- Brain replies are recorded to the session that owns the task, so transcripts stay correct even when tasks interleave.
+- TTL expiry marks a session inactive but no longer wipes its transcript — conversation history persists.
+
 ## License
 
 [MIT](https://github.com/openvole/pawhub/blob/main/LICENSE)
