@@ -109,6 +109,13 @@ async function createProvider(
 			const model = process.env.OLLAMA_MODEL ?? brainModel ?? 'qwen3:latest'
 			return new OllamaProvider(host, model)
 		}
+		case 'claude-code':
+		case 'claudecode':
+		case 'cc': {
+			const { ClaudeCodeProvider } = await import('./providers/claude-code.js')
+			const model = process.env.CLAUDE_CODE_MODEL ?? process.env.BRAIN_MODEL ?? brainModel ?? 'claude-code'
+			return new ClaudeCodeProvider(model)
+		}
 		case 'mock':
 		case 'echo':
 		case 'test': {
@@ -129,7 +136,7 @@ async function createProvider(
 		}
 		default:
 			throw new Error(
-				`Unknown brain provider: "${name}". Supported: anthropic, openai, gemini, xai, ollama, mock`,
+				`Unknown brain provider: "${name}". Supported: anthropic, openai, gemini, xai, ollama, claude-code, mock`,
 			)
 	}
 }
