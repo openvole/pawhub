@@ -178,17 +178,21 @@ export const paw: PawDefinition = {
 
 			const ttl = getTtl()
 
-			// Check if session is expired
+			// Expiry no longer deletes the transcript — that's the user-visible chat log and
+			// must persist across idle gaps (CLI, dashboard, any channel). After the TTL we just
+			// start a fresh *context* (don't replay stale messages into the prompt); the stored
+			// history is left intact so the conversation is never lost.
 			const expired = await store.isExpired(sessionId, ttl)
 			if (expired) {
-				// Archive by clearing — start fresh
-				console.log(`[paw-session] Session "${sessionId}" expired (TTL: ${ttl}m), starting fresh`)
-				await store.clear(sessionId)
+				console.log(
+					`[paw-session] Session "${sessionId}" idle > ${ttl}m — starting a fresh context (history preserved)`,
+				)
 			}
 
 			// Load recent history with 4-layer pruning. Context injection flattens newlines —
 			// the transcript keeps them (JSONL), but the LLM context stays line-oriented.
-			const messages = await store.getMessages(sessionId, BOOTSTRAP_HISTORY_LIMIT)
+			// On expiry, skip injecting old turns into the prompt (fresh context) but keep the file.
+			const messages = expired ? [] : await store.getMessages(sessionId, BOOTSTRAP_HISTORY_LIMIT)
 			if (messages.length > 0) {
 				const lines = messages.map((m) => {
 					const time = m.ts.includes('T') ? new Date(m.ts).toTimeString().slice(0, 8) : m.ts
@@ -234,14 +238,20 @@ export const paw: PawDefinition = {
 		const busTransport = createIpcTransport()
 		busTransport.subscribe(['task:completed'])
 		busTransport.onBusEvent(async (event, data) => {
-			if (event === 'task:completed' && store && currentSessionId) {
-				const taskData = data as { result?: string }
-				if (taskData.result) {
+			if (event === 'task:completed' && store) {
+				const taskData = data as { result?: string; sessionId?: string }
+				// Record against the COMPLETED task's own session, not the global
+				// currentSessionId. Tasks interleave (a heartbeat or peer task can bootstrap
+				// between a chat's bootstrap and its completion), which would otherwise file the
+				// reply under the wrong session. Fall back to currentSessionId for older cores
+				// that don't send sessionId on the event.
+				const sessionId = taskData.sessionId ?? currentSessionId
+				if (sessionId && taskData.result) {
 					const content =
 						taskData.result.length > 1000
 							? taskData.result.substring(0, 1000) + '... [truncated]'
 							: taskData.result
-					await store.appendMessage(currentSessionId, 'brain', content)
+					await store.appendMessage(sessionId, 'brain', content)
 				}
 			}
 		})
