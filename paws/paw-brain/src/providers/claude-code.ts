@@ -9,9 +9,15 @@ import type { BrainProvider, ThinkResult } from '../types.js'
 const expandHome = (p: string): string => (p === '~' || p.startsWith('~/') ? p.replace(/^~/, homedir()) : p)
 
 /** Flatten the OpenVole conversation into a single prompt for the Claude Code CLI. */
-function renderPrompt(systemPrompt: string, messages: AgentMessage[], sessionHistory?: string): string {
+function renderPrompt(
+	systemPrompt: string,
+	messages: AgentMessage[],
+	sessionHistory?: string,
+	mcpNote?: string,
+): string {
 	const parts: string[] = []
 	if (systemPrompt) parts.push(systemPrompt)
+	if (mcpNote) parts.push(mcpNote)
 	if (sessionHistory) parts.push(`# Earlier conversation\n${sessionHistory}`)
 	const transcript = messages
 		.map((m) => {
@@ -108,7 +114,13 @@ export class ClaudeCodeProvider implements BrainProvider {
 		if (process.env.CLAUDE_CODE_CONFIG_DIR)
 			env.CLAUDE_CONFIG_DIR = expandHome(process.env.CLAUDE_CODE_CONFIG_DIR)
 
-		const prompt = renderPrompt(systemPrompt, messages, sessionHistory)
+		// Without this, models see bare tool names (agent_list) in the OpenVole prompt but the
+		// callable functions are prefixed (mcp__openvole__agent_list) — and may conclude the
+		// tools are unavailable instead of bridging the naming gap.
+		const mcpNote = mcp
+			? '# Tool naming\nEvery OpenVole tool named in these instructions is available to you as an MCP function prefixed `mcp__openvole__` — e.g. `agent_list` is callable as `mcp__openvole__agent_list`. Never claim an OpenVole tool is unavailable without checking for its prefixed form.'
+			: undefined
+		const prompt = renderPrompt(systemPrompt, messages, sessionHistory, mcpNote)
 		const res = await execa(cmd, args, { input: prompt, cwd, timeout, reject: false, env, extendEnv: true })
 
 		const raw = res.stdout || ''
