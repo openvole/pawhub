@@ -118,7 +118,7 @@ export class ClaudeCodeProvider implements BrainProvider {
 		// callable functions are prefixed (mcp__openvole__agent_list) — and may conclude the
 		// tools are unavailable instead of bridging the naming gap.
 		const mcpNote = mcp
-			? '# Tool naming\nEvery OpenVole tool named in these instructions is available to you as an MCP function prefixed `mcp__openvole__` — e.g. `agent_list` is callable as `mcp__openvole__agent_list`. Never claim an OpenVole tool is unavailable without checking for its prefixed form.'
+			? '# Tool naming\nEvery OpenVole tool named in these instructions is available to you as an MCP function prefixed `mcp__openvole__` — e.g. `agent_list` is callable as `mcp__openvole__agent_list`. Never claim an OpenVole tool is unavailable without checking for its prefixed form.\n\n# Memory\nThis agent\'s durable memory is OpenVole\'s memory system, NOT your own memory directory. When asked to remember, save, or recall something, use `mcp__openvole__memory_write` / `memory_read` / `memory_search` — other tools, dashboards, and synced peers only see memories stored there.'
 			: undefined
 		const prompt = renderPrompt(systemPrompt, messages, sessionHistory, mcpNote)
 		const res = await execa(cmd, args, { input: prompt, cwd, timeout, reject: false, env, extendEnv: true })
