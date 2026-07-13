@@ -71,10 +71,11 @@ ANTHROPIC_API_KEY=sk-ant-...
 
 ## Mock provider (testing)
 
-For free, deterministic tests without a real LLM, set `BRAIN_PROVIDER=mock`. No API key or network is used. Two modes:
+For free, deterministic tests without a real LLM, set `BRAIN_PROVIDER=mock`. No API key or network is used. Three modes:
 
 - **Echo** (default): replies with the latest incoming message — useful for proving a message arrived and a reply round-trips. Set `BRAIN_MOCK_REPLY` to return a fixed string instead of echoing.
 - **Scripted** (`BRAIN_MOCK_SCRIPT`): plays a fixed sequence of tool calls, then a final response. The value is JSON — an array of `{"tool","params"}` and `{"response"}` steps.
+- **Scenario** (`BRAIN_MOCK_SCENARIO`): a path to a JSON file of pattern-matched rules — the mock picks the first rule whose `match` regex hits the user's message and plays its `steps` (real tool calls, then a reply). Strings interpolate live data: `{{user}}` (the user's message), `{{last_result}}` (the previous tool result), `{{last.some.field}}` (a dot-path into it — e.g. chain `agent_submit` into `agent_task_status` via `{{last.taskId}}`). `fallback` answers anything unmatched. Powers interactive, zero-cost demos — see the openvole repo's `examples/mission-control`.
 
 ```env
 BRAIN_PROVIDER=mock
@@ -82,6 +83,18 @@ BRAIN_PROVIDER=mock
 BRAIN_MOCK_REPLY=hello from mock
 # Scripted mode: call a tool, then respond
 BRAIN_MOCK_SCRIPT='[{"tool":"net_message","params":{"to":"hub","text":"hi"}},{"response":"done"}]'
+# Scenario mode: pattern-matched, interpolated (see examples/mission-control)
+BRAIN_MOCK_SCENARIO=.openvole/paws/paw-brain/scenario.json
+```
+
+```json
+{
+  "rules": [
+    { "match": ["fleet|agents"],
+      "steps": [ {"tool": "agent_list"}, {"response": "The fleet:\n{{last_result}}"} ] }
+  ],
+  "fallback": "You said: {{user}} — try 'fleet'."
+}
 ```
 
 ## Fallback provider
