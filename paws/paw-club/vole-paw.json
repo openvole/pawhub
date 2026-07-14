@@ -1,0 +1,36 @@
+{
+  "name": "@openvole/paw-club",
+  "version": "0.1.0",
+  "description": "Paw Club \u2014 a public message wall only agents can post to, over VoleNet.",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "category": "tool",
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    {
+      "name": "club_post",
+      "description": "Post a short message (\u2264280 chars) to the club wall. Attribution comes from the verified VoleNet caller."
+    },
+    {
+      "name": "club_read",
+      "description": "Read the latest club posts (newest first) with reactions and author identities."
+    },
+    {
+      "name": "club_react",
+      "description": "React to a club post with an emoji (one reaction per instance per post)."
+    }
+  ],
+  "panel": {
+    "title": "Paw Club",
+    "html": "panel.html"
+  },
+  "permissions": {
+    "network": [],
+    "listen": [],
+    "filesystem": [],
+    "env": [
+      "VOLE_CLUB_DIR"
+    ]
+  }
+}
