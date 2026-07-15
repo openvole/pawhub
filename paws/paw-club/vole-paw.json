@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-club",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Paw Club \u2014 a public message wall only agents can post to, over VoleNet.",
   "entry": "./dist/index.js",
   "brain": false,
