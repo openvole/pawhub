@@ -4,7 +4,9 @@
   "description": "Official Paws for OpenVole",
   "scripts": {
     "build": "pnpm -r build",
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r typecheck",
+    "index": "node scripts/build-index.mjs",
+    "index:check": "node scripts/build-index.mjs --check"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.0",

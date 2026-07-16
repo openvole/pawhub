@@ -1,0 +1,1361 @@
+{
+  "updatedAt": "2026-07-16T06:40:50.065Z",
+  "counts": {
+    "paws": 35,
+    "tools": 106
+  },
+  "paws": [
+    {
+      "name": "@openvole/paw-brain",
+      "slug": "paw-brain",
+      "version": "2.4.0",
+      "description": "Unified Brain Paw — multi-provider LLM adapter (Anthropic, OpenAI, Gemini, Ollama, xAI, local Claude Code CLI, mock)",
+      "category": "brain",
+      "brain": true,
+      "transport": "ipc",
+      "published": true,
+      "tools": [],
+      "permissions": {
+        "network": [
+          "*"
+        ],
+        "filesystem": [],
+        "env": [
+          "BRAIN_PROVIDER",
+          "CLAUDE_CODE_CMD",
+          "CLAUDE_CODE_CONFIG_DIR",
+          "CLAUDE_CODE_ARGS",
+          "CLAUDE_CODE_CWD",
+          "CLAUDE_CODE_MODEL",
+          "CLAUDE_CODE_PERMISSION_MODE",
+          "CLAUDE_CODE_TIMEOUT_MS",
+          "CLAUDE_CODE_EXPOSE_TOOLS",
+          "VOLE_DASHBOARD_URL",
+          "VOLE_DASHBOARD_TOKEN",
+          "VOLE_SPACE_ID",
+          "BRAIN_API_KEY",
+          "BRAIN_MODEL",
+          "BRAIN_BASE_URL",
+          "ANTHROPIC_API_KEY",
+          "ANTHROPIC_MODEL",
+          "OPENAI_API_KEY",
+          "OPENAI_MODEL",
+          "GEMINI_API_KEY",
+          "GEMINI_MODEL",
+          "OLLAMA_HOST",
+          "OLLAMA_MODEL",
+          "OLLAMA_API_KEY",
+          "XAI_API_KEY",
+          "XAI_MODEL",
+          "BRAIN_FALLBACK",
+          "BRAIN_FALLBACK_MODEL",
+          "BRAIN_FALLBACK_BASE_URL"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-brain",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-brain"
+    },
+    {
+      "name": "@openvole/paw-browser",
+      "slug": "paw-browser",
+      "version": "2.0.0",
+      "description": "Browser automation Paw using Puppeteer for web browsing, interaction, and screenshots",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "browser_navigate",
+          "description": "Navigate to a URL in the browser. Returns the page URL and title after loading."
+        },
+        {
+          "name": "browser_click",
+          "description": "Click an element on the page by CSS selector. Waits for the element and any triggered navigation."
+        },
+        {
+          "name": "browser_type",
+          "description": "Type text into an input element identified by CSS selector."
+        },
+        {
+          "name": "browser_screenshot",
+          "description": "Take a full-page screenshot of the current page. Returns a base64-encoded PNG."
+        },
+        {
+          "name": "browser_content",
+          "description": "Get the page text content and a simplified accessibility tree of interactive elements (links, buttons, inputs)."
+        },
+        {
+          "name": "browser_evaluate",
+          "description": "Run arbitrary JavaScript in the page context and return the result."
+        }
+      ],
+      "permissions": {
+        "network": [
+          "*"
+        ],
+        "filesystem": [],
+        "env": [
+          "VOLE_BROWSER_HEADLESS"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-browser",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-browser"
+    },
+    {
+      "name": "@openvole/paw-calendar",
+      "slug": "paw-calendar",
+      "version": "2.0.0",
+      "description": "Paw for managing Google Calendar events",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "calendar_list_events",
+          "description": "List upcoming events from Google Calendar"
+        },
+        {
+          "name": "calendar_create_event",
+          "description": "Create a new event on Google Calendar"
+        },
+        {
+          "name": "calendar_update_event",
+          "description": "Update an existing event on Google Calendar"
+        },
+        {
+          "name": "calendar_delete_event",
+          "description": "Delete an event from Google Calendar"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "www.googleapis.com",
+          "oauth2.googleapis.com"
+        ],
+        "filesystem": [],
+        "env": [
+          "GOOGLE_CLIENT_ID",
+          "GOOGLE_CLIENT_SECRET",
+          "GOOGLE_REFRESH_TOKEN",
+          "GOOGLE_CALENDAR_ID"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-calendar",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-calendar"
+    },
+    {
+      "name": "@openvole/paw-claude",
+      "slug": "paw-claude",
+      "version": "2.0.0",
+      "description": "Brain Paw powered by Anthropic Claude",
+      "category": "brain",
+      "brain": true,
+      "transport": "ipc",
+      "published": true,
+      "tools": [],
+      "permissions": {
+        "network": [
+          "api.anthropic.com"
+        ],
+        "filesystem": [],
+        "env": [
+          "ANTHROPIC_API_KEY",
+          "ANTHROPIC_MODEL",
+          "ANTHROPIC_BASE_URL"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-claude",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-claude"
+    },
+    {
+      "name": "@openvole/paw-club",
+      "slug": "paw-club",
+      "version": "0.1.1",
+      "description": "Paw Club — a public message wall only agents can post to, over VoleNet.",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "club_post",
+          "description": "Post a short message (≤280 chars) to the club wall. Attribution comes from the verified VoleNet caller."
+        },
+        {
+          "name": "club_read",
+          "description": "Read the latest club posts (newest first) with reactions and author identities."
+        },
+        {
+          "name": "club_react",
+          "description": "React to a club post with an emoji (one reaction per instance per post)."
+        }
+      ],
+      "permissions": {
+        "network": [],
+        "filesystem": [],
+        "env": [
+          "VOLE_CLUB_DIR"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-club",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-club"
+    },
+    {
+      "name": "@openvole/paw-compact",
+      "slug": "paw-compact",
+      "version": "2.0.0",
+      "description": "Default context compactor — summarizes old messages to free context window space",
+      "category": "infrastructure",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [],
+      "permissions": {
+        "network": [
+          "*"
+        ],
+        "filesystem": [],
+        "env": [
+          "VOLE_COMPACT_KEEP_RECENT",
+          "VOLE_COMPACT_MODEL",
+          "OLLAMA_HOST",
+          "OPENAI_API_KEY",
+          "GEMINI_API_KEY",
+          "ANTHROPIC_API_KEY",
+          "XAI_API_KEY"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-compact",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-compact"
+    },
+    {
+      "name": "@openvole/paw-computer",
+      "slug": "paw-computer",
+      "version": "2.0.0",
+      "description": "Desktop automation — control mouse, keyboard, and screen capture",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "computer_screenshot",
+          "description": "Capture the screen and return as base64 PNG with active window info"
+        },
+        {
+          "name": "computer_click",
+          "description": "Click at screen coordinates (x, y)"
+        },
+        {
+          "name": "computer_double_click",
+          "description": "Double click at screen coordinates"
+        },
+        {
+          "name": "computer_type",
+          "description": "Type text at the current cursor position"
+        },
+        {
+          "name": "computer_key",
+          "description": "Press a key combination (e.g. ctrl+c, cmd+tab, enter)"
+        },
+        {
+          "name": "computer_mouse_move",
+          "description": "Move the mouse cursor to coordinates without clicking"
+        },
+        {
+          "name": "computer_scroll",
+          "description": "Scroll up or down at a screen position"
+        },
+        {
+          "name": "computer_drag",
+          "description": "Drag from one screen position to another"
+        },
+        {
+          "name": "computer_active_window",
+          "description": "Get the title and bounds of the currently active window"
+        },
+        {
+          "name": "computer_ui_tree",
+          "description": "Read the accessibility UI tree — all buttons, fields, menus with positions. Cheaper than screenshots."
+        },
+        {
+          "name": "computer_clipboard_read",
+          "description": "Read the current clipboard content as text"
+        },
+        {
+          "name": "computer_clipboard_write",
+          "description": "Write text to the clipboard"
+        }
+      ],
+      "permissions": {
+        "network": [],
+        "filesystem": [],
+        "env": [
+          "VOLE_COMPUTER_DELAY_MS"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-computer",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-computer"
+    },
+    {
+      "name": "@openvole/paw-dashboard",
+      "slug": "paw-dashboard",
+      "version": "3.2.0",
+      "description": "[DEPRECATED — use `vole serve`] Web dashboard for real-time agent monitoring",
+      "category": "infrastructure",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [],
+      "permissions": {
+        "network": [],
+        "filesystem": [],
+        "env": [
+          "VOLE_DASHBOARD_PORT"
+        ],
+        "listen": [
+          3001
+        ]
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-dashboard",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-dashboard"
+    },
+    {
+      "name": "@openvole/paw-database",
+      "slug": "paw-database",
+      "version": "2.0.0",
+      "description": "Query PostgreSQL, MySQL, and SQLite databases",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "db_query",
+          "description": "Execute a SQL query and return results"
+        },
+        {
+          "name": "db_schema",
+          "description": "List tables and their columns"
+        },
+        {
+          "name": "db_execute",
+          "description": "Execute a write statement (INSERT/UPDATE/DELETE)"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "*"
+        ],
+        "filesystem": [
+          "./"
+        ],
+        "env": [
+          "DATABASE_URL",
+          "DATABASE_TYPE",
+          "VOLE_DB_READONLY"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-database",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-database"
+    },
+    {
+      "name": "@openvole/paw-discord",
+      "slug": "paw-discord",
+      "version": "2.0.0",
+      "description": "Discord bot channel for OpenVole",
+      "category": "channel",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "discord_send",
+          "description": "Send a message to a Discord channel"
+        },
+        {
+          "name": "discord_reply",
+          "description": "Reply to a message in Discord"
+        },
+        {
+          "name": "discord_get_channel",
+          "description": "Get information about a Discord channel"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "discord.com",
+          "gateway.discord.gg"
+        ],
+        "filesystem": [],
+        "env": [
+          "DISCORD_BOT_TOKEN",
+          "DISCORD_ALLOW_FROM"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-discord",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-discord"
+    },
+    {
+      "name": "@openvole/paw-email",
+      "slug": "paw-email",
+      "version": "2.1.0",
+      "description": "Paw for sending and reading emails via SMTP and IMAP",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "email_send",
+          "description": "Send an email via SMTP"
+        },
+        {
+          "name": "email_search",
+          "description": "Search emails in a mailbox folder"
+        },
+        {
+          "name": "email_read",
+          "description": "Read a specific email by its message ID"
+        },
+        {
+          "name": "email_list_folders",
+          "description": "List available mailbox folders"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "*"
+        ],
+        "filesystem": [],
+        "env": [
+          "EMAIL_HOST",
+          "EMAIL_PORT",
+          "EMAIL_USER",
+          "EMAIL_PASS",
+          "EMAIL_IMAP_HOST",
+          "EMAIL_IMAP_PORT"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-email",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-email"
+    },
+    {
+      "name": "@openvole/paw-filesystem",
+      "slug": "paw-filesystem",
+      "version": "2.0.0",
+      "description": "Filesystem Paw for reading, writing, editing, and searching files",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "fs_read",
+          "description": "Read a file"
+        },
+        {
+          "name": "fs_write",
+          "description": "Write or create a file"
+        },
+        {
+          "name": "fs_edit",
+          "description": "Search and replace in a file"
+        },
+        {
+          "name": "fs_list",
+          "description": "List directory contents"
+        },
+        {
+          "name": "fs_search",
+          "description": "Search for text in files"
+        },
+        {
+          "name": "fs_mkdir",
+          "description": "Create a directory"
+        }
+      ],
+      "permissions": {
+        "network": [],
+        "filesystem": [
+          "/app/workspace"
+        ],
+        "env": [
+          "VOLE_FS_ALLOWED_DIRS"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-filesystem",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-filesystem"
+    },
+    {
+      "name": "@openvole/paw-gemini",
+      "slug": "paw-gemini",
+      "version": "2.0.0",
+      "description": "Brain Paw powered by Google Gemini",
+      "category": "brain",
+      "brain": true,
+      "transport": "ipc",
+      "published": true,
+      "tools": [],
+      "permissions": {
+        "network": [
+          "generativelanguage.googleapis.com"
+        ],
+        "filesystem": [],
+        "env": [
+          "GEMINI_API_KEY",
+          "GEMINI_MODEL"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-gemini",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-gemini"
+    },
+    {
+      "name": "@openvole/paw-github",
+      "slug": "paw-github",
+      "version": "2.0.0",
+      "description": "Paw for interacting with GitHub via the Octokit REST API",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "github_create_issue",
+          "description": "Create a GitHub issue in a repository"
+        },
+        {
+          "name": "github_list_issues",
+          "description": "List issues in a GitHub repository"
+        },
+        {
+          "name": "github_create_pr",
+          "description": "Create a pull request in a GitHub repository"
+        },
+        {
+          "name": "github_list_prs",
+          "description": "List pull requests in a GitHub repository"
+        },
+        {
+          "name": "github_search_repos",
+          "description": "Search GitHub repositories"
+        },
+        {
+          "name": "github_get_file",
+          "description": "Get file content from a GitHub repository"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "api.github.com"
+        ],
+        "filesystem": [],
+        "env": [
+          "GITHUB_TOKEN"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-github",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-github"
+    },
+    {
+      "name": "@openvole/paw-image",
+      "slug": "paw-image",
+      "version": "2.0.0",
+      "description": "Resize, crop, watermark, compress, and convert images",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "image_resize",
+          "description": "Resize an image"
+        },
+        {
+          "name": "image_crop",
+          "description": "Crop an image"
+        },
+        {
+          "name": "image_compress",
+          "description": "Compress an image (reduce file size)"
+        },
+        {
+          "name": "image_convert",
+          "description": "Convert image format (PNG, JPEG, WebP, AVIF)"
+        },
+        {
+          "name": "image_info",
+          "description": "Get image metadata (dimensions, format, size)"
+        },
+        {
+          "name": "image_watermark",
+          "description": "Add text watermark to an image"
+        }
+      ],
+      "permissions": {
+        "network": [],
+        "filesystem": [
+          "./"
+        ],
+        "env": [],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-image",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-image"
+    },
+    {
+      "name": "@openvole/paw-markets",
+      "slug": "paw-markets",
+      "version": "0.1.1",
+      "description": "US stock market tracking, news, and trend monitoring — brain-free polling, an embedded dashboard panel, and channel alerts",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "stock_quote",
+          "description": "Latest price and change for one or more US tickers (e.g. AAPL, MSFT, NVDA)"
+        },
+        {
+          "name": "stock_trend",
+          "description": "Computed trend indicators for a ticker: % changes (1d/5d/1mo), SMA20/50, 52-week high/low, volume vs average, RSI"
+        },
+        {
+          "name": "stock_history",
+          "description": "Daily closing prices for a US ticker (for charts)"
+        },
+        {
+          "name": "stock_news",
+          "description": "Recent news headlines for a US ticker"
+        },
+        {
+          "name": "stock_watchlist",
+          "description": "Manage the tracked watchlist: list, add, or remove symbols"
+        },
+        {
+          "name": "market_report",
+          "description": "Latest snapshot of the watchlist (quotes + trends + alerts) — call this to comment on the market"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "*"
+        ],
+        "filesystem": [],
+        "env": [
+          "TWELVEDATA_KEY",
+          "FINNHUB_KEY",
+          "MARKETS_SYMBOLS",
+          "MARKETS_POLL_SECONDS",
+          "MARKETS_MOVE_ALERT_PCT",
+          "MARKETS_VOLUME_SPIKE_X",
+          "MARKETS_SLACK_WEBHOOK",
+          "MARKETS_TELEGRAM_TOKEN",
+          "MARKETS_TELEGRAM_CHAT_ID",
+          "MARKETS_WEBHOOK_URL",
+          "VOLE_MARKETS_DIR"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-markets",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-markets"
+    },
+    {
+      "name": "@openvole/paw-mcp",
+      "slug": "paw-mcp",
+      "version": "2.0.0",
+      "description": "Bridges MCP servers into OpenVole's tool registry",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "mcp_add_server",
+          "description": "Add and connect a new MCP server at runtime"
+        },
+        {
+          "name": "mcp_remove_server",
+          "description": "Disconnect and remove an MCP server"
+        },
+        {
+          "name": "mcp_list_servers",
+          "description": "List all connected MCP servers"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "*"
+        ],
+        "filesystem": [],
+        "env": [],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-mcp",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-mcp"
+    },
+    {
+      "name": "@openvole/paw-memory",
+      "slug": "paw-memory",
+      "version": "2.0.0",
+      "description": "Persistent memory — markdown-based long-term and daily memory",
+      "category": "infrastructure",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "memory_read",
+          "description": "Read a memory file (MEMORY.md or a daily log)"
+        },
+        {
+          "name": "memory_write",
+          "description": "Write or append to a memory file"
+        },
+        {
+          "name": "memory_search",
+          "description": "Search across all memory files for relevant content"
+        },
+        {
+          "name": "memory_list",
+          "description": "List all memory files with dates"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "*"
+        ],
+        "filesystem": [],
+        "env": [
+          "VOLE_MEMORY_DIR",
+          "VOLE_EMBEDDING_PROVIDER",
+          "VOLE_EMBEDDING_MODEL",
+          "VOLE_EMBEDDING_DIMS",
+          "OLLAMA_HOST",
+          "OPENAI_API_KEY",
+          "GEMINI_API_KEY"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-memory",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-memory"
+    },
+    {
+      "name": "@openvole/paw-msteams",
+      "slug": "paw-msteams",
+      "version": "2.0.0",
+      "description": "Microsoft Teams channel for OpenVole",
+      "category": "channel",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "msteams_send",
+          "description": "Send a message to a Microsoft Teams conversation"
+        },
+        {
+          "name": "msteams_reply",
+          "description": "Reply to the current Teams conversation"
+        },
+        {
+          "name": "msteams_get_conversations",
+          "description": "List active Teams conversations"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "login.microsoftonline.com",
+          "smba.trafficmanager.net",
+          "*.botframework.com"
+        ],
+        "filesystem": [],
+        "env": [
+          "MSTEAMS_APP_ID",
+          "MSTEAMS_APP_PASSWORD",
+          "MSTEAMS_TENANT_ID",
+          "MSTEAMS_PORT",
+          "MSTEAMS_ALLOW_FROM"
+        ],
+        "listen": [
+          3978
+        ]
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-msteams",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-msteams"
+    },
+    {
+      "name": "@openvole/paw-ollama",
+      "slug": "paw-ollama",
+      "version": "2.0.0",
+      "description": "Brain Paw powered by Ollama for local LLM inference",
+      "category": "brain",
+      "brain": true,
+      "transport": "ipc",
+      "published": true,
+      "tools": [],
+      "permissions": {
+        "network": [
+          "127.0.0.1"
+        ],
+        "filesystem": [],
+        "env": [
+          "OLLAMA_MODEL",
+          "OLLAMA_HOST"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-ollama",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-ollama"
+    },
+    {
+      "name": "@openvole/paw-openai",
+      "slug": "paw-openai",
+      "version": "2.0.0",
+      "description": "Brain Paw powered by OpenAI",
+      "category": "brain",
+      "brain": true,
+      "transport": "ipc",
+      "published": true,
+      "tools": [],
+      "permissions": {
+        "network": [
+          "api.openai.com"
+        ],
+        "filesystem": [],
+        "env": [
+          "OPENAI_API_KEY",
+          "OPENAI_MODEL"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-openai",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-openai"
+    },
+    {
+      "name": "@openvole/paw-pdf",
+      "slug": "paw-pdf",
+      "version": "2.0.0",
+      "description": "Read, merge, split, and extract text from PDFs",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "pdf_read",
+          "description": "Extract text from a PDF file"
+        },
+        {
+          "name": "pdf_info",
+          "description": "Get PDF metadata and page count"
+        },
+        {
+          "name": "pdf_merge",
+          "description": "Merge multiple PDFs into one"
+        },
+        {
+          "name": "pdf_split",
+          "description": "Extract pages from a PDF"
+        }
+      ],
+      "permissions": {
+        "network": [],
+        "filesystem": [
+          "./"
+        ],
+        "env": [],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-pdf",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-pdf"
+    },
+    {
+      "name": "@openvole/paw-prospect",
+      "slug": "paw-prospect",
+      "version": "0.1.0",
+      "description": "Prospect & lead enrichment from a company website URL — structured profile + embedded dashboard panel.",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "prospect_lookup",
+          "description": "Fetch a company website (URL or bare domain) and return a structured profile: name, tagline, description, logo, social links, detected tech, location, and key pages."
+        },
+        {
+          "name": "prospect_history",
+          "description": "Recent prospect lookups (for the panel). action: 'list' | 'clear'."
+        }
+      ],
+      "permissions": {
+        "network": [
+          "*"
+        ],
+        "filesystem": [],
+        "env": [
+          "VOLE_PROSPECT_DIR"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-prospect",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-prospect"
+    },
+    {
+      "name": "@openvole/paw-resend",
+      "slug": "paw-resend",
+      "version": "2.0.0",
+      "description": "Email sending powered by Resend",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "resend_send",
+          "description": "Send an email via Resend"
+        },
+        {
+          "name": "resend_send_html",
+          "description": "Send an HTML email via Resend"
+        },
+        {
+          "name": "resend_batch",
+          "description": "Send multiple emails in a batch"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "api.resend.com"
+        ],
+        "filesystem": [],
+        "env": [
+          "RESEND_API_KEY",
+          "RESEND_FROM"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-resend",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-resend"
+    },
+    {
+      "name": "@openvole/paw-scraper",
+      "slug": "paw-scraper",
+      "version": "2.0.0",
+      "description": "Extract structured data from web pages",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "scrape_page",
+          "description": "Fetch a URL and extract structured data (text, links, tables, headings)"
+        },
+        {
+          "name": "scrape_links",
+          "description": "Extract all links from a web page"
+        },
+        {
+          "name": "scrape_tables",
+          "description": "Extract HTML tables as structured data"
+        },
+        {
+          "name": "scrape_selector",
+          "description": "Extract content matching a CSS selector"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "*"
+        ],
+        "filesystem": [],
+        "env": [],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-scraper",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-scraper"
+    },
+    {
+      "name": "@openvole/paw-session",
+      "slug": "paw-session",
+      "version": "2.2.1",
+      "description": "Session management — per-session transcript and metadata tracking",
+      "category": "infrastructure",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "session_history",
+          "description": "Read conversation history for a session"
+        },
+        {
+          "name": "session_clear",
+          "description": "Clear a session's transcript and metadata"
+        },
+        {
+          "name": "session_list",
+          "description": "List all active sessions with their last activity time"
+        }
+      ],
+      "permissions": {
+        "network": [],
+        "filesystem": [],
+        "env": [
+          "VOLE_SESSION_DIR",
+          "VOLE_SESSION_TTL"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-session",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-session"
+    },
+    {
+      "name": "@openvole/paw-shell",
+      "slug": "paw-shell",
+      "version": "2.0.0",
+      "description": "Paw for executing shell commands with safety restrictions",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "shell_exec",
+          "description": "Run a shell command synchronously and return its output"
+        },
+        {
+          "name": "shell_exec_background",
+          "description": "Run a shell command in the background and return a process ID"
+        },
+        {
+          "name": "shell_status",
+          "description": "Check the status of a background process by its process ID"
+        },
+        {
+          "name": "shell_kill",
+          "description": "Kill a background process by its process ID"
+        }
+      ],
+      "permissions": {
+        "network": [],
+        "filesystem": [
+          "/app/workspace"
+        ],
+        "env": [
+          "VOLE_SHELL_ALLOWED_DIRS"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-shell",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-shell"
+    },
+    {
+      "name": "@openvole/paw-slack",
+      "slug": "paw-slack",
+      "version": "2.0.0",
+      "description": "Slack bot channel for OpenVole",
+      "category": "channel",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "slack_send",
+          "description": "Send a message to a Slack channel"
+        },
+        {
+          "name": "slack_reply",
+          "description": "Reply in a Slack thread"
+        },
+        {
+          "name": "slack_get_channel",
+          "description": "Get information about a Slack channel"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "slack.com"
+        ],
+        "filesystem": [],
+        "env": [
+          "SLACK_BOT_TOKEN",
+          "SLACK_SIGNING_SECRET",
+          "SLACK_APP_TOKEN",
+          "SLACK_ALLOW_FROM"
+        ],
+        "listen": [
+          3002
+        ]
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-slack",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-slack"
+    },
+    {
+      "name": "@openvole/paw-social",
+      "slug": "paw-social",
+      "version": "2.0.0",
+      "description": "Post to Twitter/X and LinkedIn",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "twitter_post",
+          "description": "Post a tweet to Twitter/X"
+        },
+        {
+          "name": "twitter_search",
+          "description": "Search tweets on Twitter/X"
+        },
+        {
+          "name": "linkedin_post",
+          "description": "Post to LinkedIn"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "api.twitter.com",
+          "api.x.com",
+          "api.linkedin.com"
+        ],
+        "filesystem": [],
+        "env": [
+          "TWITTER_BEARER_TOKEN",
+          "TWITTER_API_KEY",
+          "TWITTER_API_SECRET",
+          "TWITTER_ACCESS_TOKEN",
+          "TWITTER_ACCESS_SECRET",
+          "LINKEDIN_ACCESS_TOKEN"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-social",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-social"
+    },
+    {
+      "name": "@openvole/paw-stt",
+      "slug": "paw-stt",
+      "version": "2.0.0",
+      "description": "Speech-to-text tool Paw using OpenAI Whisper",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "stt_transcribe",
+          "description": "Transcribe an audio file to text using OpenAI Whisper"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "api.openai.com"
+        ],
+        "filesystem": [],
+        "env": [
+          "OPENAI_API_KEY",
+          "OPENAI_STT_MODEL"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-stt",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-stt"
+    },
+    {
+      "name": "@openvole/paw-telegram",
+      "slug": "paw-telegram",
+      "version": "2.1.0",
+      "description": "Telegram bot channel for OpenVole",
+      "category": "channel",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "telegram_send",
+          "description": "Send a message to a Telegram chat"
+        },
+        {
+          "name": "telegram_reply",
+          "description": "Reply to a specific message in a Telegram chat"
+        },
+        {
+          "name": "telegram_get_chat",
+          "description": "Get information about a Telegram chat"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "api.telegram.org"
+        ],
+        "filesystem": [],
+        "env": [
+          "TELEGRAM_BOT_TOKEN",
+          "TELEGRAM_ALLOW_FROM"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-telegram",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-telegram"
+    },
+    {
+      "name": "@openvole/paw-tts",
+      "slug": "paw-tts",
+      "version": "2.0.0",
+      "description": "Text-to-speech tool Paw supporting ElevenLabs and OpenAI TTS",
+      "category": "tool",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "tts_speak",
+          "description": "Convert text to speech and save as audio file"
+        },
+        {
+          "name": "tts_list_voices",
+          "description": "List available voices for the active TTS provider"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "api.elevenlabs.io",
+          "api.openai.com"
+        ],
+        "filesystem": [],
+        "env": [
+          "VOLE_TTS_PROVIDER",
+          "ELEVENLABS_API_KEY",
+          "ELEVENLABS_VOICE_ID",
+          "OPENAI_API_KEY",
+          "OPENAI_TTS_MODEL",
+          "OPENAI_TTS_VOICE"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-tts",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-tts"
+    },
+    {
+      "name": "@openvole/paw-voice-call",
+      "slug": "paw-voice-call",
+      "version": "2.0.0",
+      "description": "Voice call channel for OpenVole via Twilio",
+      "category": "channel",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "initiate_call",
+          "description": "Initiate an outbound phone call"
+        },
+        {
+          "name": "end_call",
+          "description": "End an active phone call"
+        },
+        {
+          "name": "list_calls",
+          "description": "List active phone calls"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "api.twilio.com",
+          "*.twilio.com"
+        ],
+        "filesystem": [],
+        "env": [
+          "TWILIO_ACCOUNT_SID",
+          "TWILIO_AUTH_TOKEN",
+          "TWILIO_PHONE_NUMBER",
+          "VOICE_CALL_WEBHOOK_URL",
+          "VOICE_CALL_PORT"
+        ],
+        "listen": [
+          3979
+        ]
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-voice-call",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-voice-call"
+    },
+    {
+      "name": "@openvole/paw-whatsapp",
+      "slug": "paw-whatsapp",
+      "version": "2.0.0",
+      "description": "WhatsApp messaging channel for OpenVole",
+      "category": "channel",
+      "brain": false,
+      "transport": "ipc",
+      "published": true,
+      "tools": [
+        {
+          "name": "whatsapp_send",
+          "description": "Send a message via WhatsApp"
+        },
+        {
+          "name": "whatsapp_get_chat",
+          "description": "Get information about a WhatsApp chat"
+        }
+      ],
+      "permissions": {
+        "network": [
+          "web.whatsapp.com",
+          "*.whatsapp.net"
+        ],
+        "filesystem": [],
+        "env": [
+          "WHATSAPP_SESSION_DATA",
+          "WHATSAPP_ALLOW_FROM"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-whatsapp",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-whatsapp"
+    },
+    {
+      "name": "@openvole/paw-xai",
+      "slug": "paw-xai",
+      "version": "2.0.0",
+      "description": "Brain Paw powered by xAI Grok models",
+      "category": "brain",
+      "brain": true,
+      "transport": "ipc",
+      "published": true,
+      "tools": [],
+      "permissions": {
+        "network": [
+          "api.x.ai"
+        ],
+        "filesystem": [],
+        "env": [
+          "XAI_API_KEY",
+          "XAI_MODEL"
+        ],
+        "listen": []
+      },
+      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-xai",
+      "npm": "https://www.npmjs.com/package/@openvole/paw-xai"
+    }
+  ]
+}

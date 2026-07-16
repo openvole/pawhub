@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paws — capabilities for OpenVole agents</title>
+<meta name="description" content="The official Paw registry for OpenVole. 36 sandboxed plugins — brains, tools, channels, infrastructure — that give your agents capabilities. Install with one command.">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="Paws — capabilities for OpenVole agents">
+<meta property="og:description" content="36 sandboxed plugins that give your agents capabilities: brains, tools, channels, infrastructure. Each runs in its own process with explicit permissions.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://openvole.com/vole.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="https://openvole.com/vole.png">
+<link rel="preload" href="INDEX.json" as="fetch" crossorigin>
+<style>
+  :root{
+    --bg:#0d1117; --surface:#161b22; --raised:#1c232d; --border:#222a35;
+    --text:#e6edf3; --dim:#8b949e; --faint:#6e7681;
+    --accent:#58a6ff; --accent2:#3fb950; --accent3:#d2a8ff; --accent4:#f0883e;
+    --radius:12px;
+    --ease:cubic-bezier(.2,.7,.3,1);
+    --cat-tool:#58a6ff; --cat-brain:#d2a8ff; --cat-channel:#f0883e; --cat-infrastructure:#3fb950;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--text); line-height:1.6;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    /* two soft spotlights behind the hero — pure CSS, no image weight */
+    background-image:
+      radial-gradient(60rem 30rem at 15% -8%, rgba(88,166,255,.10), transparent 60%),
+      radial-gradient(50rem 26rem at 90% -4%, rgba(210,168,255,.09), transparent 60%);
+    background-repeat:no-repeat;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 1.25rem}
+
+  /* ── header ─────────────────────────────────────────── */
+  .top{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 0;font-size:.9rem}
+  .top .brand{display:flex;align-items:center;gap:.55rem;color:var(--text);font-weight:600}
+  .top .brand img{width:26px;height:26px;border-radius:7px}
+  .top nav{display:flex;gap:1.1rem;color:var(--dim)}
+  .top nav a{color:var(--dim)}
+  .top nav a:hover{color:var(--text);text-decoration:none}
+
+  header.hero{padding:3rem 0 2rem;text-align:center}
+  h1{font-size:clamp(2.2rem,6vw,3.4rem);font-weight:800;letter-spacing:-.03em;line-height:1.1}
+  h1 .grad{
+    background:linear-gradient(100deg,var(--accent) 10%,var(--accent3) 60%,var(--accent4));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .tagline{color:var(--dim);font-size:1.1rem;max-width:56ch;margin:.9rem auto 0}
+  .stats{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-top:1.6rem}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:999px;
+    padding:.3rem .9rem;font-size:.85rem;color:var(--dim)}
+  .stat b{color:var(--text);font-weight:700}
+
+  /* ── toolbar ────────────────────────────────────────── */
+  .toolbar{position:sticky;top:0;z-index:5;padding:.85rem 0;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(12px); border-bottom:1px solid transparent;
+    transition:border-color .2s}
+  .toolbar.stuck{border-bottom-color:var(--border)}
+  .search{position:relative;display:block}
+  .search input{
+    width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;
+    color:var(--text);font:inherit;font-size:.95rem;padding:.7rem 5.5rem .7rem 2.5rem;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .search input:focus{outline:none;border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(88,166,255,.15)}
+  .search input::placeholder{color:var(--faint)}
+  .search .icon{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);
+    color:var(--faint);pointer-events:none;line-height:1}
+  .search kbd{position:absolute;right:.7rem;top:50%;transform:translateY(-50%);
+    color:var(--faint);font-size:.7rem;border:1px solid var(--border);border-radius:5px;
+    padding:.05rem .35rem;background:var(--bg);pointer-events:none}
+  .search input:not(:placeholder-shown) ~ kbd{opacity:0}
+
+  .chips{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.7rem}
+  .chip{
+    background:var(--surface);border:1px solid var(--border);color:var(--dim);
+    border-radius:999px;padding:.28rem .8rem;font-size:.82rem;font:inherit;font-size:.82rem;
+    cursor:pointer;transition:color .18s,border-color .18s,background .18s;
+    display:inline-flex;align-items:center;gap:.4rem;
+  }
+  .chip:hover{color:var(--text);border-color:var(--faint)}
+  .chip .n{color:var(--faint);font-size:.72rem}
+  .chip[aria-pressed="true"]{color:var(--text);border-color:currentColor;background:var(--raised)}
+  .chip[aria-pressed="true"] .swatch{transform:scale(1.35)}
+  .swatch{width:7px;height:7px;border-radius:2px;background:var(--c,var(--dim));
+    transition:transform .18s var(--ease)}
+  .chip[data-cat="tool"]{--c:var(--cat-tool)}
+  .chip[data-cat="brain"]{--c:var(--cat-brain)}
+  .chip[data-cat="channel"]{--c:var(--cat-channel)}
+  .chip[data-cat="infrastructure"]{--c:var(--cat-infrastructure)}
+  .chip[aria-pressed="true"][data-cat="tool"]{color:var(--cat-tool)}
+  .chip[aria-pressed="true"][data-cat="brain"]{color:var(--cat-brain)}
+  .chip[aria-pressed="true"][data-cat="channel"]{color:var(--cat-channel)}
+  .chip[aria-pressed="true"][data-cat="infrastructure"]{color:var(--cat-infrastructure)}
+
+  .count{color:var(--faint);font-size:.8rem;margin-top:.6rem;min-height:1.2em}
+
+  /* ── cards ──────────────────────────────────────────── */
+  /* 320px floor: a card narrower than this cannot fit `vole paw add @openvole/paw-filesystem`
+     at any legible size, so the grid must never produce one. */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));
+    gap:.9rem;padding:1rem 0 3rem;align-items:start}
+  .card{
+    --c:var(--cat-tool);
+    position:relative;background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:1rem 1.05rem 0.9rem;
+    display:flex;flex-direction:column;gap:.55rem;
+    container-type:inline-size;
+    transition:transform .22s var(--ease), border-color .22s, box-shadow .22s;
+  }
+  /* the category tint only appears on hover — colour as feedback, not noise */
+  .card::before{
+    content:"";position:absolute;inset:0;border-radius:var(--radius);pointer-events:none;
+    background:radial-gradient(28rem 12rem at 50% -30%, var(--c), transparent 70%);
+    opacity:0;transition:opacity .25s;
+  }
+  .card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--c) 55%,var(--border));
+    box-shadow:0 10px 30px -12px rgba(0,0,0,.65)}
+  .card:hover::before{opacity:.07}
+  .card[data-cat="tool"]{--c:var(--cat-tool)}
+  .card[data-cat="brain"]{--c:var(--cat-brain)}
+  .card[data-cat="channel"]{--c:var(--cat-channel)}
+  .card[data-cat="infrastructure"]{--c:var(--cat-infrastructure)}
+
+  /* .card sets display:flex, which overrides the UA stylesheet's [hidden]{display:none} —
+     without this rule the filter sets the attribute and nothing disappears. */
+  .card[hidden]{display:none}
+  .card-top{display:flex;align-items:center;gap:.5rem}
+  .badge{font-size:.65rem;text-transform:uppercase;letter-spacing:.07em;font-weight:700;
+    color:var(--c);border:1px solid color-mix(in srgb,var(--c) 40%,transparent);
+    background:color-mix(in srgb,var(--c) 10%,transparent);
+    border-radius:999px;padding:.05rem .45rem}
+  .ver{margin-left:auto;color:var(--faint);font-size:.72rem;font-family:ui-monospace,monospace}
+  .card h3{font-size:1.02rem;font-weight:650;letter-spacing:-.01em;line-height:1.3}
+  .card p{color:var(--dim);font-size:.87rem;flex:1}
+
+  .tools{display:flex;gap:.3rem;flex-wrap:wrap}
+  .tool{font-family:ui-monospace,monospace;font-size:.7rem;color:var(--dim);
+    background:var(--raised);border:1px solid var(--border);border-radius:6px;padding:.05rem .4rem;
+    max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tool.more{color:var(--faint);background:transparent;border-style:dashed;cursor:default}
+
+  .card-foot{display:flex;align-items:center;gap:.5rem;margin-top:.2rem;
+    border-top:1px solid var(--border);padding-top:.6rem}
+  .install{flex:1;min-width:0;display:flex;align-items:center;gap:.35rem;
+    background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.3rem .45rem}
+  /* Sized so the longest command (@openvole/paw-filesystem, 37ch) fits without ellipsis.
+     The card, not the viewport, is the constraint — at the 2-column breakpoint cards get
+     narrow enough to clip, so step the command down by card width rather than screen width. */
+  .install code{font-size:.67rem;color:var(--accent2);overflow:hidden;text-overflow:ellipsis;
+    white-space:nowrap;flex:1}
+  @container (max-width: 330px){ .install code{font-size:.62rem} }
+  .copy{background:transparent;border:0;color:var(--faint);cursor:pointer;font:inherit;
+    font-size:.7rem;padding:.1rem .2rem;border-radius:4px;transition:color .15s;flex:none}
+  .copy:hover{color:var(--text)}
+  .copy.done{color:var(--accent2)}
+  .src{color:var(--faint);font-size:.72rem;flex:none}
+  .src:hover{color:var(--text);text-decoration:none}
+  .source-only{flex:1;color:var(--faint);font-size:.72rem;font-style:italic}
+
+  .empty{grid-column:1/-1;text-align:center;color:var(--dim);padding:3.5rem 1rem;
+    border:1px dashed var(--border);border-radius:var(--radius)}
+  .empty b{color:var(--text)}
+  .skeleton{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    height:170px;animation:pulse 1.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.45}50%{opacity:.8}}
+
+  footer{border-top:1px solid var(--border);padding:2rem 0 3rem;color:var(--faint);
+    font-size:.85rem;display:flex;gap:1rem;justify-content:space-between;flex-wrap:wrap}
+  footer a{color:var(--dim)}
+
+  /* ── motion ─────────────────────────────────────────── */
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .card.reveal{animation:rise .5s var(--ease) both;animation-delay:var(--d,0ms)}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before{animation:none!important;transition:none!important}
+    .card:hover{transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="brand" href="https://openvole.com"><img src="https://openvole.com/vole.png" alt="">OpenVole</a>
+    <nav>
+      <a href="https://openvole.com/openvole/paws">Docs</a>
+      <a href="https://hub.openvole.com">Skills</a>
+      <a href="https://github.com/openvole/pawhub">GitHub</a>
+    </nav>
+  </div>
+
+  <header class="hero">
+    <h1>Every agent needs <span class="grad">paws</span></h1>
+    <p class="tagline">A Paw is a capability: a brain, a tool, a channel, a piece of infrastructure.
+    Each runs in its own sandboxed process with explicit permissions — nothing executes on trust alone.</p>
+    <div class="stats" id="stats" aria-live="polite"></div>
+  </header>
+
+  <main>
+    <div class="toolbar" id="toolbar">
+      <label class="search">
+        <span class="icon" aria-hidden="true">⌕</span>
+        <input id="q" type="search" placeholder="Search paws, tools, permissions…"
+               autocomplete="off" spellcheck="false" aria-label="Search paws">
+        <kbd>/</kbd>
+      </label>
+      <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+      <p class="count" id="count" role="status"></p>
+    </div>
+
+    <div class="grid" id="grid">
+      <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+      <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+    </div>
+    <noscript>
+      <p class="empty">This registry is rendered from
+      <a href="INDEX.json">INDEX.json</a> — open it directly to browse every paw without JavaScript.</p>
+    </noscript>
+  </main>
+
+  <footer>
+    <span>🐹 Paws for <a href="https://openvole.com">OpenVole</a> — the self-hosted agent OS</span>
+    <span><a href="https://github.com/openvole/pawhub/blob/main/CONTRIBUTING.md">Write a paw</a> ·
+          <a href="INDEX.json">INDEX.json</a></span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var CATS = ['tool', 'brain', 'channel', 'infrastructure'];
+  var grid = document.getElementById('grid');
+  var qEl = document.getElementById('q');
+  var chipsEl = document.getElementById('chips');
+  var countEl = document.getElementById('count');
+  var paws = [];
+  var cards = [];            // rendered once; filtering only toggles hidden
+  var cat = '';
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML }
+  function short(name) { return String(name).replace(/^@openvole\//, '') }
+  function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's') }
+
+  // Everything a card exposes is searchable — name, blurb, tool names, permissions.
+  function haystack(p) {
+    return [
+      p.name, p.slug, p.description, p.category,
+      p.tools.map(function (t) { return t.name + ' ' + t.description }).join(' '),
+      (p.permissions.network || []).join(' '),
+      (p.permissions.env || []).join(' '),
+    ].join(' ').toLowerCase();
+  }
+
+  function cardHtml(p) {
+    var toolChips = p.tools.slice(0, 3).map(function (t) {
+      return '<span class="tool" title="' + esc(t.description) + '">' + esc(t.name) + '</span>';
+    }).join('');
+    if (p.tools.length > 3) toolChips += '<span class="tool more">+' + (p.tools.length - 3) + '</span>';
+    if (!p.tools.length && p.brain) toolChips = '<span class="tool more">implements think()</span>';
+
+    var foot = p.published
+      ? '<span class="install"><code>vole paw add ' + esc(p.name) + '</code>'
+        + '<button class="copy" type="button" data-cmd="vole paw add ' + esc(p.name) + '"'
+        + ' aria-label="Copy install command for ' + esc(short(p.name)) + '">copy</button></span>'
+      : '<span class="source-only">source only — not published</span>';
+
+    return '<article class="card" data-cat="' + esc(p.category) + '">'
+      + '<div class="card-top"><span class="badge">' + esc(p.category) + '</span>'
+      + '<span class="ver">v' + esc(p.version) + '</span>'
+      + '<a class="src" href="' + esc(p.repository) + '" rel="noopener">source ↗</a></div>'
+      + '<h3>' + esc(short(p.name)) + '</h3>'
+      + '<p>' + esc(p.description) + '</p>'
+      + '<div class="tools">' + toolChips + '</div>'
+      + '<div class="card-foot">' + foot + '</div>'
+      + '</article>';
+  }
+
+  function renderChips() {
+    var counts = {};
+    paws.forEach(function (p) { counts[p.category] = (counts[p.category] || 0) + 1 });
+    var html = '<button class="chip" type="button" data-cat="" aria-pressed="true">All'
+      + '<span class="n">' + paws.length + '</span></button>';
+    CATS.forEach(function (c) {
+      if (!counts[c]) return;
+      html += '<button class="chip" type="button" data-cat="' + c + '" aria-pressed="false">'
+        + '<span class="swatch" aria-hidden="true"></span>' + c
+        + '<span class="n">' + counts[c] + '</span></button>';
+    });
+    chipsEl.innerHTML = html;
+  }
+
+  function apply() {
+    var q = qEl.value.trim().toLowerCase();
+    var shown = 0;
+    cards.forEach(function (c) {
+      var ok = (!cat || c.p.category === cat) && (!q || c.hay.indexOf(q) !== -1);
+      c.el.hidden = !ok;
+      if (ok) shown++;
+    });
+    var empty = document.getElementById('none');
+    if (!shown && !empty) {
+      grid.insertAdjacentHTML('beforeend',
+        '<p class="empty" id="none">No paws match <b>' + esc(qEl.value) + '</b>.<br>'
+        + 'Try a tool name like <b>browser_navigate</b>, or a service like <b>slack</b>.</p>');
+    } else if (shown && empty) {
+      empty.remove();
+    }
+    countEl.textContent = shown === paws.length
+      ? plural(paws.length, 'paw')
+      : shown + ' of ' + paws.length + ' paws';
+    syncUrl(q);
+  }
+
+  // Filtering is a discrete DOM change; let the browser tween it where supported.
+  function transition(fn) {
+    if (reduce || !document.startViewTransition) { fn(); return }
+    document.startViewTransition(fn);
+  }
+
+  function syncUrl(q) {
+    var u = new URL(location.href);
+    q ? u.searchParams.set('q', q) : u.searchParams.delete('q');
+    cat ? u.searchParams.set('cat', cat) : u.searchParams.delete('cat');
+    history.replaceState(null, '', u);
+  }
+
+  function reveal() {
+    if (reduce || !('IntersectionObserver' in window)) return;
+    var i = 0;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        // stagger within a viewport-batch, then reset so later rows don't accumulate delay
+        e.target.style.setProperty('--d', (i++ % 8) * 45 + 'ms');
+        e.target.classList.add('reveal');
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '80px' });
+    cards.forEach(function (c) { io.observe(c.el) });
+  }
+
+  function render() {
+    grid.innerHTML = paws.map(cardHtml).join('');
+    cards = Array.prototype.map.call(grid.children, function (el, i) {
+      return { el: el, p: paws[i], hay: haystack(paws[i]) };
+    });
+    reveal();
+  }
+
+  fetch('INDEX.json', { cache: 'default' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json() })
+    .then(function (d) {
+      paws = (d.paws || []).slice().sort(function (a, b) {
+        // published first, then richest first — the useful stuff leads
+        if (a.published !== b.published) return a.published ? -1 : 1;
+        return b.tools.length - a.tools.length || a.name.localeCompare(b.name);
+      });
+      var c = d.counts || {};
+      document.getElementById('stats').innerHTML =
+        '<span class="stat"><b>' + (c.paws || paws.length) + '</b> paws</span>'
+        + '<span class="stat"><b>' + (c.tools || 0) + '</b> tools</span>'
+        + '<span class="stat"><b>' + CATS.length + '</b> categories</span>'
+        + '<span class="stat">sandboxed &amp; signed</span>';
+      renderChips();
+      render();
+
+      // restore a shared/bookmarked filter
+      var u = new URL(location.href);
+      var q0 = u.searchParams.get('q'), c0 = u.searchParams.get('cat');
+      if (q0) qEl.value = q0;
+      if (c0 && CATS.indexOf(c0) !== -1) {
+        cat = c0;
+        Array.prototype.forEach.call(chipsEl.children, function (b) {
+          b.setAttribute('aria-pressed', String(b.dataset.cat === cat));
+        });
+      }
+      apply();
+    })
+    .catch(function () {
+      grid.innerHTML = '<p class="empty">Could not load the registry.<br>'
+        + 'Browse it directly: <a href="INDEX.json">INDEX.json</a></p>';
+    });
+
+  qEl.addEventListener('input', apply);
+  chipsEl.addEventListener('click', function (e) {
+    var b = e.target.closest('.chip');
+    if (!b) return;
+    cat = b.dataset.cat;
+    Array.prototype.forEach.call(chipsEl.children, function (x) {
+      x.setAttribute('aria-pressed', String(x === b));
+    });
+    transition(apply);
+  });
+  grid.addEventListener('click', function (e) {
+    var b = e.target.closest('.copy');
+    if (!b) return;
+    navigator.clipboard.writeText(b.dataset.cmd).then(function () {
+      b.textContent = 'copied'; b.classList.add('done');
+      setTimeout(function () { b.textContent = 'copy'; b.classList.remove('done') }, 1400);
+    });
+  });
+  // '/' to search, Escape to clear — muscle memory from every registry site
+  addEventListener('keydown', function (e) {
+    if (e.key === '/' && document.activeElement !== qEl) { e.preventDefault(); qEl.focus() }
+    if (e.key === 'Escape' && document.activeElement === qEl) { qEl.value = ''; apply(); qEl.blur() }
+  });
+  var tb = document.getElementById('toolbar');
+  new IntersectionObserver(function (es) { tb.classList.toggle('stuck', es[0].intersectionRatio < 1) },
+    { threshold: [1] }).observe(tb);
+})();
+</script>
+</body>
+</html>
