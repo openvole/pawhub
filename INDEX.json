@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-16T06:40:50.065Z",
+  "updatedAt": "2026-07-24T09:10:06.905Z",
   "counts": {
     "paws": 35,
     "tools": 106
@@ -8,8 +8,8 @@
     {
       "name": "@openvole/paw-brain",
       "slug": "paw-brain",
-      "version": "2.4.0",
-      "description": "Unified Brain Paw — multi-provider LLM adapter (Anthropic, OpenAI, Gemini, Ollama, xAI, local Claude Code CLI, mock)",
+      "version": "2.5.0",
+      "description": "Unified Brain Paw — multi-provider LLM adapter (Anthropic, OpenAI, Gemini, Ollama, xAI, local Claude Code / Antigravity CLI, mock)",
       "category": "brain",
       "brain": true,
       "transport": "ipc",

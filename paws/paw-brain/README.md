@@ -12,6 +12,7 @@ Unified Brain Paw for OpenVole — a single paw that supports multiple LLM provi
 | xAI | `xai` | `XAI_API_KEY` | `XAI_MODEL` | `grok-3` |
 | Ollama | `ollama` | — | `OLLAMA_MODEL` | `qwen3:latest` |
 | Claude Code | `claude-code` | — (uses CLI auth) | `CLAUDE_CODE_MODEL` | CLI default |
+| Antigravity | `antigravity` (`agy`) | — (uses CLI auth) | `ANTIGRAVITY_MODEL` | CLI default |
 | Mock | `mock` | — | `BRAIN_MODEL` | `mock` |
 
 ## Configuration
@@ -131,6 +132,36 @@ BRAIN_PROVIDER=claude-code
 | `CLAUDE_CODE_EXPOSE_TOOLS` | Set to `1` to let Claude Code call OpenVole's own tools over MCP | — |
 
 When `CLAUDE_CODE_EXPOSE_TOOLS=1`, the brain connects Claude Code to the space's MCP endpoint (`/mcp/<space>`) so it can call OpenVole tools directly.
+
+## Antigravity provider
+
+Use the local, already-authenticated [Antigravity](https://antigravity.google) CLI (`agy`, the successor to the Gemini CLI) as the brain — no API key, it uses the CLI's own auth:
+
+```env
+BRAIN_PROVIDER=antigravity
+```
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `ANTIGRAVITY_CMD` | Path or name of the CLI binary | `agy` |
+| `ANTIGRAVITY_MODEL` | Model to request (see `agy models`) | CLI default |
+| `ANTIGRAVITY_AGENT` | Agent to run the session as | — |
+| `ANTIGRAVITY_EFFORT` | Reasoning effort: `low` \| `medium` \| `high` | — |
+| `ANTIGRAVITY_MODE` | Execution mode: `accept-edits` \| `plan` | — |
+| `ANTIGRAVITY_SKIP_PERMISSIONS` | `1` to auto-approve tool permission prompts | — |
+| `ANTIGRAVITY_SANDBOX` | `1` to run with terminal restrictions | — |
+| `ANTIGRAVITY_ADD_DIR` | Comma-separated dirs to add to the workspace | — |
+| `ANTIGRAVITY_CWD` | Working directory for the CLI | — |
+| `ANTIGRAVITY_ARGS` | Extra CLI arguments | — |
+| `ANTIGRAVITY_TIMEOUT_MS` | Per-call timeout in milliseconds | `600000` |
+| `ANTIGRAVITY_MAX_PROMPT_BYTES` | Refuse prompts larger than this | `512000` |
+
+`agy models` lists what your account can reach (`gemini-3.x`, `claude-*`, `gpt-oss-*`).
+
+Two differences from the Claude Code provider worth knowing:
+
+- **No MCP equivalent.** `agy` has no `--mcp-config`, so OpenVole's own tools cannot be exposed to it. Like `claude-code` without `CLAUDE_CODE_EXPOSE_TOOLS`, it runs its own agent loop with its own tools and returns a final text answer (no OpenVole tool calls).
+- **The prompt is passed as a command-line argument** (`--print <prompt>`), not on stdin, so it is bounded by `ARG_MAX` (~1 MB). Oversized prompts fail fast with a clear error rather than a bare `E2BIG` — lower `loop.maxContextTokens` or raise `ANTIGRAVITY_MAX_PROMPT_BYTES`.
 
 ## Cost tracking
 

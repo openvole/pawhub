@@ -4,38 +4,10 @@ import { join } from 'node:path'
 import { execa } from 'execa'
 import type { AgentMessage, ToolSummary } from '@openvole/paw-sdk'
 import type { BrainProvider, ThinkResult } from '../types.js'
+import { renderPrompt } from './cli-prompt.js'
 
 /** Expand a leading ~ to the user's home directory. */
 const expandHome = (p: string): string => (p === '~' || p.startsWith('~/') ? p.replace(/^~/, homedir()) : p)
-
-/** Flatten the OpenVole conversation into a single prompt for the Claude Code CLI. */
-function renderPrompt(
-	systemPrompt: string,
-	messages: AgentMessage[],
-	sessionHistory?: string,
-	mcpNote?: string,
-): string {
-	const parts: string[] = []
-	if (systemPrompt) parts.push(systemPrompt)
-	if (mcpNote) parts.push(mcpNote)
-	if (sessionHistory) parts.push(`# Earlier conversation\n${sessionHistory}`)
-	const transcript = messages
-		.map((m) => {
-			const who =
-				m.role === 'user'
-					? 'User'
-					: m.role === 'brain'
-						? 'Assistant'
-						: m.role === 'tool_result'
-							? 'Tool result'
-							: String(m.role)
-			const content = typeof m.content === 'string' ? m.content : JSON.stringify(m.content)
-			return `${who}: ${content}`
-		})
-		.join('\n\n')
-	parts.push(`# Conversation\n${transcript}\n\nAssistant:`)
-	return parts.join('\n\n---\n\n')
-}
 
 let cachedMcpConfigPath: string | null | undefined
 

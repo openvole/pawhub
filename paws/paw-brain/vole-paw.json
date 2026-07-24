@@ -1,7 +1,7 @@
 {
   "name": "@openvole/paw-brain",
   "version": "2.3.0",
-  "description": "Unified Brain Paw — multi-provider LLM adapter (Anthropic, OpenAI, Gemini, Ollama, xAI, local Claude Code CLI, mock)",
+  "description": "Unified Brain Paw — multi-provider LLM adapter (Anthropic, OpenAI, Gemini, Ollama, xAI, local Claude Code / Antigravity CLI, mock)",
   "entry": "./dist/index.js",
   "brain": true,
   "category": "brain",

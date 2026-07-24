@@ -116,6 +116,14 @@ async function createProvider(
 			const model = process.env.CLAUDE_CODE_MODEL ?? process.env.BRAIN_MODEL ?? brainModel ?? 'claude-code'
 			return new ClaudeCodeProvider(model)
 		}
+		case 'antigravity':
+		case 'agy':
+		case 'ag': {
+			const { AntigravityProvider } = await import('./providers/antigravity.js')
+			const model =
+				process.env.ANTIGRAVITY_MODEL ?? process.env.BRAIN_MODEL ?? brainModel ?? 'antigravity'
+			return new AntigravityProvider(model)
+		}
 		case 'mock':
 		case 'echo':
 		case 'test': {
@@ -136,7 +144,7 @@ async function createProvider(
 		}
 		default:
 			throw new Error(
-				`Unknown brain provider: "${name}". Supported: anthropic, openai, gemini, xai, ollama, claude-code, mock`,
+				`Unknown brain provider: "${name}". Supported: anthropic, openai, gemini, xai, ollama, claude-code, antigravity, mock`,
 			)
 	}
 }
