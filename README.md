@@ -18,7 +18,7 @@
 
 | Package | Description | npm |
 |---------|-------------|-----|
-| `@openvole/paw-brain` | **Unified multi-provider brain** — Anthropic, OpenAI, Gemini, xAI, Ollama, local Claude Code CLI, and a mock provider, selected with `BRAIN_PROVIDER` | [![npm](https://img.shields.io/npm/v/@openvole/paw-brain)](https://www.npmjs.com/package/@openvole/paw-brain) |
+| `@openvole/paw-brain` | **Unified multi-provider brain** — Anthropic, OpenAI, Gemini, xAI, Ollama, local Claude Code / Antigravity CLIs, and a mock provider, selected with `BRAIN_PROVIDER` | [![npm](https://img.shields.io/npm/v/@openvole/paw-brain)](https://www.npmjs.com/package/@openvole/paw-brain) |
 
 > One brain paw covers every provider. The old single-provider paws (`paw-ollama`, `paw-claude`, `paw-openai`, `paw-gemini`, `paw-xai`) are deprecated — use `paw-brain`.
 
