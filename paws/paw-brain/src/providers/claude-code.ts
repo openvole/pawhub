@@ -97,11 +97,36 @@ export class ClaudeCodeProvider implements BrainProvider {
 
 		const raw = res.stdout || ''
 		let text = raw
+		let envelope: Record<string, unknown> | null = null
 		try {
-			const j = JSON.parse(raw) as { result?: string; is_error?: boolean }
-			if (typeof j.result === 'string') text = j.result
+			envelope = JSON.parse(raw) as Record<string, unknown>
 		} catch {
 			/* not JSON — use raw stdout */
+		}
+		if (envelope) {
+			const result = envelope.result
+			if (typeof result === 'string' && result.trim()) {
+				text = result
+			} else {
+				// The CLI answered with an envelope carrying no result — it errored or was cut
+				// off (e.g. is_error + stop_reason "tool_use" after hitting a turn/time limit).
+				// Fail loudly: returning `raw` here dumped the whole JSON blob into the chat as
+				// if the agent had written it, which is worse than a visible failure.
+				const detail = [
+					typeof envelope.subtype === 'string' ? envelope.subtype : null,
+					typeof envelope.stop_reason === 'string' ? `stop_reason: ${envelope.stop_reason}` : null,
+					typeof envelope.num_turns === 'number' ? `${envelope.num_turns} turns` : null,
+					typeof envelope.duration_api_ms === 'number'
+						? `${Math.round(envelope.duration_api_ms / 1000)}s`
+						: null,
+				]
+					.filter(Boolean)
+					.join(', ')
+				throw new Error(
+					`claude-code returned no result${detail ? ` (${detail})` : ''} — the CLI stopped before answering. ` +
+						'Usually a turn or time limit on a long tool-using run: retry, narrow the task, or raise CLAUDE_CODE_TIMEOUT_MS.',
+				)
+			}
 		}
 		if (res.exitCode !== 0 && !text) {
 			throw new Error(
