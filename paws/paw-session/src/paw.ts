@@ -236,8 +236,26 @@ export const paw: PawDefinition = {
 		// Subscribe to task completion to record brain responses in session
 		const { createIpcTransport } = await import('@openvole/paw-sdk')
 		const busTransport = createIpcTransport()
-		busTransport.subscribe(['task:completed'])
+		busTransport.subscribe(['task:completed', 'channel:message'])
 		busTransport.onBusEvent(async (event, data) => {
+			// A channel Paw moved a human-facing message (agent → human on `out`, human → agent on
+			// `in`). Those never pass through the brain loop, so nothing else would record them —
+			// and an agent-initiated question that isn't in the transcript is invisible in chat.
+			if (event === 'channel:message' && store) {
+				const msg = data as {
+					channel?: string
+					dir?: 'in' | 'out'
+					sessionId?: string
+					text?: string
+					from?: string
+				}
+				if (msg.sessionId && msg.text) {
+					// Roles the dashboard already renders: 'brain' as the agent, 'user' as the human.
+					const role = msg.dir === 'in' ? 'user' : 'brain'
+					await store.appendMessage(msg.sessionId, role, msg.text)
+				}
+				return
+			}
 			if (event === 'task:completed' && store) {
 				const taskData = data as { result?: string; sessionId?: string }
 				// Record against the COMPLETED task's own session, not the global

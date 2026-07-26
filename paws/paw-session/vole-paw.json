@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-session",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "Session management — per-session transcript and metadata tracking",
   "entry": "./dist/index.js",
   "brain": false,
@@ -10,7 +10,8 @@
   "tools": [
     { "name": "session_history", "description": "Read conversation history for a session" },
     { "name": "session_clear", "description": "Clear a session's transcript and metadata" },
-    { "name": "session_list", "description": "List all active sessions with their last activity time" }
+    { "name": "session_list", "description": "List all active sessions with their last activity time" },
+    { "name": "session_append", "description": "Append a message to a session transcript (for messages that bypass the brain loop)" }
   ],
   "permissions": {
     "network": [],

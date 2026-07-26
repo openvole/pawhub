@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-07-26T07:42:07.288Z",
+  "updatedAt": "2026-07-26T15:35:48.578Z",
   "counts": {
     "paws": 35,
-    "tools": 106
+    "tools": 107
   },
   "paws": [
     {
@@ -996,7 +996,7 @@
     {
       "name": "@openvole/paw-session",
       "slug": "paw-session",
-      "version": "2.2.1",
+      "version": "2.3.0",
       "description": "Session management — per-session transcript and metadata tracking",
       "category": "infrastructure",
       "brain": false,
@@ -1014,6 +1014,10 @@
         {
           "name": "session_list",
           "description": "List all active sessions with their last activity time"
+        },
+        {
+          "name": "session_append",
+          "description": "Append a message to a session transcript (for messages that bypass the brain loop)"
         }
       ],
       "permissions": {
