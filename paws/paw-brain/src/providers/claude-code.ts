@@ -66,7 +66,9 @@ export class ClaudeCodeProvider implements BrainProvider {
 		sessionHistory?: string,
 	): Promise<ThinkResult> {
 		const cmd = process.env.CLAUDE_CODE_CMD || 'claude'
-		const timeout = Number(process.env.CLAUDE_CODE_TIMEOUT_MS) || 600_000
+		// 30 minutes: this is a runaway guard, not a work cap. Agentic coding runs routinely
+		// pass 10 minutes, and core puts no timeout on `think` at all.
+		const timeout = Number(process.env.CLAUDE_CODE_TIMEOUT_MS) || 1_800_000
 		const cwd = process.env.CLAUDE_CODE_CWD || undefined
 
 		const args = ['-p', '--output-format', 'json']
@@ -94,6 +96,17 @@ export class ClaudeCodeProvider implements BrainProvider {
 			: undefined
 		const prompt = renderPrompt(systemPrompt, messages, sessionHistory, mcpNote)
 		const res = await execa(cmd, args, { input: prompt, cwd, timeout, reject: false, env, extendEnv: true })
+
+		// A killed run must be reported as a timeout, not as whatever half-written output
+		// happened to be on stdout when the signal landed. `think` has no IPC timeout above
+		// us (core treats inference as unbounded), so this is the only clock in the path.
+		if ((res as { timedOut?: boolean }).timedOut) {
+			throw new Error(
+				`claude-code timed out after ${Math.round(timeout / 1000)}s and was killed. ` +
+					'Long agentic runs are normal — raise CLAUDE_CODE_TIMEOUT_MS for this agent ' +
+					'(e.g. 3600000 for an hour).',
+			)
+		}
 
 		const raw = res.stdout || ''
 		let text = raw

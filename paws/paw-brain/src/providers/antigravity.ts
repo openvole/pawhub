@@ -43,7 +43,8 @@ export class AntigravityProvider implements BrainProvider {
 		sessionHistory?: string,
 	): Promise<ThinkResult> {
 		const cmd = process.env.ANTIGRAVITY_CMD || 'agy'
-		const timeout = Number(process.env.ANTIGRAVITY_TIMEOUT_MS) || 600_000
+		// 30 minutes — same reasoning as claude-code: a runaway guard, not a work cap.
+		const timeout = Number(process.env.ANTIGRAVITY_TIMEOUT_MS) || 1_800_000
 		const cwd = process.env.ANTIGRAVITY_CWD || undefined
 
 		const prompt = renderPrompt(systemPrompt, messages, sessionHistory)
@@ -78,6 +79,13 @@ export class AntigravityProvider implements BrainProvider {
 		if (process.env.ANTIGRAVITY_ARGS) args.push(...process.env.ANTIGRAVITY_ARGS.split(' ').filter(Boolean))
 
 		const res = await execa(cmd, args, { cwd, timeout, reject: false })
+
+		if ((res as { timedOut?: boolean }).timedOut) {
+			throw new Error(
+				`antigravity timed out after ${Math.round(timeout / 1000)}s and was killed. ` +
+					'Raise ANTIGRAVITY_TIMEOUT_MS for long runs.',
+			)
+		}
 
 		// `agy --print` writes the answer as plain text (no JSON envelope).
 		const text = (res.stdout || '').trim()

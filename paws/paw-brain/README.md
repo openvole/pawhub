@@ -128,8 +128,13 @@ BRAIN_PROVIDER=claude-code
 | `CLAUDE_CODE_MODEL` | Model to request from the CLI | CLI default |
 | `CLAUDE_CODE_PERMISSION_MODE` | Permission mode passed to the CLI | — |
 | `CLAUDE_CODE_ARGS` | Extra CLI arguments | — |
-| `CLAUDE_CODE_TIMEOUT_MS` | Per-call timeout in milliseconds | — |
+| `CLAUDE_CODE_TIMEOUT_MS` | Per-call timeout in ms — covers the whole agentic run | `1800000` (30 min) |
 | `CLAUDE_CODE_EXPOSE_TOOLS` | Set to `1` to let Claude Code call OpenVole's own tools over MCP | — |
+
+> **Timeouts.** OpenVole puts *no* limit on thinking — `think` is exempt from the IPC timeout — so this
+> per-call timeout is the only clock, and it covers the entire agentic run (all of Claude Code's own
+> turns and tool use). Raise it for long work: `CLAUDE_CODE_TIMEOUT_MS=3600000`. On expiry the CLI is
+> killed and the task fails with a timeout error.
 
 When `CLAUDE_CODE_EXPOSE_TOOLS=1`, the brain connects Claude Code to the space's MCP endpoint (`/mcp/<space>`) so it can call OpenVole tools directly.
 
@@ -153,7 +158,7 @@ BRAIN_PROVIDER=antigravity
 | `ANTIGRAVITY_ADD_DIR` | Comma-separated dirs to add to the workspace | — |
 | `ANTIGRAVITY_CWD` | Working directory for the CLI | — |
 | `ANTIGRAVITY_ARGS` | Extra CLI arguments | — |
-| `ANTIGRAVITY_TIMEOUT_MS` | Per-call timeout in milliseconds | `600000` |
+| `ANTIGRAVITY_TIMEOUT_MS` | Per-call timeout in ms | `1800000` (30 min) |
 | `ANTIGRAVITY_MAX_PROMPT_BYTES` | Refuse prompts larger than this | `512000` |
 
 `agy models` lists what your account can reach (`gemini-3.x`, `claude-*`, `gpt-oss-*`).
