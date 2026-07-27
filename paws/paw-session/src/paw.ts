@@ -248,7 +248,11 @@ export const paw: PawDefinition = {
 					sessionId?: string
 					text?: string
 					from?: string
+					stored?: boolean
 				}
+				// `stored` means the emitter already wrote it (core's chat_send appends directly, so a
+				// message is never lost to an older paw-session). Writing it again would double it.
+				if (msg.stored) return
 				if (msg.sessionId && msg.text) {
 					// Roles the dashboard already renders: 'brain' as the agent, 'user' as the human.
 					const role = msg.dir === 'in' ? 'user' : 'brain'
