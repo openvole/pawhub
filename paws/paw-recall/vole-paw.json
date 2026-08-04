@@ -1,0 +1,33 @@
+{
+  "name": "@openvole/paw-recall",
+  "version": "0.1.0",
+  "description": "Memory with a memory model — typed records, hybrid retrieval with decay, pluggable storage backends",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "category": "infrastructure",
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "memory_search", "description": "Hybrid search over memory records (semantic + keyword + recency + importance)" },
+    { "name": "memory_write", "description": "Store a memory record (episodic, semantic, procedural, or entity)" },
+    { "name": "memory_read", "description": "Read a record by id, or the curated digest" },
+    { "name": "memory_list", "description": "List recent memory records with filters" },
+    { "name": "memory_forget", "description": "Archive a memory record (excluded from recall, never deleted)" },
+    { "name": "memory_pin", "description": "Pin or unpin a record — pinned records never decay and always appear in the digest" }
+  ],
+  "permissions": {
+    "network": ["*"],
+    "listen": [],
+    "filesystem": [],
+    "env": [
+      "VOLE_MEMORY_BACKEND",
+      "VOLE_MEMORY_DIR",
+      "VOLE_EMBEDDING_PROVIDER",
+      "VOLE_EMBEDDING_MODEL",
+      "VOLE_EMBEDDING_DIMS",
+      "OLLAMA_HOST",
+      "OPENAI_API_KEY",
+      "GEMINI_API_KEY"
+    ]
+  }
+}

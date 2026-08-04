@@ -60,6 +60,7 @@
 
 | Package | Description | npm |
 |---------|-------------|-----|
+| `@openvole/paw-recall` | **Memory with a memory model** — typed records (episodic/semantic/procedural/entity), hybrid retrieval with decay, pluggable backends. Successor to paw-memory; migrates its data automatically | [![npm](https://img.shields.io/npm/v/@openvole/paw-recall)](https://www.npmjs.com/package/@openvole/paw-recall) |
 | `@openvole/paw-memory` | Persistent memory — hybrid semantic + keyword search | [![npm](https://img.shields.io/npm/v/@openvole/paw-memory)](https://www.npmjs.com/package/@openvole/paw-memory) |
 | `@openvole/paw-session` | Session/conversation management | [![npm](https://img.shields.io/npm/v/@openvole/paw-session)](https://www.npmjs.com/package/@openvole/paw-session) |
 | `@openvole/paw-compact` | Context compaction — heuristic + optional LLM summarization | [![npm](https://img.shields.io/npm/v/@openvole/paw-compact)](https://www.npmjs.com/package/@openvole/paw-compact) |
