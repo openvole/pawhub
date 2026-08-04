@@ -35,27 +35,74 @@ function parseTranscriptLine(line: string): SessionMessage | null {
 	return { ts: m[1], role: m[2], content: m[3] }
 }
 
-/** Validates sessionId to prevent path traversal */
+/**
+ * Session ids are used verbatim as directory names, and channel sessions carry a colon
+ * (`volenet:<peer>`, `telegram:<chat>`, `dashboard:<stamp>`). `:` is reserved on Windows, so on
+ * NTFS the mkdir failed with EINVAL and every colon-named session silently lost its transcript —
+ * chat looked fine live and came back empty. Names are therefore percent-encoded: reversible,
+ * identical for ids that were already safe (`dashboard` stays `dashboard`), and legal on every
+ * platform. Windows is the binding constraint: <>:"|?*, path separators, control characters, a
+ * trailing dot or space, and the DOS device names are all off-limits. `%` itself is escaped so
+ * decoding is unambiguous.
+ */
+const RESERVED_CHARS = /[<>:"/\\|?*%\u0000-\u001f]/g
+const WINDOWS_DEVICE_NAMES = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i
+
+function hexEscape(c: string): string {
+	return `%${c.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')}`
+}
+
+/** Directory name for a session id. A fixed point: encode(decode(name)) === name. */
+function encodeSessionDir(sessionId: string): string {
+	let name = sessionId.replace(RESERVED_CHARS, hexEscape)
+	// Windows silently strips a trailing dot or space, colliding otherwise-distinct names.
+	name = name.replace(/[. ]$/, hexEscape)
+	if (WINDOWS_DEVICE_NAMES.test(name)) name = hexEscape(name[0]) + name.slice(1)
+	return name
+}
+
+/** Inverse of encodeSessionDir. Sequences that are not valid %XX pass through untouched. */
+function decodeSessionDir(name: string): string {
+	return name.replace(/%([0-9a-fA-F]{2})/g, (_, h) => String.fromCharCode(Number.parseInt(h, 16)))
+}
+
+/** Reject ids that could escape the store regardless of encoding. */
 function sanitizeSessionId(sessionId: string): string {
-	// Strip any path separators or parent directory references
-	const sanitized = sessionId.replace(/[/\\]/g, '_').replace(/\.\./g, '_')
-	if (!sanitized || sanitized === '.' || sanitized === '..') {
+	if (!sessionId || sessionId === '.' || sessionId === '..') {
 		throw new Error(`Invalid session ID: "${sessionId}"`)
 	}
-	return sanitized
+	return sessionId
 }
 
 export class SessionStore {
 	constructor(private baseDir: string) {}
 
-	/** Ensure the base sessions directory exists */
+	/** Ensure the base sessions directory exists and normalize pre-encoding directory names */
 	async init(): Promise<void> {
 		await fs.mkdir(this.baseDir, { recursive: true })
+		// Directories created before names were encoded (`volenet:x` on POSIX) are renamed to
+		// their canonical form so the same store reads them on every platform. Canonical names
+		// are fixed points of encode∘decode, so this pass converges and never re-renames.
+		try {
+			const entries = await fs.readdir(this.baseDir, { withFileTypes: true })
+			for (const entry of entries) {
+				if (!entry.isDirectory()) continue
+				const canonical = encodeSessionDir(decodeSessionDir(entry.name))
+				if (canonical === entry.name) continue
+				await fs
+					.rename(path.join(this.baseDir, entry.name), path.join(this.baseDir, canonical))
+					.catch(() => {
+						/* target already exists or the dir is locked — leave the legacy dir in place */
+					})
+			}
+		} catch {
+			/* base dir unreadable — the first append will surface the real error */
+		}
 	}
 
 	/** Get the directory path for a session */
 	private sessionDir(sessionId: string): string {
-		return path.join(this.baseDir, sanitizeSessionId(sessionId))
+		return path.join(this.baseDir, encodeSessionDir(sanitizeSessionId(sessionId)))
 	}
 
 	/** Get the transcript path for a session */
@@ -157,8 +204,11 @@ export class SessionStore {
 
 			for (const entry of entries) {
 				if (!entry.isDirectory()) continue
-				const meta = await this.getMeta(entry.name)
-				sessions.push({ sessionId: entry.name, meta })
+				// The directory name is the ENCODED id — decode before handing it back, and read
+				// meta via the decoded id so the lookup re-encodes to this same directory.
+				const sessionId = decodeSessionDir(entry.name)
+				const meta = await this.getMeta(sessionId)
+				sessions.push({ sessionId, meta })
 			}
 
 			return sessions
