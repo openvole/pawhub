@@ -137,10 +137,19 @@ export class SessionStore {
 		await fs.mkdir(dir, { recursive: true })
 
 		const now = new Date()
+		// 200k is a safety net against pathological single messages (a tool dumping megabytes),
+		// not a display budget — the dashboard renders transcript entries in full, and prompt
+		// injection is bounded separately at bootstrap. When the net does catch something, say so
+		// in the text instead of ending mid-sentence.
+		const MAX_ENTRY_CHARS = 200_000
+		const bounded =
+			content.length > MAX_ENTRY_CHARS
+				? `${content.substring(0, MAX_ENTRY_CHARS)}\n… [truncated: message was ${content.length} chars]`
+				: content
 		const entry = `${JSON.stringify({
 			ts: now.toISOString(),
 			role,
-			content: content.substring(0, 4000),
+			content: bounded,
 		})}\n`
 
 		await fs.appendFile(this.transcriptPath(sessionId), entry, 'utf-8')

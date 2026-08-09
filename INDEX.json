@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T07:55:42.958Z",
+  "updatedAt": "2026-08-09T08:11:33.510Z",
   "counts": {
     "paws": 35,
     "tools": 107
@@ -996,7 +996,7 @@
     {
       "name": "@openvole/paw-session",
       "slug": "paw-session",
-      "version": "2.3.1",
+      "version": "2.3.2",
       "description": "Session management — per-session transcript and metadata tracking",
       "category": "infrastructure",
       "brain": false,

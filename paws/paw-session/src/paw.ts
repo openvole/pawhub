@@ -269,11 +269,12 @@ export const paw: PawDefinition = {
 				// that don't send sessionId on the event.
 				const sessionId = taskData.sessionId ?? currentSessionId
 				if (sessionId && taskData.result) {
-					const content =
-						taskData.result.length > 1000
-							? taskData.result.substring(0, 1000) + '... [truncated]'
-							: taskData.result
-					await store.appendMessage(sessionId, 'brain', content)
+					// Store the WHOLE reply. This transcript is what the dashboard re-renders when
+					// you navigate back to a chat — a 1000-char cap here meant a long answer looked
+					// complete live and came back "[truncated]" on reload. Bounding what goes into
+					// the PROMPT is a different job, done by pruneSessionHistory at bootstrap; the
+					// store applies its own generous safety cap for pathological sizes.
+					await store.appendMessage(sessionId, 'brain', taskData.result)
 				}
 			}
 		})
