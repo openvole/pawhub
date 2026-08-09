@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-08-09T07:55:08.312Z",
+  "updatedAt": "2026-08-09T07:55:42.958Z",
   "counts": {
-    "paws": 36,
-    "tools": 113
+    "paws": 35,
+    "tools": 107
   },
   "paws": [
     {
@@ -917,61 +917,6 @@
       },
       "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-prospect",
       "npm": "https://www.npmjs.com/package/@openvole/paw-prospect"
-    },
-    {
-      "name": "@openvole/paw-recall",
-      "slug": "paw-recall",
-      "version": "0.1.0",
-      "description": "Memory with a memory model — typed records, hybrid retrieval with decay, pluggable storage backends",
-      "category": "infrastructure",
-      "brain": false,
-      "transport": "ipc",
-      "published": true,
-      "tools": [
-        {
-          "name": "memory_search",
-          "description": "Hybrid search over memory records (semantic + keyword + recency + importance)"
-        },
-        {
-          "name": "memory_write",
-          "description": "Store a memory record (episodic, semantic, procedural, or entity)"
-        },
-        {
-          "name": "memory_read",
-          "description": "Read a record by id, or the curated digest"
-        },
-        {
-          "name": "memory_list",
-          "description": "List recent memory records with filters"
-        },
-        {
-          "name": "memory_forget",
-          "description": "Archive a memory record (excluded from recall, never deleted)"
-        },
-        {
-          "name": "memory_pin",
-          "description": "Pin or unpin a record — pinned records never decay and always appear in the digest"
-        }
-      ],
-      "permissions": {
-        "network": [
-          "*"
-        ],
-        "filesystem": [],
-        "env": [
-          "VOLE_MEMORY_BACKEND",
-          "VOLE_MEMORY_DIR",
-          "VOLE_EMBEDDING_PROVIDER",
-          "VOLE_EMBEDDING_MODEL",
-          "VOLE_EMBEDDING_DIMS",
-          "OLLAMA_HOST",
-          "OPENAI_API_KEY",
-          "GEMINI_API_KEY"
-        ],
-        "listen": []
-      },
-      "repository": "https://github.com/openvole/pawhub/tree/main/paws/paw-recall",
-      "npm": "https://www.npmjs.com/package/@openvole/paw-recall"
     },
     {
       "name": "@openvole/paw-resend",
