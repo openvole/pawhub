@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-04T18:16:29.437Z",
+  "updatedAt": "2026-08-09T07:55:08.312Z",
   "counts": {
     "paws": 36,
     "tools": 113
@@ -332,7 +332,7 @@
     {
       "name": "@openvole/paw-database",
       "slug": "paw-database",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Query PostgreSQL, MySQL, and SQLite databases",
       "category": "tool",
       "brain": false,
@@ -713,7 +713,7 @@
     {
       "name": "@openvole/paw-memory",
       "slug": "paw-memory",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Persistent memory — markdown-based long-term and daily memory",
       "category": "infrastructure",
       "brain": false,

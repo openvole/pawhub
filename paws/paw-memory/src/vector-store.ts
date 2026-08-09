@@ -1,5 +1,7 @@
 /**
- * Vector store using better-sqlite3 + sqlite-vec for KNN search + FTS5 for BM25.
+ * Vector store using node:sqlite (Node's builtin, no native addon) — FTS5 for BM25, brute-force
+ * cosine for KNN. better-sqlite3 was dropped after its 11.x line failed to compile against new
+ * Node releases (V8 API removals), which broke `npm install` for every new agent.
  * Hybrid search with Reciprocal Rank Fusion (RRF).
  *
  * Design: Vector index is disposable — markdown files are source of truth.
@@ -132,7 +134,7 @@ function rrfFuse(
 }
 
 export class VectorStore {
-	private db: any // better-sqlite3 Database (dynamically imported)
+	private db: any // node:sqlite DatabaseSync (dynamically imported)
 	private embedder: EmbeddingProvider
 	private dbPath: string
 	private initialized = false
@@ -145,9 +147,20 @@ export class VectorStore {
 	async init(): Promise<void> {
 		if (this.initialized) return
 
-		const { default: Database } = await import('better-sqlite3')
-		this.db = new Database(this.dbPath)
-		this.db.pragma('journal_mode = WAL')
+		// Builtin since Node 22.5 — on older Nodes this throws and the caller degrades to
+		// BM25-only search with a clear message.
+		let DatabaseSync: new (path: string) => unknown
+		try {
+			// Computed specifier: esbuild (via tsup, target node20) rewrites a literal
+			// 'node:sqlite' to bare 'sqlite' — but this builtin exists ONLY under the node:
+			// prefix, so the bundle broke at runtime. A non-literal string passes through.
+			const builtinSqlite = ['node', 'sqlite'].join(':')
+			;({ DatabaseSync } = await import(builtinSqlite))
+		} catch {
+			throw new Error('vector search needs Node >= 22.5 (node:sqlite)')
+		}
+		this.db = new DatabaseSync(this.dbPath)
+		this.db.exec('PRAGMA journal_mode = WAL')
 
 		// Create tables
 		this.db.exec(`
@@ -223,7 +236,9 @@ export class VectorStore {
 			'INSERT INTO chunks_fts (content, id, path, source) VALUES (?, ?, ?, ?)',
 		)
 
-		const insertAll = this.db.transaction(() => {
+		// node:sqlite has no transaction() helper — plain BEGIN/COMMIT with rollback on failure.
+		this.db.exec('BEGIN')
+		try {
 			for (let i = 0; i < chunks.length; i++) {
 				const chunk = chunks[i]
 				const id = `${path}:${chunk.startLine}-${chunk.endLine}`
@@ -238,8 +253,11 @@ export class VectorStore {
 				)
 				insertFts.run(chunk.content, id, chunk.path, chunk.source)
 			}
-		})
-		insertAll()
+			this.db.exec('COMMIT')
+		} catch (err) {
+			this.db.exec('ROLLBACK')
+			throw err
+		}
 
 		// Update file tracking
 		this.db.prepare(

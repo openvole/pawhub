@@ -10,11 +10,24 @@ interface DatabaseClient {
 	close(): void
 }
 
-/** SQLite client using better-sqlite3 */
+/** SQLite client using node:sqlite — Node's builtin, no native addon to compile. */
 async function createSQLiteClient(dbPath: string): Promise<DatabaseClient> {
-	const { default: Database } = await import('better-sqlite3')
-	const db = new Database(dbPath)
-	db.pragma('journal_mode = WAL')
+	let DatabaseSync: new (path: string) => any
+	try {
+		// Computed specifier: esbuild (via tsup, target node20) rewrites a literal
+			// 'node:sqlite' to bare 'sqlite' — but this builtin exists ONLY under the node:
+			// prefix, so the bundle broke at runtime. A non-literal string passes through.
+			const builtinSqlite = ['node', 'sqlite'].join(':')
+			;({ DatabaseSync } = await import(builtinSqlite))
+	} catch {
+		throw new Error(
+			'SQLite support needs Node >= 22.5 (node:sqlite). Postgres and MySQL connections are unaffected.',
+		)
+	}
+	// Accept both a bare path and a sqlite:// URL — DATABASE_URL conventions vary and a
+	// scheme-prefixed path otherwise reaches sqlite verbatim ("unable to open database file").
+	const db = new DatabaseSync(dbPath.replace(/^sqlite:\/\/|^sqlite:/, ''))
+	db.exec('PRAGMA journal_mode = WAL')
 
 	return {
 		type: 'sqlite',
@@ -178,18 +191,22 @@ export const paw: PawDefinition = {
 			name: 'db_query',
 			description: 'Execute a read-only SQL query and return results as rows. Use for SELECT statements.',
 			parameters: z.object({
-				sql: z.string().describe('SQL query to execute (SELECT only)'),
+				sql: z.string().describe('SQL query to execute (SELECT only) — use ? placeholders with params'),
+				params: z
+					.array(z.union([z.string(), z.number(), z.null()]))
+					.optional()
+					.describe('Bind values for ? placeholders — always prefer these over string interpolation'),
 				limit: z.number().optional().describe('Max rows to return (default: 100)'),
 			}),
 			async execute(params) {
-				const { sql, limit } = params as { sql: string; limit?: number }
+				const { sql, params: bind, limit } = params as { sql: string; params?: unknown[]; limit?: number }
 				const upper = sql.trim().toUpperCase()
 				if (!upper.startsWith('SELECT') && !upper.startsWith('WITH') && !upper.startsWith('EXPLAIN')) {
 					return { ok: false, error: 'db_query only accepts SELECT/WITH/EXPLAIN statements. Use db_execute for writes.' }
 				}
 				const client = await getClient()
 				const limitedSql = limit ? `${sql} LIMIT ${limit}` : `${sql} LIMIT 100`
-				const result = await client.query(limitedSql)
+				const result = await client.query(limitedSql, bind)
 				return { ok: true, rows: result.rows, rowCount: result.rowCount }
 			},
 		},
@@ -207,15 +224,19 @@ export const paw: PawDefinition = {
 			name: 'db_execute',
 			description: 'Execute a write SQL statement (INSERT, UPDATE, DELETE, CREATE, ALTER). Blocked if VOLE_DB_READONLY=true.',
 			parameters: z.object({
-				sql: z.string().describe('SQL statement to execute'),
+				sql: z.string().describe('SQL statement to execute — use ? placeholders with params'),
+				params: z
+					.array(z.union([z.string(), z.number(), z.null()]))
+					.optional()
+					.describe('Bind values for ? placeholders — always prefer these over string interpolation'),
 			}),
 			async execute(params) {
 				if (readOnly) {
 					return { ok: false, error: 'Database is in read-only mode (VOLE_DB_READONLY=true)' }
 				}
-				const { sql } = params as { sql: string }
+				const { sql, params: bind } = params as { sql: string; params?: unknown[] }
 				const client = await getClient()
-				const result = await client.execute(sql)
+				const result = await client.execute(sql, bind)
 				return { ok: true, changes: result.changes }
 			},
 		},

@@ -1,7 +1,7 @@
 {
   "name": "@openvole/paw-memory",
-  "version": "2.0.0",
-  "description": "Persistent memory Paw for OpenVole — markdown-based long-term and daily memory",
+  "version": "2.1.0",
+  "description": "Persistent memory Paw for OpenVole \u2014 markdown-based long-term and daily memory",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -15,11 +15,8 @@
     "build": "tsup",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "better-sqlite3": "^11.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.0",
     "@types/node": "^22.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.0",
