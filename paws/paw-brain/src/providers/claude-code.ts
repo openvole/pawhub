@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { execa } from 'execa'
 import type { AgentMessage, ToolSummary } from '@openvole/paw-sdk'
 import type { BrainProvider, ThinkResult } from '../types.js'
-import { renderPrompt } from './cli-prompt.js'
+import { HOST_NOTE, renderPrompt } from './cli-prompt.js'
 
 /** Expand a leading ~ to the user's home directory. */
 const expandHome = (p: string): string => (p === '~' || p.startsWith('~/') ? p.replace(/^~/, homedir()) : p)
@@ -69,7 +69,10 @@ export class ClaudeCodeProvider implements BrainProvider {
 		// 30 minutes: this is a runaway guard, not a work cap. Agentic coding runs routinely
 		// pass 10 minutes, and core puts no timeout on `think` at all.
 		const timeout = Number(process.env.CLAUDE_CODE_TIMEOUT_MS) || 1_800_000
-		const cwd = process.env.CLAUDE_CODE_CWD || undefined
+		// The paw inherits the engine's cwd, which the control plane sets to the agent directory.
+		// Naming it rather than letting it be inherited: the CLI resolves every relative path and
+		// every `~` against this, so an accidental cwd puts an agent's work in somebody else's tree.
+		const cwd = process.env.CLAUDE_CODE_CWD || process.cwd()
 
 		const args = ['-p', '--output-format', 'json']
 		const model =
@@ -83,6 +86,11 @@ export class ClaudeCodeProvider implements BrainProvider {
 		const mcp = await mcpConfigPath()
 		if (mcp) args.push('--mcp-config', mcp, '--strict-mcp-config')
 
+		// The agent's own directory, so the CLI's file tools reach the workspace it is told to work
+		// in. Without it the CLI is scoped to wherever it was launched and quietly prefers $HOME —
+		// which is how one run's output landed in ~/.openvole instead of the agent's workspace.
+		args.push('--add-dir', cwd)
+
 		// `claude-ep` is just `CLAUDE_CONFIG_DIR=~/.claude-ep claude` — replicate via the child env.
 		const env: Record<string, string> = {}
 		if (process.env.CLAUDE_CODE_CONFIG_DIR)
@@ -91,10 +99,23 @@ export class ClaudeCodeProvider implements BrainProvider {
 		// Without this, models see bare tool names (agent_list) in the OpenVole prompt but the
 		// callable functions are prefixed (mcp__openvole__agent_list) — and may conclude the
 		// tools are unavailable instead of bridging the naming gap.
-		const mcpNote = mcp
-			? '# Tool naming\nEvery OpenVole tool named in these instructions is available to you as an MCP function prefixed `mcp__openvole__` — e.g. `agent_list` is callable as `mcp__openvole__agent_list`. Never claim an OpenVole tool is unavailable without checking for its prefixed form.\n\n# Memory\nThis agent\'s durable memory is OpenVole\'s memory system, NOT your own memory directory. When asked to remember, save, or recall something, use `mcp__openvole__memory_write` / `memory_read` / `memory_search` — other tools, dashboards, and synced peers only see memories stored there.'
-			: undefined
-		const prompt = renderPrompt(systemPrompt, messages, sessionHistory, mcpNote)
+		const notes = [HOST_NOTE]
+		if (mcp) {
+			notes.push(
+				'# Tool naming\nEvery OpenVole tool named in these instructions is available to you as an MCP function prefixed `mcp__openvole__` — e.g. `agent_list` is callable as `mcp__openvole__agent_list`. Never claim an OpenVole tool is unavailable without checking for its prefixed form.\n\n# Memory\nThis agent\'s durable memory is OpenVole\'s memory system, NOT your own memory directory. When asked to remember, save, or recall something, use `mcp__openvole__memory_write` / `memory_read` / `memory_search` — other tools, dashboards, and synced peers only see memories stored there.',
+			)
+		}
+
+		// The system prompt goes in as a *system* prompt.
+		//
+		// It used to ride in on stdin as the opening of the user message, which left the CLI's own
+		// system prompt as the only authoritative voice in the run: OpenVole's identity, workspace
+		// path and skills all arrived as advisory text a model is free to reason past. It did —
+		// agents introduced themselves as the CLI, went looking for OpenVole skills in the CLI's
+		// own skills directory, and wrote their output outside the workspace they had been given.
+		args.push('--append-system-prompt', [systemPrompt, ...notes].join('\n\n---\n\n'))
+
+		const prompt = renderPrompt('', messages, sessionHistory)
 		const res = await execa(cmd, args, { input: prompt, cwd, timeout, reject: false, env, extendEnv: true })
 
 		// A killed run must be reported as a timeout, not as whatever half-written output

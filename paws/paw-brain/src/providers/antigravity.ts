@@ -2,7 +2,7 @@ import { homedir } from 'node:os'
 import { execa } from 'execa'
 import type { AgentMessage, ToolSummary } from '@openvole/paw-sdk'
 import type { BrainProvider, ThinkResult } from '../types.js'
-import { renderPrompt } from './cli-prompt.js'
+import { HOST_NOTE, renderPrompt } from './cli-prompt.js'
 
 /** Expand a leading ~ to the user's home directory. */
 const expandHome = (p: string): string => (p === '~' || p.startsWith('~/') ? p.replace(/^~/, homedir()) : p)
@@ -45,9 +45,11 @@ export class AntigravityProvider implements BrainProvider {
 		const cmd = process.env.ANTIGRAVITY_CMD || 'agy'
 		// 30 minutes — same reasoning as claude-code: a runaway guard, not a work cap.
 		const timeout = Number(process.env.ANTIGRAVITY_TIMEOUT_MS) || 1_800_000
-		const cwd = process.env.ANTIGRAVITY_CWD || undefined
+		// Inherit the engine's cwd (the agent directory) explicitly rather than by accident — the
+		// CLI resolves every relative path against it.
+		const cwd = process.env.ANTIGRAVITY_CWD || process.cwd()
 
-		const prompt = renderPrompt(systemPrompt, messages, sessionHistory)
+		const prompt = renderPrompt(systemPrompt, messages, sessionHistory, HOST_NOTE)
 		const maxBytes = Number(process.env.ANTIGRAVITY_MAX_PROMPT_BYTES) || DEFAULT_MAX_PROMPT_BYTES
 		const bytes = Buffer.byteLength(prompt, 'utf8')
 		if (bytes > maxBytes) {
