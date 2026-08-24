@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-session",
-  "version": "2.3.2",
+  "version": "2.4.0",
   "description": "Session management Paw for OpenVole \u2014 per-session transcript and metadata",
   "type": "module",
   "main": "./dist/index.js",

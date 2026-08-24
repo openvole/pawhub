@@ -218,7 +218,13 @@ export const paw: PawDefinition = {
 		},
 
 		async onObserve(result) {
-			if (!store || !currentSessionId) return
+			// Record against the run's OWN conversation, which core stamps on the result. A run with
+			// no conversation — a heartbeat, a task started from the board — has nothing to record
+			// into: its tool traffic is work, not chat. This used to fall back to `currentSessionId`
+			// and so pushed one run's tool calls into another run's transcript, where they were then
+			// replayed into that chat's prompt.
+			const sessionId = (result as { sessionId?: string }).sessionId
+			if (!store || !sessionId) return
 
 			// Record tool results — truncated to keep transcript manageable
 			const rawContent = result.success
@@ -228,7 +234,7 @@ export const paw: PawDefinition = {
 				: (result.error?.message ?? 'error')
 			const content = rawContent.length > 300 ? rawContent.substring(0, 300) + '...' : rawContent
 
-			await store.appendMessage(currentSessionId, `tool:${result.toolName}`, content)
+			await store.appendMessage(sessionId, `tool:${result.toolName}`, content)
 		},
 	},
 
@@ -261,13 +267,20 @@ export const paw: PawDefinition = {
 				return
 			}
 			if (event === 'task:completed' && store) {
-				const taskData = data as { result?: string; sessionId?: string }
-				// Record against the COMPLETED task's own session, not the global
-				// currentSessionId. Tasks interleave (a heartbeat or peer task can bootstrap
-				// between a chat's bootstrap and its completion), which would otherwise file the
-				// reply under the wrong session. Fall back to currentSessionId for older cores
-				// that don't send sessionId on the event.
-				const sessionId = taskData.sessionId ?? currentSessionId
+				const taskData = data as { result?: string; sessionId?: string; replyTo?: string }
+				// Where the completed task said its report goes — never ambient state.
+				//
+				// `replyTo` is core's reply address: the task's own session for a chat turn, the
+				// project's conversation for project work, the dashboard otherwise. It is set for
+				// every task, so a run with no conversation of its own still has somewhere to land.
+				//
+				// This used to fall back to the module-global `currentSessionId` when a task had no
+				// session. Tasks interleave — a heartbeat or a board run bootstraps between a chat's
+				// bootstrap and its completion — so the fallback filed reports against whichever
+				// conversation happened to run last. Correct until two runs overlap, then silently
+				// wrong, which is exactly how reports drifted into the general chat. A task that
+				// somehow reaches here with no address is dropped rather than misfiled.
+				const sessionId = taskData.replyTo ?? taskData.sessionId
 				if (sessionId && taskData.result) {
 					// Store the WHOLE reply. This transcript is what the dashboard re-renders when
 					// you navigate back to a chat — a 1000-char cap here meant a long answer looked
