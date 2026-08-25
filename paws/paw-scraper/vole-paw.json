@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-scraper",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Extract structured data from web pages",
   "entry": "./dist/index.js",
   "brain": false,

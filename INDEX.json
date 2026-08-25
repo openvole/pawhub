@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-24T21:16:07.176Z",
+  "updatedAt": "2026-08-25T07:44:52.309Z",
   "counts": {
     "paws": 35,
     "tools": 107
@@ -59,7 +59,7 @@
     {
       "name": "@openvole/paw-browser",
       "slug": "paw-browser",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Browser automation Paw using Puppeteer for web browsing, interaction, and screenshots",
       "category": "tool",
       "brain": false,
@@ -372,7 +372,7 @@
     {
       "name": "@openvole/paw-discord",
       "slug": "paw-discord",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Discord bot channel for OpenVole",
       "category": "channel",
       "brain": false,
@@ -410,7 +410,7 @@
     {
       "name": "@openvole/paw-email",
       "slug": "paw-email",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "description": "Paw for sending and reading emails via SMTP and IMAP",
       "category": "tool",
       "brain": false,
@@ -455,7 +455,7 @@
     {
       "name": "@openvole/paw-filesystem",
       "slug": "paw-filesystem",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Filesystem Paw for reading, writing, editing, and searching files",
       "category": "tool",
       "brain": false,
@@ -679,7 +679,7 @@
     {
       "name": "@openvole/paw-mcp",
       "slug": "paw-mcp",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Bridges MCP servers into OpenVole's tool registry",
       "category": "tool",
       "brain": false,
@@ -958,7 +958,7 @@
     {
       "name": "@openvole/paw-scraper",
       "slug": "paw-scraper",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Extract structured data from web pages",
       "category": "tool",
       "brain": false,
@@ -1306,7 +1306,7 @@
     {
       "name": "@openvole/paw-whatsapp",
       "slug": "paw-whatsapp",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "WhatsApp messaging channel for OpenVole",
       "category": "channel",
       "brain": false,

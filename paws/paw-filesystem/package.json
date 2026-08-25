@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-filesystem",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Filesystem Paw for reading, writing, editing, and searching files",
   "type": "module",
   "main": "./dist/index.js",
@@ -9,13 +9,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "glob": "^11.0.0"
+    "glob": "^11.1.0"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
-    "tsup": "^8.3.0",
-    "typescript": "^5.6.0",
-    "@openvole/paw-sdk": ">=2.0.0"
+    "@openvole/paw-sdk": ">=2.0.0",
+    "@types/node": "^22.20.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=20.0.0"

@@ -1,0 +1,21 @@
+{
+  "name": "@openvole/paw-hn",
+  "version": "0.1.0",
+  "description": "Hacker News reader — live front page, stories & threads, with an embedded dashboard panel.",
+  "entry": "./dist/index.js",
+  "brain": false,
+  "category": "tool",
+  "inProcess": false,
+  "transport": "ipc",
+  "tools": [
+    { "name": "hn_top", "description": "Hacker News stories for a feed (top/new/best/ask/show/job): title, points, comment count, url, domain, author, age." },
+    { "name": "hn_story", "description": "A single HN item with its top-level comments — for reading or summarizing a thread." }
+  ],
+  "panel": { "title": "Hacker News", "html": "panel.html" },
+  "permissions": {
+    "network": ["hacker-news.firebaseio.com"],
+    "listen": [],
+    "filesystem": [],
+    "env": []
+  }
+}
