@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-25T07:44:52.309Z",
+  "updatedAt": "2026-09-03T07:12:27.056Z",
   "counts": {
     "paws": 35,
     "tools": 107
@@ -107,7 +107,7 @@
     {
       "name": "@openvole/paw-calendar",
       "slug": "paw-calendar",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Paw for managing Google Calendar events",
       "category": "tool",
       "brain": false,
