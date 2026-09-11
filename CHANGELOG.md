@@ -1,5 +1,14 @@
 # Changelog
 
+## r2026-9-12
+
+### Security
+- **`@openvole/paw-image` 2.1.0** — upgraded `sharp` to `^0.35.4`, clearing two high-severity libheif advisories (GHSA-g89c-p67h-r497, GHSA-2jg2-4) present in the 0.33 line. Uses only `resize`/`composite`/`extract`/`metadata` and the format encoders, all unchanged across the minors. The range had to move in the package itself: a workspace override never leaves this repo, so without it nobody installing the paw would receive the fix.
+- Workspace `nodemailer` override raised to the patched `>=9.1.1 <10`, clearing a high-severity quadratic `addressparser` advisory and three moderates (file-access bypass, punycode allow-list bypass, RFC 5322 comment misparse). Capped inside the major `paw-email` declares, so what resolves here is what ships. Consumers were unaffected either way — its `^9.0.5` already resolves to the patched release.
+- Workspace `hono` overrides collapsed from three overlapping ranges to one `>=4.13.5` floor, clearing three moderate advisories reached through `@modelcontextprotocol/sdk`. Overlapping overrides for a single package are what resolves inconsistently.
+
+`pnpm audit` now reports zero vulnerabilities.
+
 ## r2026-6-21
 
 ### Changed
