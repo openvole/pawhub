@@ -750,7 +750,7 @@ export function getDashboardHtml(wsPort: number): string {
 
       <div class="config-section">
         <div class="config-section-header" onclick="toggleSection(this)">
-          <h3>Brain <a class="docs-link" href="https://openvole.com/openvole/paws-brain" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
+          <h3>Brain <a class="docs-link" href="https://openvole.github.io/openvole/paws-brain" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
           <span class="config-section-arrow">&#9660;</span>
         </div>
         <div class="config-section-body">
@@ -764,7 +764,7 @@ export function getDashboardHtml(wsPort: number): string {
 
       <div class="config-section">
         <div class="config-section-header" onclick="toggleSection(this)">
-          <h3>Heartbeat <a class="docs-link" href="https://openvole.com/openvole/configuration#heartbeat" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
+          <h3>Heartbeat <a class="docs-link" href="https://openvole.github.io/openvole/configuration#heartbeat" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
           <span class="config-section-arrow">&#9660;</span>
         </div>
         <div class="config-section-body">
@@ -792,7 +792,7 @@ export function getDashboardHtml(wsPort: number): string {
 
       <div class="config-section">
         <div class="config-section-header" onclick="toggleSection(this)">
-          <h3>Loop <a class="docs-link" href="https://openvole.com/openvole/configuration#loop" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
+          <h3>Loop <a class="docs-link" href="https://openvole.github.io/openvole/configuration#loop" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
           <span class="config-section-arrow">&#9660;</span>
         </div>
         <div class="config-section-body">
@@ -859,7 +859,7 @@ export function getDashboardHtml(wsPort: number): string {
 
       <div class="config-section">
         <div class="config-section-header" onclick="toggleSection(this)">
-          <h3>Security <a class="docs-link" href="https://openvole.com/openvole/configuration#security" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
+          <h3>Security <a class="docs-link" href="https://openvole.github.io/openvole/configuration#security" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
           <span class="config-section-arrow">&#9660;</span>
         </div>
         <div class="config-section-body">
@@ -885,7 +885,7 @@ export function getDashboardHtml(wsPort: number): string {
 
       <div class="config-section">
         <div class="config-section-header" onclick="toggleSection(this)">
-          <h3>Paws <a class="docs-link" href="https://openvole.com/openvole/paws" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
+          <h3>Paws <a class="docs-link" href="https://openvole.github.io/openvole/paws" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
           <span class="config-section-arrow">&#9660;</span>
         </div>
         <div class="config-section-body">
@@ -898,7 +898,7 @@ export function getDashboardHtml(wsPort: number): string {
 
       <div class="config-section">
         <div class="config-section-header" onclick="toggleSection(this)">
-          <h3>Tool Profiles <a class="docs-link" href="https://openvole.com/openvole/configuration#toolprofiles" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
+          <h3>Tool Profiles <a class="docs-link" href="https://openvole.github.io/openvole/configuration#toolprofiles" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
           <span class="config-section-arrow">&#9660;</span>
         </div>
         <div class="config-section-body">
@@ -911,7 +911,7 @@ export function getDashboardHtml(wsPort: number): string {
 
       <div class="config-section">
         <div class="config-section-header" onclick="toggleSection(this)">
-          <h3>Agents <a class="docs-link" href="https://openvole.com/openvole/configuration#agents" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
+          <h3>Agents <a class="docs-link" href="https://openvole.github.io/openvole/configuration#agents" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
           <span class="config-section-arrow">&#9660;</span>
         </div>
         <div class="config-section-body">
@@ -924,7 +924,7 @@ export function getDashboardHtml(wsPort: number): string {
 
       <div class="config-section">
         <div class="config-section-header" onclick="toggleSection(this)">
-          <h3>Net (VoleNet) <a class="docs-link" href="https://openvole.com/openvole/volenet" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
+          <h3>Net (VoleNet) <a class="docs-link" href="https://openvole.github.io/openvole/volenet" target="_blank" onclick="event.stopPropagation()">docs</a></h3>
           <span class="config-section-arrow">&#9660;</span>
         </div>
         <div class="config-section-body">
@@ -966,7 +966,7 @@ export function getDashboardHtml(wsPort: number): string {
     <span class="footer-sep">&middot;</span>
     <a href="https://www.npmjs.com/package/openvole" target="_blank">npm</a>
     <span class="footer-sep">&middot;</span>
-    <a href="https://openvole.com/openvole/" target="_blank">Docs</a>
+    <a href="https://openvole.github.io/openvole/" target="_blank">Docs</a>
     <span class="footer-sep">&middot;</span>
     <a href="https://volehub.dev" target="_blank">VoleHub</a>
     <span class="footer-sep">&middot;</span>

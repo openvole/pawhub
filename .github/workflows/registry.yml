@@ -1,6 +1,6 @@
 name: Registry
 
-# INDEX.json is what paw.openvole.com renders and what a registry client reads. If a paw is
+# INDEX.json is what openvole.github.io/pawhub renders and what a registry client reads. If a paw is
 # added or its manifest changes without regenerating it, the site silently omits the change —
 # so fail loudly instead. The generator uses only Node builtins; no install needed.
 on:
