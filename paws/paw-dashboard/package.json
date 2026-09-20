@@ -1,6 +1,6 @@
 {
   "name": "@openvole/paw-dashboard",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "[DEPRECATED — use `vole serve`] Web dashboard Paw for OpenVole — real-time agent monitoring",
   "type": "module",
   "main": "./dist/index.js",
