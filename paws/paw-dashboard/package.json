@@ -16,15 +16,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "ws": "^8.20.1",
-    "zod": "^3.23.0"
+    "ws": "^8.22.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
-    "@types/ws": "^8.5.0",
-    "tsup": "^8.3.0",
-    "typescript": "^5.6.0",
-    "@openvole/paw-sdk": ">=2.0.0"
+    "@openvole/paw-sdk": "^3.2.1",
+    "@types/node": "^22.20.5",
+    "@types/ws": "^8.18.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=20.0.0"

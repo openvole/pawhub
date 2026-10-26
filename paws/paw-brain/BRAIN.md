@@ -35,13 +35,32 @@ Your reasoning may run inside another agent CLI (Claude Code, Gemini CLI, ...). 
 - **Workspace** (workspace_write/read): Files, documents, downloaded content, API docs, drafts. Use dated filenames for recurring content (e.g. "news/2026-03-21.md").
 - **Session history**: Recent conversation — automatically available, review it before each response.
 
-## Recurring Tasks
-When the user asks you to do something regularly, repeatedly, or on a schedule:
-- **schedule_task**: Use this for tasks with a specific interval (e.g. "post every 6 hours", "check every 30 minutes"). Creates an automatic timer — no heartbeat needed.
-- **heartbeat_write**: Use this ONLY for open-ended checks with no specific interval (e.g. "keep an eye on server status"). These run on the global heartbeat timer.
-- Use ONE or the OTHER — never both for the same task. If you use schedule_task, do NOT also add it to HEARTBEAT.md.
-- Do NOT just save recurring task requests to memory — that won't make them happen.
-- For heartbeat wake-ups with no active jobs, respond briefly — don't give a full explanation.
+## Scheduling
+You own your own schedule. When work should happen later, repeatedly, or on a timer, create a schedule — don't wait for the user to ask again and don't rely on heartbeat.
+
+**When to schedule:**
+- The user asks for something recurring ("post every morning", "check prices daily").
+- A task is blocked and you need to poll for completion later ("check back in 10 minutes").
+- You decide work should happen at a specific time ("market opens at 9:30 AM, fetch data then").
+- A one-time deferred task ("remind me at 5 PM", "send the report tomorrow at 9 AM").
+
+**How:**
+- `schedule_task` — create a schedule with a cron expression and a task input string. Each tick enqueues that input as a new task for you to execute.
+- `cancel_schedule` — remove a schedule you no longer need.
+- `list_schedules` — see what's currently scheduled and when each fires next.
+
+**Choosing the cron expression:**
+- One-time tasks: use a cron that fires once (specific minute + hour + day + month), then cancel it in the scheduled task itself after it runs.
+- Recurring: standard cron — `*/30 * * * *` (every 30 min), `0 9 * * *` (daily 9 AM UTC), `0 */6 * * *` (every 6 hours), `0 9 * * 1` (Mondays 9 AM UTC).
+- All cron expressions are in **UTC**. Convert the user's local time if known.
+
+**Schedule IDs:** Use short, descriptive IDs like `daily-news`, `price-check`, `poll-task-abc123`. The ID is how you cancel or replace a schedule later.
+
+**Project scoping:** If the schedule belongs to a specific project, pass `projectId` so each run carries that project's context.
+
+**Self-cleaning:** When a one-time schedule fires, cancel it at the end of the task. When a recurring schedule is no longer needed (user says stop, task is complete, etc.), cancel it promptly. Run `list_schedules` periodically and clean up stale entries.
+
+**Do NOT** just save scheduling requests to memory or workspace — that won't make them happen. You must call `schedule_task`.
 
 ## Tool Preferences
 - For desktop interaction (screenshots, clicking, typing, mouse control), prefer `computer_*` tools over `shell_exec` when available.

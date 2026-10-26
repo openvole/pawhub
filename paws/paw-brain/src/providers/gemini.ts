@@ -109,17 +109,41 @@ export class GeminiProvider implements BrainProvider {
 						parts: [{ text: msg.content }],
 					})
 					break
-				case 'brain':
-					result.push({
-						role: 'model',
-						parts: [{ text: msg.content }],
-					})
+				case 'brain': {
+					// If this brain message recorded tool calls, reconstruct proper
+					// Gemini functionCall parts so subsequent functionResponse parts
+					// are valid.
+					if (msg.toolCall) {
+						const parts: Part[] = []
+						const textContent = msg.content?.replace(/^Calling tools:.*/, '').trim()
+						if (textContent) {
+							parts.push({ text: textContent })
+						}
+						const calls = msg.toolCall.name === 'multiple'
+							? (msg.toolCall.params as Array<{ tool: string; params: unknown }>)
+							: [{ tool: msg.toolCall.name, params: msg.toolCall.params }]
+						for (const call of calls) {
+							parts.push({
+								functionCall: {
+									name: call.tool,
+									args: (call.params as Record<string, unknown>) ?? {},
+								},
+							})
+						}
+						result.push({ role: 'model', parts })
+					} else {
+						result.push({
+							role: 'model',
+							parts: [{ text: msg.content }],
+						})
+					}
 					break
+				}
 				case 'tool_result': {
 					const toolParts: Part[] = [
 						{
 							functionResponse: {
-								name: (msg as any).toolName || 'unknown',
+								name: msg.toolCall?.name || 'unknown',
 								response: { result: msg.content },
 							},
 						},
@@ -139,17 +163,25 @@ export class GeminiProvider implements BrainProvider {
 					break
 				}
 				case 'error':
-					result.push({
-						role: 'function',
-						parts: [
-							{
-								functionResponse: {
-									name: (msg as any).toolName || 'unknown',
-									response: { error: msg.content },
+					// Only emit as functionResponse if this error came from a tool call
+					if (msg.toolCall) {
+						result.push({
+							role: 'function',
+							parts: [
+								{
+									functionResponse: {
+										name: msg.toolCall.name,
+										response: { error: msg.content },
+									},
 								},
-							},
-						],
-					})
+							],
+						})
+					} else {
+						result.push({
+							role: 'user',
+							parts: [{ text: `Error: ${msg.content}` }],
+						})
+					}
 					break
 			}
 		}
@@ -160,14 +192,27 @@ export class GeminiProvider implements BrainProvider {
 	private convertTools(tools: ToolSummary[]): GeminiTool[] {
 		if (tools.length === 0) return []
 
-		const functionDeclarations: FunctionDeclaration[] = tools.map((tool) => ({
-			name: tool.name,
-			description: tool.description,
-			parameters: {
-				type: SchemaType.OBJECT,
-				properties: {},
-			},
-		}))
+		const functionDeclarations: FunctionDeclaration[] = tools.map((tool) => {
+			// ToolSummary.parameters is already JSON Schema (converted from Zod by core).
+			// Gemini expects its own schema format but accepts JSON Schema-like objects.
+			if (tool.parameters && typeof tool.parameters === 'object') {
+				const schema = tool.parameters as Record<string, unknown>
+				return {
+					name: tool.name,
+					description: tool.description,
+					parameters: {
+						type: SchemaType.OBJECT,
+						properties: {},
+						...schema,
+					},
+				}
+			}
+			return {
+				name: tool.name,
+				description: tool.description,
+				parameters: { type: SchemaType.OBJECT, properties: {} },
+			}
+		})
 
 		return [{ functionDeclarations }]
 	}

@@ -82,15 +82,50 @@ export class AnthropicProvider implements BrainProvider {
 			}
 		}
 
+		// Monotonic counter for synthetic tool_use IDs — Anthropic requires every
+		// tool_result to reference the tool_use_id of a preceding assistant tool_use
+		// block. The core loop stores tool calls as AgentMessage.toolCall rather than
+		// provider-specific IDs, so we synthesise IDs and pair them up.
+		let toolUseSeq = 0
+
 		for (const msg of messages) {
 			switch (msg.role) {
 				case 'user':
 					result.push({ role: 'user', content: msg.content })
 					break
-				case 'brain':
-					result.push({ role: 'assistant', content: msg.content })
+				case 'brain': {
+					// If this brain message recorded tool calls, reconstruct proper
+					// Anthropic tool_use blocks so subsequent tool_result messages
+					// reference valid tool_use_ids.
+					if (msg.toolCall) {
+						const blocks: Anthropic.ContentBlockParam[] = []
+						// Add any text the brain emitted alongside the tool calls
+						const textContent = msg.content?.replace(/^Calling tools:.*/, '').trim()
+						if (textContent) {
+							blocks.push({ type: 'text', text: textContent })
+						}
+						// Expand single or "multiple" tool calls
+						const calls = msg.toolCall.name === 'multiple'
+							? (msg.toolCall.params as Array<{ tool: string; params: unknown }>)
+							: [{ tool: msg.toolCall.name, params: msg.toolCall.params }]
+						for (const call of calls) {
+							toolUseSeq++
+							blocks.push({
+								type: 'tool_use',
+								id: `tool_${toolUseSeq}`,
+								name: call.tool,
+								input: (call.params as Record<string, unknown>) ?? {},
+							})
+						}
+						result.push({ role: 'assistant', content: blocks })
+					} else {
+						result.push({ role: 'assistant', content: msg.content })
+					}
 					break
+				}
 				case 'tool_result': {
+					// Pair with the next tool_use ID in sequence
+					toolUseSeq++
 					const toolResultContent: Anthropic.ToolResultBlockParam['content'] = [
 						{ type: 'text', text: msg.content },
 					]
@@ -109,26 +144,35 @@ export class AnthropicProvider implements BrainProvider {
 						content: [
 							{
 								type: 'tool_result',
-								tool_use_id: (msg as any).toolUseId || 'unknown',
+								tool_use_id: `tool_${toolUseSeq}`,
 								content: toolResultContent,
 							},
 						],
 					})
 					break
 				}
-				case 'error':
-					result.push({
-						role: 'user',
-						content: [
-							{
-								type: 'tool_result',
-								tool_use_id: (msg as any).toolUseId || 'unknown',
-								content: `Error: ${msg.content}`,
-								is_error: true,
-							},
-						],
-					})
+				case 'error': {
+					// Errors from tool execution are also tool_results with is_error.
+					// Only wrap as tool_result if this error came from a tool call;
+					// otherwise it is a system error (rate limit, stuck-loop hint, etc.)
+					if (msg.toolCall) {
+						toolUseSeq++
+						result.push({
+							role: 'user',
+							content: [
+								{
+									type: 'tool_result',
+									tool_use_id: `tool_${toolUseSeq}`,
+									content: `Error: ${msg.content}`,
+									is_error: true,
+								},
+							],
+						})
+					} else {
+						result.push({ role: 'user', content: `Error: ${msg.content}` })
+					}
 					break
+				}
 			}
 		}
 
@@ -136,14 +180,20 @@ export class AnthropicProvider implements BrainProvider {
 	}
 
 	private convertTools(tools: ToolSummary[]): Anthropic.Tool[] {
-		return tools.map((tool) => ({
-			name: tool.name,
-			description: tool.description,
-			input_schema: {
-				type: 'object' as const,
-				properties: {},
-			},
-		}))
+		return tools.map((tool) => {
+			// ToolSummary.parameters is already JSON Schema (converted from Zod by core)
+			const schema = (tool.parameters && typeof tool.parameters === 'object')
+				? tool.parameters as Record<string, unknown>
+				: { type: 'object', properties: {} }
+			return {
+				name: tool.name,
+				description: tool.description,
+				input_schema: {
+					type: 'object' as const,
+					...schema,
+				},
+			}
+		})
 	}
 
 	private parseToolCalls(response: Anthropic.Message): PlannedAction[] {

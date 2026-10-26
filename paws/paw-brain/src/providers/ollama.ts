@@ -81,9 +81,29 @@ export class OllamaProvider implements BrainProvider {
 				case 'user':
 					result.push({ role: 'user', content: msg.content })
 					break
-				case 'brain':
-					result.push({ role: 'assistant', content: msg.content })
+				case 'brain': {
+					// If this brain message recorded tool calls, reconstruct proper
+					// Ollama tool_calls so the conversation history is coherent.
+					if (msg.toolCall) {
+						const calls = msg.toolCall.name === 'multiple'
+							? (msg.toolCall.params as Array<{ tool: string; params: unknown }>)
+							: [{ tool: msg.toolCall.name, params: msg.toolCall.params }]
+						const textContent = msg.content?.replace(/^Calling tools:.*/, '').trim() || ''
+						result.push({
+							role: 'assistant',
+							content: textContent,
+							tool_calls: calls.map((call) => ({
+								function: {
+									name: call.tool,
+									arguments: (call.params as Record<string, unknown>) ?? {},
+								},
+							})),
+						})
+					} else {
+						result.push({ role: 'assistant', content: msg.content })
+					}
 					break
+				}
 				case 'tool_result': {
 					const toolMsg: Message = { role: 'tool', content: msg.content }
 					if (msg.imageBase64 && msg.imageMimeType) {
@@ -93,10 +113,15 @@ export class OllamaProvider implements BrainProvider {
 					break
 				}
 				case 'error':
-					result.push({
-						role: 'tool',
-						content: `Error: ${msg.content}`,
-					})
+					// Only emit as tool response if this error came from a tool call
+					if (msg.toolCall) {
+						result.push({
+							role: 'tool',
+							content: `Error: ${msg.content}`,
+						})
+					} else {
+						result.push({ role: 'user', content: `Error: ${msg.content}` })
+					}
 					break
 			}
 		}

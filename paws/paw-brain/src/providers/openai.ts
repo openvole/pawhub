@@ -91,6 +91,9 @@ export class OpenAIProvider implements BrainProvider {
 			}
 		}
 
+		// Monotonic counter for synthetic tool_call IDs
+		let toolCallSeq = 0
+
 		for (const msg of messages) {
 			switch (msg.role) {
 				case 'user': {
@@ -110,14 +113,43 @@ export class OpenAIProvider implements BrainProvider {
 					}
 					break
 				}
-				case 'brain':
-					result.push({ role: 'assistant', content: msg.content })
+				case 'brain': {
+					// If this brain message recorded tool calls, reconstruct proper
+					// OpenAI assistant message with tool_calls so subsequent tool
+					// role messages reference valid tool_call_ids.
+					if (msg.toolCall) {
+						const calls = msg.toolCall.name === 'multiple'
+							? (msg.toolCall.params as Array<{ tool: string; params: unknown }>)
+							: [{ tool: msg.toolCall.name, params: msg.toolCall.params }]
+						const toolCalls: OpenAI.ChatCompletionMessageToolCall[] = calls.map((call, i) => {
+							toolCallSeq++
+							return {
+								id: `call_${toolCallSeq}`,
+								type: 'function' as const,
+								function: {
+									name: call.tool,
+									arguments: JSON.stringify(call.params ?? {}),
+								},
+							}
+						})
+						// Strip the auto-generated "Calling tools:" prefix from content
+						const textContent = msg.content?.replace(/^Calling tools:.*/, '').trim() || null
+						result.push({
+							role: 'assistant',
+							content: textContent,
+							tool_calls: toolCalls,
+						})
+					} else {
+						result.push({ role: 'assistant', content: msg.content })
+					}
 					break
+				}
 				case 'tool_result': {
+					toolCallSeq++
 					result.push({
 						role: 'tool',
 						content: msg.content,
-						tool_call_id: (msg as any).toolCallId || 'unknown',
+						tool_call_id: `call_${toolCallSeq}`,
 					})
 					if (msg.imageBase64 && msg.imageMimeType) {
 						result.push({
@@ -133,13 +165,21 @@ export class OpenAIProvider implements BrainProvider {
 					}
 					break
 				}
-				case 'error':
-					result.push({
-						role: 'tool',
-						content: `Error: ${msg.content}`,
-						tool_call_id: (msg as any).toolCallId || 'unknown',
-					})
+				case 'error': {
+					// Only wrap as tool response if this error came from a tool call;
+					// otherwise it is a system error (rate limit, stuck-loop hint, etc.)
+					if (msg.toolCall) {
+						toolCallSeq++
+						result.push({
+							role: 'tool',
+							content: `Error: ${msg.content}`,
+							tool_call_id: `call_${toolCallSeq}`,
+						})
+					} else {
+						result.push({ role: 'user', content: `Error: ${msg.content}` })
+					}
 					break
+				}
 			}
 		}
 
@@ -147,17 +187,20 @@ export class OpenAIProvider implements BrainProvider {
 	}
 
 	private convertTools(tools: ToolSummary[]): OpenAI.ChatCompletionTool[] {
-		return tools.map((tool) => ({
-			type: 'function' as const,
-			function: {
-				name: tool.name,
-				description: tool.description,
-				parameters: {
-					type: 'object',
-					properties: {},
+		return tools.map((tool) => {
+			// ToolSummary.parameters is already JSON Schema (converted from Zod by core)
+			const schema = (tool.parameters && typeof tool.parameters === 'object')
+				? tool.parameters as Record<string, unknown>
+				: { type: 'object', properties: {} }
+			return {
+				type: 'function' as const,
+				function: {
+					name: tool.name,
+					description: tool.description,
+					parameters: schema,
 				},
-			},
-		}))
+			}
+		})
 	}
 
 	private parseToolCalls(message: OpenAI.ChatCompletionMessage): PlannedAction[] {
